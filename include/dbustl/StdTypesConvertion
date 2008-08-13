@@ -1,0 +1,161 @@
+#ifndef DBUSTL_STDTYPESCONVERTION
+#define DBUSTL_STDTYPESCONVERTION
+
+// STL to DBUS arguments types mapping
+
+#include <string>
+#include <cassert>
+#include <dbus/dbus.h>
+
+namespace dbustl {
+  
+    /* integral types */
+    
+    //helper functions
+    template<typename T> 
+    inline bool __pushOneArgSignedIntegral(DBusMessageIter* it, const T& arg)
+    {
+        int dbus_type = DBUS_TYPE_INVALID;
+        switch(sizeof(arg)) {
+            case 2:
+                dbus_type = DBUS_TYPE_INT16;
+                break;
+            case 4:
+                dbus_type = DBUS_TYPE_INT32;
+                break;
+            case 8:
+                dbus_type = DBUS_TYPE_INT64;
+                break;
+            default:
+                assert("The supplied argument does not match any integer size supported by DBUS");
+        }
+        if(dbus_type != DBUS_TYPE_INVALID) {
+            return dbus_message_iter_append_basic(it, dbus_type, &arg);
+        }
+        else {
+            return false;
+        }
+    }
+
+    template<typename T> 
+    inline bool __pushOneArgUnsignedIntegral(DBusMessageIter* it, const T& arg)
+    {
+        int dbus_type = DBUS_TYPE_INVALID;
+        switch(sizeof(arg)) {
+            case 1:
+                dbus_type = DBUS_TYPE_BYTE;
+                break;
+            case 2:
+                dbus_type = DBUS_TYPE_UINT16;
+                break;
+            case 4:
+                dbus_type = DBUS_TYPE_UINT32;
+                break;
+            case 8:
+                dbus_type = DBUS_TYPE_UINT64;
+                break;
+            default:
+                assert("The supplied argument does not match any integer size supported by DBUS");
+        }
+        if(dbus_type != DBUS_TYPE_INVALID) {
+            return dbus_message_iter_append_basic(it, dbus_type, &arg);
+        }
+        else {
+            return false;
+        }
+    }
+    
+    /* bool */
+    template<> dbus_bool_t pushOneArg<bool>(DBusMessageIter* it, const bool& arg)
+    {
+        return dbus_message_iter_append_basic(it, DBUS_TYPE_BOOLEAN, &arg);
+    }
+
+    /* char */
+    template<> dbus_bool_t pushOneArg<char>(DBusMessageIter* it, const char& arg)
+    {
+        return __pushOneArgUnsignedIntegral<char>(it, arg);
+    }
+
+    /* signed char */
+    template<> dbus_bool_t pushOneArg<signed char>(DBusMessageIter* it, const signed char& arg)
+    {
+        return __pushOneArgSignedIntegral<signed char>(it, arg);
+    }
+
+    /* unsigned char */
+    template<> dbus_bool_t pushOneArg<unsigned char>(DBusMessageIter* it, const unsigned char& arg)
+    {
+        return __pushOneArgUnsignedIntegral<unsigned char>(it, arg);
+    }
+
+    /* short */
+    template<> dbus_bool_t pushOneArg<short>(DBusMessageIter* it, const short& arg)
+    {
+        return __pushOneArgSignedIntegral<short>(it, arg);
+    }
+
+    /* unsigned short */
+    template<> dbus_bool_t pushOneArg<unsigned short>(DBusMessageIter* it, const unsigned short& arg)
+    {
+        return __pushOneArgUnsignedIntegral<unsigned short>(it, arg);
+    }
+
+    /* int */
+    template<> dbus_bool_t pushOneArg<int>(DBusMessageIter* it, const int& arg)
+    {
+        return __pushOneArgSignedIntegral<int>(it, arg);
+    }
+
+    /* unsigned int */
+    template<> dbus_bool_t pushOneArg<unsigned int>(DBusMessageIter* it, const unsigned int& arg)
+    {
+        return __pushOneArgUnsignedIntegral<unsigned int>(it, arg);
+    }
+
+    /* long */
+    template<> dbus_bool_t pushOneArg<long>(DBusMessageIter* it, const long& arg)
+    {
+        return __pushOneArgSignedIntegral<long>(it, arg);
+    }
+
+    /* unsigned long */
+    template<> dbus_bool_t pushOneArg<unsigned long>(DBusMessageIter* it, const unsigned long& arg)
+    {
+        return __pushOneArgUnsignedIntegral<unsigned long>(it, arg);
+    }
+
+    /* long long */
+    template<> dbus_bool_t pushOneArg<long long>(DBusMessageIter* it, const long long& arg)
+    {
+        return __pushOneArgSignedIntegral<long long>(it, arg);
+    }
+
+    /* unsigned long long */
+    template<> dbus_bool_t pushOneArg<unsigned long long>(DBusMessageIter* it, const unsigned long long& arg)
+    {
+        return __pushOneArgUnsignedIntegral<unsigned long long>(it, arg);
+    }
+
+    /* double */
+    template<> dbus_bool_t pushOneArg<double>(DBusMessageIter* it, const double& arg)
+    {
+        return dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &arg);
+    }
+
+    /* const char* */
+    template<> dbus_bool_t pushOneArg<const char*>(DBusMessageIter* it, const char* const& arg)
+    {
+        return dbus_message_iter_append_basic(it, DBUS_TYPE_STRING, &arg);
+    }
+    
+    /* std::string */
+    template<> dbus_bool_t pushOneArg<std::string>(DBusMessageIter* it, const std::string& arg)
+    {
+        const char *cstring = arg.c_str();
+        return dbus_message_iter_append_basic(it, DBUS_TYPE_STRING, &cstring);
+    }
+    
+}
+
+#endif

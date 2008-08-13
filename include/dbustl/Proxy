@@ -1,0 +1,117 @@
+#ifndef DBUSTL_PROXY
+#define DBUSTL_PROXY
+
+#include <dbus/dbus.h>
+
+#include <string>
+#include <new>
+
+#include <dbustl/DBusException>
+#include <dbustl/TypesConvertion>
+
+namespace dbustl {
+
+    class Connection;
+
+    class Proxy {
+        public:
+            // Path the object path we target
+            // destination is only required if this connection talks to a message bus
+            // In this case it must contain the name of the connection this message is intended for,
+            // otherwise givin the connection object is enough
+            Proxy(Connection* conn, const std::string& path, const std::string& destination = "");
+
+            // For synchronous blocking calls, set the timeout to val.
+            // -1 means default value
+            void setTimeout(int timeout) { _timeout = timeout; };
+            // Sets the interface to use for the remote object.
+            // If empty(the default), the default interface is used
+            void setInterface(const std::string& interface) { _interface = interface; };
+
+        #ifndef DBUSTL_NO_EXCEPTIONS
+            //Returns the last error that happened
+            const DBusException& error();
+        #endif
+
+            //If fails returns false and error contains the detailed error value
+            template<typename... Args>
+            bool call(const std::string& methodName, const Args&... args);
+            
+        private:
+            //Disallow the following constructs
+            Proxy(const Proxy& con);
+            Proxy& operator=(Proxy&);
+            
+        #ifdef DBUSTL_NO_EXCEPTIONS
+            inline void throw_or_set(const DBusException& error) {_error = error; };
+            inline void throw_or_set(const chat *name, const char *message) {_error = DBusException(name, message); };
+        #else
+            static inline void throw_or_set(const DBusException& error) {throw error; };
+            static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
+        #endif
+            
+            DBusMessage * newMethodCall(const std::string& methodName);
+
+            template<typename T, typename... Args>            
+            inline bool fillMessageWithArgs(DBusMessageIter *it, const T& value, const Args&... args);
+            //NO OP - just to finish the recursion
+            inline bool fillMessageWithArgs(DBusMessageIter *) { return true;};
+      
+            Connection *_conn;
+            std::string _path;
+            std::string _destination;
+            std::string _interface;
+            int _timeout; //call timeout in milliseconds, -1 means default
+        #ifdef DBUSTL_NO_EXCEPTIONS
+            DBusException _error;
+        #endif
+    };
+
+
+    template<typename... Args>
+    bool Proxy::call(const std::string& methodName, const Args&... args)
+    {
+        DBusMessageIter append_iterator;
+        DBusMessage *method_call = newMethodCall(methodName);
+        
+        if(!method_call) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+        }
+        
+        dbus_message_iter_init_append(method_call, &append_iterator);
+        
+        if(!fillMessageWithArgs(&append_iterator, args...)) {
+            dbus_message_unref(method_call);
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory while writing DBUS message arguments");
+        }
+        
+        DBusException error;
+        DBusMessage *reply;
+        
+        reply = dbus_connection_send_with_reply_and_block(_conn->dbus(), method_call, _timeout, error.dbus());
+        dbus_message_unref(method_call);
+        if(reply) {
+            //TODO parse return args
+            dbus_message_unref(reply);
+            return true;
+        }
+        else {
+            throw_or_set(error);
+            return false;
+        }
+    }
+
+    template<typename T, typename... Args>            
+    bool Proxy::fillMessageWithArgs(DBusMessageIter *it, const T& value, const Args&... args)
+    {
+        if(pushOneArg(it, value) == TRUE) {
+            return fillMessageWithArgs(it, args...);
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+#endif /* DBUSTL_PROXY */
+
