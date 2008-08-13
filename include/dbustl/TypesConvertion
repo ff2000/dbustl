@@ -13,9 +13,9 @@
 
 namespace dbustl {
 
-    template<typename T> dbus_bool_t pushOneArg(DBusMessageIter* it, const T& arg);
+    template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const T& arg);
 
-    template<typename T> dbus_bool_t popOneArg(DBusMessageIter* it, T& arg);
+    template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, T* arg);
 
 }
 
