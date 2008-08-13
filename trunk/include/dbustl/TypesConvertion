@@ -1,0 +1,22 @@
+#ifndef DBUSTL_TYPESCONVERTION
+#define DBUSTL_TYPESCONVERTION
+
+// DBUS arguments types convertion
+
+//This file only declares the templates used for arguments serialization/deserialization
+//Actual implementation is either : 
+//  - left to the user of dbustl
+//  - shipped with ToolKit specific convertion templates as StlTypesConvertion, 
+//    GlibTypesConvertion or QtTypesConvertion
+
+#include <dbus/dbus.h>
+
+namespace dbustl {
+
+    template<typename T> dbus_bool_t pushOneArg(DBusMessageIter* it, const T& arg);
+
+    template<typename T> dbus_bool_t popOneArg(DBusMessageIter* it, T& arg);
+
+}
+
+#endif

@@ -1,0 +1,33 @@
+#ifndef DBUSTL_CONNECTION
+#define DBUSTL_CONNECTION
+
+#include <dbus/dbus.h>
+
+#include <string>
+
+namespace dbustl {
+
+   class Connection {
+        public:
+            static Connection * systemBus();
+            static Connection * sessionBus();
+
+            ~Connection();
+
+            //Should ne be used, reserved for internal use
+            DBusConnection * dbus();
+
+        private:
+            Connection(DBusConnection* llconn);
+
+            //Disallow construct that would bypass the static initializers
+            Connection(const Connection& con);
+            Connection& operator=(Connection&);
+        
+            //Low level connection
+            DBusConnection *_llconn;
+    };
+
+}
+
+#endif /* DBUSTL_CONNECTION */
