@@ -4,7 +4,6 @@
 #include <dbus/dbus.h>
 
 #include <string>
-#include <new>
 
 #include <dbustl/DBusException>
 #include <dbustl/TypesConvertion>
@@ -50,12 +49,20 @@ namespace dbustl {
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
         #endif
             
-            DBusMessage * newMethodCall(const std::string& methodName);
+            DBusMessage* newMethodCall(const std::string& methodName);
 
             template<typename T, typename... Args>            
-            inline bool fillMessageWithArgs(DBusMessageIter *it, const T& value, const Args&... args);
-            //NO OP - just to finish the recursion
-            inline bool fillMessageWithArgs(DBusMessageIter *) { return true;};
+            inline bool processCall(DBusMessage *method_call, DBusMessageIter *it, const T& invalue, const Args&... args);
+
+            template<typename T, typename... Args>            
+            inline bool processCall(DBusMessage *method_call, DBusMessageIter *it, const T* invalue, const Args&... args);
+
+            template<typename T, typename... Args>            
+            inline bool processCall(DBusMessage *method_call, DBusMessageIter *it, T* outvalue, const Args&... args);
+
+            bool processCall(DBusMessage *method_call, DBusMessageIter *);
+      
+            DBusMessage* doBlockingCall(DBusMessage *method_call);
       
             Connection *_conn;
             std::string _path;
@@ -65,6 +72,40 @@ namespace dbustl {
         #ifdef DBUSTL_NO_EXCEPTIONS
             DBusException _error;
         #endif
+            bool _parsingInputArguments;
+
+            //Utility class: Handles DBusMessage refcounting automagically
+            class MessageContainer {
+                public:
+                    MessageContainer() { _msg = NULL; };
+
+                    MessageContainer(DBusMessage *msg) {_msg = msg; };
+
+                    MessageContainer(const MessageContainer& other) {
+                        if(other._msg) dbus_message_ref(other._msg);
+                        _msg = other._msg;
+                    };
+
+                    ~MessageContainer() { if(_msg) dbus_message_unref(_msg); };
+
+                    MessageContainer& operator=(MessageContainer& other) {
+                        if(other._msg) dbus_message_ref(other._msg);
+                        if(_msg) dbus_message_unref(_msg);
+                        _msg = other._msg;
+                        return *this;
+                    };
+                    
+                    MessageContainer& operator=(DBusMessage *msg) {
+                        if(_msg) dbus_message_unref(_msg);
+                        _msg = msg;
+                        return *this;
+                    };
+                    
+                    DBusMessage* dbus() { return _msg; };
+                    
+                private:
+                    DBusMessage *_msg;
+            };
     };
 
 
@@ -72,40 +113,70 @@ namespace dbustl {
     bool Proxy::call(const std::string& methodName, const Args&... args)
     {
         DBusMessageIter append_iterator;
-        DBusMessage *method_call = newMethodCall(methodName);
+        MessageContainer method_call(newMethodCall(methodName));
         
-        if(!method_call) {
+        if(!method_call.dbus()) {
             throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
         }
         
-        dbus_message_iter_init_append(method_call, &append_iterator);
+        dbus_message_iter_init_append(method_call.dbus(), &append_iterator);
         
-        if(!fillMessageWithArgs(&append_iterator, args...)) {
-            dbus_message_unref(method_call);
-            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory while writing DBUS message arguments");
+        _parsingInputArguments = true;
+        return processCall(method_call.dbus(), &append_iterator, args...);
+    }
+
+    template<typename T, typename... Args>            
+    bool Proxy::processCall(DBusMessage *method_call, DBusMessageIter *it, const T& invalue, const Args&... args)
+    {
+        if(!_parsingInputArguments) {
+          //Should definately not be here
+          throw_or_set(DBUS_ERROR_NO_MEMORY, "Issue with arguments ordering");
+          return false;
         }
-        
-        DBusException error;
-        DBusMessage *reply;
-        
-        reply = dbus_connection_send_with_reply_and_block(_conn->dbus(), method_call, _timeout, error.dbus());
-        dbus_message_unref(method_call);
-        if(reply) {
-            //TODO parse return args
-            dbus_message_unref(reply);
-            return true;
+        if(serialize(it, invalue) == TRUE) {
+            return processCall(method_call, it, args...);
         }
         else {
-            throw_or_set(error);
             return false;
         }
     }
 
     template<typename T, typename... Args>            
-    bool Proxy::fillMessageWithArgs(DBusMessageIter *it, const T& value, const Args&... args)
+    bool Proxy::processCall(DBusMessage *method_call, DBusMessageIter *it, const T* invalue, const Args&... args)
     {
-        if(pushOneArg(it, value) == TRUE) {
-            return fillMessageWithArgs(it, args...);
+        if(!_parsingInputArguments) {
+          //Should definately not be here
+          throw_or_set(DBUS_ERROR_NO_MEMORY, "Issue with arguments ordering");
+          return false;
+        }
+        if(serialize(it, invalue) == TRUE) {
+            return processCall(method_call, it, args...);
+        }
+        else {
+            return false;
+        }
+    }
+
+    template<typename T, typename... Args>            
+    bool Proxy::processCall(DBusMessage *msg, DBusMessageIter *it, T* outvalue, const Args&... args)
+    {
+        MessageContainer reply;
+        if(_parsingInputArguments) {
+            _parsingInputArguments = false;
+            reply = doBlockingCall(msg);
+            if(reply.dbus()) {
+                //Overwrite message and iterator
+                msg = reply.dbus();
+                dbus_message_iter_init(msg, it);
+            }
+            else {
+                return false;
+            }
+        }
+        
+        if(deserialize(it, outvalue) == TRUE) {
+            dbus_message_iter_next(it);
+            return processCall(msg, it, args...);
         }
         else {
             return false;

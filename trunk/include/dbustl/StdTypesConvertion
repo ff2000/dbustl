@@ -13,7 +13,7 @@ namespace dbustl {
     
     //helper functions
     template<typename T> 
-    inline bool __pushOneArgSignedIntegral(DBusMessageIter* it, const T& arg)
+    inline bool __serializeSignedIntegral(DBusMessageIter* it, const T& arg)
     {
         int dbus_type = DBUS_TYPE_INVALID;
         switch(sizeof(arg)) {
@@ -38,7 +38,7 @@ namespace dbustl {
     }
 
     template<typename T> 
-    inline bool __pushOneArgUnsignedIntegral(DBusMessageIter* it, const T& arg)
+    inline bool __serializeUnsignedIntegral(DBusMessageIter* it, const T& arg)
     {
         int dbus_type = DBUS_TYPE_INVALID;
         switch(sizeof(arg)) {
@@ -66,96 +66,122 @@ namespace dbustl {
     }
     
     /* bool */
-    template<> dbus_bool_t pushOneArg<bool>(DBusMessageIter* it, const bool& arg)
+    template<> dbus_bool_t serialize<bool>(DBusMessageIter* it, const bool& arg)
     {
         return dbus_message_iter_append_basic(it, DBUS_TYPE_BOOLEAN, &arg);
     }
+    template<> dbus_bool_t deserialize<bool>(DBusMessageIter* it, bool *arg)
+    {
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_BOOLEAN) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, arg);
+        return TRUE;
+    }
 
     /* char */
-    template<> dbus_bool_t pushOneArg<char>(DBusMessageIter* it, const char& arg)
+    template<> dbus_bool_t serialize<char>(DBusMessageIter* it, const char& arg)
     {
-        return __pushOneArgUnsignedIntegral<char>(it, arg);
+        return __serializeUnsignedIntegral<char>(it, arg);
     }
 
     /* signed char */
-    template<> dbus_bool_t pushOneArg<signed char>(DBusMessageIter* it, const signed char& arg)
+    template<> dbus_bool_t serialize<signed char>(DBusMessageIter* it, const signed char& arg)
     {
-        return __pushOneArgSignedIntegral<signed char>(it, arg);
+        return __serializeSignedIntegral<signed char>(it, arg);
     }
 
     /* unsigned char */
-    template<> dbus_bool_t pushOneArg<unsigned char>(DBusMessageIter* it, const unsigned char& arg)
+    template<> dbus_bool_t serialize<unsigned char>(DBusMessageIter* it, const unsigned char& arg)
     {
-        return __pushOneArgUnsignedIntegral<unsigned char>(it, arg);
+        return __serializeUnsignedIntegral<unsigned char>(it, arg);
     }
 
     /* short */
-    template<> dbus_bool_t pushOneArg<short>(DBusMessageIter* it, const short& arg)
+    template<> dbus_bool_t serialize<short>(DBusMessageIter* it, const short& arg)
     {
-        return __pushOneArgSignedIntegral<short>(it, arg);
+        return __serializeSignedIntegral<short>(it, arg);
     }
 
     /* unsigned short */
-    template<> dbus_bool_t pushOneArg<unsigned short>(DBusMessageIter* it, const unsigned short& arg)
+    template<> dbus_bool_t serialize<unsigned short>(DBusMessageIter* it, const unsigned short& arg)
     {
-        return __pushOneArgUnsignedIntegral<unsigned short>(it, arg);
+        return __serializeUnsignedIntegral<unsigned short>(it, arg);
     }
 
     /* int */
-    template<> dbus_bool_t pushOneArg<int>(DBusMessageIter* it, const int& arg)
+    template<> dbus_bool_t serialize<int>(DBusMessageIter* it, const int& arg)
     {
-        return __pushOneArgSignedIntegral<int>(it, arg);
+        return __serializeSignedIntegral<int>(it, arg);
     }
 
     /* unsigned int */
-    template<> dbus_bool_t pushOneArg<unsigned int>(DBusMessageIter* it, const unsigned int& arg)
+    template<> dbus_bool_t serialize<unsigned int>(DBusMessageIter* it, const unsigned int& arg)
     {
-        return __pushOneArgUnsignedIntegral<unsigned int>(it, arg);
+        return __serializeUnsignedIntegral<unsigned int>(it, arg);
     }
 
     /* long */
-    template<> dbus_bool_t pushOneArg<long>(DBusMessageIter* it, const long& arg)
+    template<> dbus_bool_t serialize<long>(DBusMessageIter* it, const long& arg)
     {
-        return __pushOneArgSignedIntegral<long>(it, arg);
+        return __serializeSignedIntegral<long>(it, arg);
     }
 
     /* unsigned long */
-    template<> dbus_bool_t pushOneArg<unsigned long>(DBusMessageIter* it, const unsigned long& arg)
+    template<> dbus_bool_t serialize<unsigned long>(DBusMessageIter* it, const unsigned long& arg)
     {
-        return __pushOneArgUnsignedIntegral<unsigned long>(it, arg);
+        return __serializeUnsignedIntegral<unsigned long>(it, arg);
     }
 
     /* long long */
-    template<> dbus_bool_t pushOneArg<long long>(DBusMessageIter* it, const long long& arg)
+    template<> dbus_bool_t serialize<long long>(DBusMessageIter* it, const long long& arg)
     {
-        return __pushOneArgSignedIntegral<long long>(it, arg);
+        return __serializeSignedIntegral<long long>(it, arg);
     }
 
     /* unsigned long long */
-    template<> dbus_bool_t pushOneArg<unsigned long long>(DBusMessageIter* it, const unsigned long long& arg)
+    template<> dbus_bool_t serialize<unsigned long long>(DBusMessageIter* it, const unsigned long long& arg)
     {
-        return __pushOneArgUnsignedIntegral<unsigned long long>(it, arg);
+        return __serializeUnsignedIntegral<unsigned long long>(it, arg);
     }
 
     /* double */
-    template<> dbus_bool_t pushOneArg<double>(DBusMessageIter* it, const double& arg)
+    template<> dbus_bool_t serialize<double>(DBusMessageIter* it, const double& arg)
     {
         return dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &arg);
     }
+    template<> dbus_bool_t deserialize<double>(DBusMessageIter* it, double *arg)
+    {
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_DOUBLE) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, arg);
+        return TRUE;
+    }
 
     /* const char* */
-    template<> dbus_bool_t pushOneArg<const char*>(DBusMessageIter* it, const char* const& arg)
+    template<> dbus_bool_t serialize<const char*>(DBusMessageIter* it, const char* const& arg)
     {
         return dbus_message_iter_append_basic(it, DBUS_TYPE_STRING, &arg);
     }
     
     /* std::string */
-    template<> dbus_bool_t pushOneArg<std::string>(DBusMessageIter* it, const std::string& arg)
+    template<> dbus_bool_t serialize<std::string>(DBusMessageIter* it, const std::string& arg)
     {
         const char *cstring = arg.c_str();
         return dbus_message_iter_append_basic(it, DBUS_TYPE_STRING, &cstring);
     }
-    
+    template<> dbus_bool_t deserialize<std::string>(DBusMessageIter* it, std::string* arg)
+    {
+        const char *str;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_STRING) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, &str);
+        *arg = str;
+        return TRUE;
+    }
+
 }
 
 #endif
