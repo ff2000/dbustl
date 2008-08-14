@@ -30,14 +30,12 @@ Message ClientProxy::call(Message& method_call)
     return Message(reply);
 }
 
-bool ClientProxy::processCall(Message& method_call)
+void ClientProxy::processCall(Message& method_call)
 {
     if(_parsingInputArguments) {
         //All arguments are consumed but we haven't called yet, do it now
-        Message reply(call(method_call));
-        return !reply.isNull();
+        call(method_call);
     }
-    return true;
 }
 
 }
