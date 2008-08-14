@@ -30,12 +30,25 @@ Message ClientProxy::call(Message& method_call)
     return Message(reply);
 }
 
-void ClientProxy::processCall(Message& method_call)
+void ClientProxy::processInArgs(Message& msg)
 {
-    if(_parsingInputArguments) {
-        //All arguments are consumed but we haven't called yet, do it now
-        call(method_call);
+    if(msg.isValid()) {
+        Message reply(call(msg));
+        if(!reply.isNull()) {
+            //Overwrite message 
+            msg = reply;
+        }
     }
+    else {
+        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+    }
+}
+
+void ClientProxy::processOutArgs(Message&)
+{
+    //TODO handle case where:
+    // Not enough return arguments where provided
+    // Too much return arguments are provided
 }
 
 }
