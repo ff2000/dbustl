@@ -54,24 +54,22 @@ namespace dbustl {
         #endif
             
             template<typename T, typename... Args>            
-            inline bool processCall(Message& method_call, const T& invalue, const Args&... args);
+            inline void processCall(Message& method_call, const T& invalue, const Args&... args);
 
             template<typename T, typename... Args>            
-            inline bool processCall(Message& method_call, const T* invalue, const Args&... args);
+            inline void processCall(Message& method_call, const T* invalue, const Args&... args);
 
             template<typename T, typename... Args>            
-            inline bool processCall(Message& method_call, T* outvalue, const Args&... args);
+            inline void processCall(Message& method_call, T* outvalue, const Args&... args);
 
-            bool processCall(Message& method_call);
+            void processCall(Message& method_call);
             
             Connection *_conn;
             std::string _path;
             std::string _destination;
             std::string _interface;
             int _timeout; //call timeout in milliseconds, -1 means default
-        #ifdef DBUSTL_NO_EXCEPTIONS
             DBusException _error;
-        #endif
             bool _parsingInputArguments;
     };
 
@@ -85,46 +83,38 @@ namespace dbustl {
             throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
         }
         
+        _error = DBusException();
         _parsingInputArguments = true;
-        return processCall(method_call, args...);
+        processCall(method_call, args...);
+        return !_error.isSet();
     }
 
     template<typename T, typename... Args>            
-    bool ClientProxy::processCall(Message& method_call, const T& invalue, const Args&... args)
+    void ClientProxy::processCall(Message& method_call, const T& invalue, const Args&... args)
     {
         if(!_parsingInputArguments) {
           //Should definately not be here
-          throw_or_set(DBUS_ERROR_NO_MEMORY, "Issue with arguments ordering");
-          return false;
+          throw_or_set("TBD", "Issue with arguments ordering");
+          return;
         }
         method_call << invalue;
-        if(method_call.isValid()) {
-            return processCall(method_call, args...);
-        }
-        else {
-            return false;
-        }
+        processCall(method_call, args...);
     }
 
     template<typename T, typename... Args>            
-    bool ClientProxy::processCall(Message& method_call, const T* invalue, const Args&... args)
+    void ClientProxy::processCall(Message& method_call, const T* invalue, const Args&... args)
     {
         if(!_parsingInputArguments) {
           //Should definately not be here
-          throw_or_set(DBUS_ERROR_NO_MEMORY, "Issue with arguments ordering");
-          return false;
+          throw_or_set("TBD", "Issue with arguments ordering");
+          return;
         }
         method_call << invalue;
-        if(method_call.isValid()) {
-            return processCall(method_call, args...);
-        }
-        else {
-            return false;
-        }
+        processCall(method_call, args...);
     }
 
     template<typename T, typename... Args>            
-    bool ClientProxy::processCall(Message& msg, T* outvalue, const Args&... args)
+    void ClientProxy::processCall(Message& msg, T* outvalue, const Args&... args)
     {
         if(_parsingInputArguments) {
             _parsingInputArguments = false;
@@ -134,17 +124,12 @@ namespace dbustl {
                 msg = reply;
             }
             else {
-                return false;
+                return;
             }
         }
         
         msg >> outvalue;
-        if(msg.isValid()) {
-            return processCall(msg, args...);
-        }
-        else {
-            return false;
-        }
+        processCall(msg, args...);
     }
 }
 

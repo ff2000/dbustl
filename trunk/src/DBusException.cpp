@@ -22,10 +22,12 @@ DBusException::DBusException(const DBusException& e) throw()
 }
 
 //assignmen operator: special care must be taken
-DBusException& DBusException::operator=(DBusException& e) throw()
+DBusException& DBusException::operator=(const DBusException& e) throw()
 {
     dbus_error_free(&_dbusError);
-    dbus_set_error(&_dbusError, e._dbusError.name, "%s", e._dbusError.message);
+    if(dbus_error_is_set(&e._dbusError)) {
+      dbus_set_error(&_dbusError, e._dbusError.name, "%s", e._dbusError.message);
+    }
     return *this;
 }
 
@@ -54,4 +56,9 @@ std::string DBusException::message() const
     return _dbusError.message;
 }
   
+bool DBusException::isSet() const throw()
+{
+    return dbus_error_is_set(&_dbusError) == TRUE;
+}
+
 }

@@ -18,7 +18,7 @@ class DBusException : public std::exception {
         //Copy constructor: special care must be taken
         DBusException(const DBusException& e) throw();
         //assignmen operator: special care must be taken
-        DBusException& operator=(DBusException&) throw();
+        DBusException& operator=(const DBusException&) throw();
 
         virtual ~DBusException() throw();
 
@@ -29,6 +29,9 @@ class DBusException : public std::exception {
         std::string name() const;
         //A more verbose description of the exception
         std::string message() const;
+        
+        //Returns true if the object contains a valid exception
+        bool isSet() const throw();
         
         //Should not be used : reserved for internal use
         DBusError* dbus() {return &_dbusError; };
