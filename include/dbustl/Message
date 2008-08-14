@@ -1,0 +1,86 @@
+#ifndef DBUSTL_MESSAGE
+#define DBUSTL_MESSAGE
+
+#include <dbus/dbus.h>
+
+#include <cassert>
+
+namespace dbustl {
+
+    //Utility class: Handles DBusMessage refcounting automagically and provides
+    //facilities for serialization& deserialisation through uses of << and >> operators
+    class Message {
+        public:
+            Message();
+
+            Message(DBusMessage *msg);
+
+            Message(const Message& other);
+
+            ~Message();
+            
+            Message& operator=(Message& other);
+            
+            Message& operator=(DBusMessage *msg);
+            
+            template<typename T> Message& operator<<(const T& inarg);
+
+            template<typename T> Message& operator>>(T* outarg);
+            
+            bool isNull() const { return (_msg == NULL); };
+            
+            bool isValid() const { return _valid; };
+            
+            DBusMessage* dbus() { return _msg; };
+            
+        private:
+            DBusMessage *_msg;
+            bool _valid;
+            bool _iteratorInitialized;
+            DBusMessageIter _it;
+    };
+
+    template<typename T> Message& Message::operator<<(const T& inarg)
+    {
+        assert(_msg);
+        
+        if(!_iteratorInitialized) {
+            dbus_message_iter_init_append(_msg, &_it);
+            _iteratorInitialized = true;
+        }
+
+        //If message is already screwed up, we just discard the other arguments
+        if(_valid) {
+            _valid = (serialize(&_it, inarg) == TRUE);
+        }
+        return *this;
+    }
+
+    template<typename T> Message& Message::operator>>(T* outarg)
+    {
+        assert(_msg);
+
+        if(_iteratorInitialized) {
+            dbus_message_iter_next(&_it);
+        }
+        else {
+            dbus_message_iter_init(_msg, &_it);
+            _iteratorInitialized = true;
+        }
+
+        //If we are past the end, we mark the message as invalid
+        if(dbus_message_iter_get_arg_type(&_it) != DBUS_TYPE_INVALID) {
+            if(_valid) {
+                _valid = (deserialize(&_it, outarg) == TRUE);
+            }
+        }
+        else {
+            _valid = false;
+        }
+        return *this;
+    }
+
+}
+
+#endif /* DBUSTL_MESSAGE */
+

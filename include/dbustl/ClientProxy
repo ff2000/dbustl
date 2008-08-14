@@ -1,5 +1,5 @@
-#ifndef DBUSTL_PROXY
-#define DBUSTL_PROXY
+#ifndef DBUSTL_CLIENTPROXY
+#define DBUSTL_CLIENTPROXY
 
 #include <dbus/dbus.h>
 
@@ -7,18 +7,19 @@
 
 #include <dbustl/DBusException>
 #include <dbustl/TypesConvertion>
+#include <dbustl/Message>
 
 namespace dbustl {
 
     class Connection;
 
-    class Proxy {
+    class ClientProxy {
         public:
             // Path the object path we target
             // destination is only required if this connection talks to a message bus
             // In this case it must contain the name of the connection this message is intended for,
             // otherwise givin the connection object is enough
-            Proxy(Connection* conn, const std::string& path, const std::string& destination = "");
+            ClientProxy(Connection* conn, const std::string& path, const std::string& destination = "");
 
             // For synchronous blocking calls, set the timeout to val.
             // -1 means default value
@@ -36,10 +37,13 @@ namespace dbustl {
             template<typename... Args>
             bool call(const std::string& methodName, const Args&... args);
             
+            Message createMethodCall(const std::string& methodName) const;
+            Message call(Message& method_call);
+
         private:
             //Disallow the following constructs
-            Proxy(const Proxy& con);
-            Proxy& operator=(Proxy&);
+            ClientProxy(const ClientProxy& con);
+            ClientProxy& operator=(ClientProxy&);
             
         #ifdef DBUSTL_NO_EXCEPTIONS
             inline void throw_or_set(const DBusException& error) {_error = error; };
@@ -49,21 +53,17 @@ namespace dbustl {
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
         #endif
             
-            DBusMessage* newMethodCall(const std::string& methodName);
+            template<typename T, typename... Args>            
+            inline bool processCall(Message& method_call, const T& invalue, const Args&... args);
 
             template<typename T, typename... Args>            
-            inline bool processCall(DBusMessage *method_call, DBusMessageIter *it, const T& invalue, const Args&... args);
+            inline bool processCall(Message& method_call, const T* invalue, const Args&... args);
 
             template<typename T, typename... Args>            
-            inline bool processCall(DBusMessage *method_call, DBusMessageIter *it, const T* invalue, const Args&... args);
+            inline bool processCall(Message& method_call, T* outvalue, const Args&... args);
 
-            template<typename T, typename... Args>            
-            inline bool processCall(DBusMessage *method_call, DBusMessageIter *it, T* outvalue, const Args&... args);
-
-            bool processCall(DBusMessage *method_call, DBusMessageIter *);
-      
-            DBusMessage* doBlockingCall(DBusMessage *method_call);
-      
+            bool processCall(Message& method_call);
+            
             Connection *_conn;
             std::string _path;
             std::string _destination;
@@ -73,68 +73,33 @@ namespace dbustl {
             DBusException _error;
         #endif
             bool _parsingInputArguments;
-
-            //Utility class: Handles DBusMessage refcounting automagically
-            class MessageContainer {
-                public:
-                    MessageContainer() { _msg = NULL; };
-
-                    MessageContainer(DBusMessage *msg) {_msg = msg; };
-
-                    MessageContainer(const MessageContainer& other) {
-                        if(other._msg) dbus_message_ref(other._msg);
-                        _msg = other._msg;
-                    };
-
-                    ~MessageContainer() { if(_msg) dbus_message_unref(_msg); };
-
-                    MessageContainer& operator=(MessageContainer& other) {
-                        if(other._msg) dbus_message_ref(other._msg);
-                        if(_msg) dbus_message_unref(_msg);
-                        _msg = other._msg;
-                        return *this;
-                    };
-                    
-                    MessageContainer& operator=(DBusMessage *msg) {
-                        if(_msg) dbus_message_unref(_msg);
-                        _msg = msg;
-                        return *this;
-                    };
-                    
-                    DBusMessage* dbus() { return _msg; };
-                    
-                private:
-                    DBusMessage *_msg;
-            };
     };
 
 
     template<typename... Args>
-    bool Proxy::call(const std::string& methodName, const Args&... args)
+    bool ClientProxy::call(const std::string& methodName, const Args&... args)
     {
-        DBusMessageIter append_iterator;
-        MessageContainer method_call(newMethodCall(methodName));
+        Message method_call(createMethodCall(methodName));
         
         if(!method_call.dbus()) {
             throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
         }
         
-        dbus_message_iter_init_append(method_call.dbus(), &append_iterator);
-        
         _parsingInputArguments = true;
-        return processCall(method_call.dbus(), &append_iterator, args...);
+        return processCall(method_call, args...);
     }
 
     template<typename T, typename... Args>            
-    bool Proxy::processCall(DBusMessage *method_call, DBusMessageIter *it, const T& invalue, const Args&... args)
+    bool ClientProxy::processCall(Message& method_call, const T& invalue, const Args&... args)
     {
         if(!_parsingInputArguments) {
           //Should definately not be here
           throw_or_set(DBUS_ERROR_NO_MEMORY, "Issue with arguments ordering");
           return false;
         }
-        if(serialize(it, invalue) == TRUE) {
-            return processCall(method_call, it, args...);
+        method_call << invalue;
+        if(method_call.isValid()) {
+            return processCall(method_call, args...);
         }
         else {
             return false;
@@ -142,15 +107,16 @@ namespace dbustl {
     }
 
     template<typename T, typename... Args>            
-    bool Proxy::processCall(DBusMessage *method_call, DBusMessageIter *it, const T* invalue, const Args&... args)
+    bool ClientProxy::processCall(Message& method_call, const T* invalue, const Args&... args)
     {
         if(!_parsingInputArguments) {
           //Should definately not be here
           throw_or_set(DBUS_ERROR_NO_MEMORY, "Issue with arguments ordering");
           return false;
         }
-        if(serialize(it, invalue) == TRUE) {
-            return processCall(method_call, it, args...);
+        method_call << invalue;
+        if(method_call.isValid()) {
+            return processCall(method_call, args...);
         }
         else {
             return false;
@@ -158,25 +124,23 @@ namespace dbustl {
     }
 
     template<typename T, typename... Args>            
-    bool Proxy::processCall(DBusMessage *msg, DBusMessageIter *it, T* outvalue, const Args&... args)
+    bool ClientProxy::processCall(Message& msg, T* outvalue, const Args&... args)
     {
-        MessageContainer reply;
         if(_parsingInputArguments) {
             _parsingInputArguments = false;
-            reply = doBlockingCall(msg);
-            if(reply.dbus()) {
+            Message reply(call(msg));
+            if(!reply.isNull()) {
                 //Overwrite message and iterator
-                msg = reply.dbus();
-                dbus_message_iter_init(msg, it);
+                msg = reply;
             }
             else {
                 return false;
             }
         }
         
-        if(deserialize(it, outvalue) == TRUE) {
-            dbus_message_iter_next(it);
-            return processCall(msg, it, args...);
+        msg >> outvalue;
+        if(msg.isValid()) {
+            return processCall(msg, args...);
         }
         else {
             return false;
@@ -184,5 +148,5 @@ namespace dbustl {
     }
 }
 
-#endif /* DBUSTL_PROXY */
+#endif /* DBUSTL_CLIENTPROXY */
 
