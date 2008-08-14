@@ -54,15 +54,20 @@ namespace dbustl {
         #endif
             
             template<typename T, typename... Args>            
-            inline void processCall(Message& method_call, const T& invalue, const Args&... args);
+            void processInArgs(Message& method_call, const T& invalue, const Args&... args);
 
             template<typename T, typename... Args>            
-            inline void processCall(Message& method_call, const T* invalue, const Args&... args);
+            void processInArgs(Message& method_call, const T* invalue, const Args&... args);
 
             template<typename T, typename... Args>            
-            inline void processCall(Message& method_call, T* outvalue, const Args&... args);
+            void processInArgs(Message& msg, T* outvalue, const Args&... args);
 
-            void processCall(Message& method_call);
+            void processInArgs(Message& msg);
+
+            template<typename T, typename... Args>            
+            void processOutArgs(Message& method_call, T* outvalue, const Args&... args);
+
+            void processOutArgs(Message& method_call);
             
             Connection *_conn;
             std::string _path;
@@ -70,7 +75,6 @@ namespace dbustl {
             std::string _interface;
             int _timeout; //call timeout in milliseconds, -1 means default
             DBusException _error;
-            bool _parsingInputArguments;
     };
 
 
@@ -84,53 +88,41 @@ namespace dbustl {
         }
         
         _error = DBusException();
-        _parsingInputArguments = true;
-        processCall(method_call, args...);
+        processInArgs(method_call, args...);
         return !_error.isSet();
     }
 
     template<typename T, typename... Args>            
-    void ClientProxy::processCall(Message& method_call, const T& invalue, const Args&... args)
+    void ClientProxy::processInArgs(Message& method_call, const T& invalue, const Args&... args)
     {
-        if(!_parsingInputArguments) {
-          //Should definately not be here
-          throw_or_set("TBD", "Issue with arguments ordering");
-          return;
-        }
         method_call << invalue;
-        processCall(method_call, args...);
+        processInArgs(method_call, args...);
     }
 
     template<typename T, typename... Args>            
-    void ClientProxy::processCall(Message& method_call, const T* invalue, const Args&... args)
+    void ClientProxy::processInArgs(Message& method_call, const T* invalue, const Args&... args)
     {
-        if(!_parsingInputArguments) {
-          //Should definately not be here
-          throw_or_set("TBD", "Issue with arguments ordering");
-          return;
-        }
         method_call << invalue;
-        processCall(method_call, args...);
+        processInArgs(method_call, args...);
     }
 
     template<typename T, typename... Args>            
-    void ClientProxy::processCall(Message& msg, T* outvalue, const Args&... args)
+    void ClientProxy::processInArgs(Message& msg, T* outvalue, const Args&... args)
     {
-        if(_parsingInputArguments) {
-            _parsingInputArguments = false;
-            Message reply(call(msg));
-            if(!reply.isNull()) {
-                //Overwrite message and iterator
-                msg = reply;
-            }
-            else {
-                return;
-            }
+        //All input arguments are consumed, process call now...
+        processInArgs(msg);
+        if(!_error.isSet()) {
+            processOutArgs(msg, outvalue, args...);
         }
-        
-        msg >> outvalue;
-        processCall(msg, args...);
     }
+
+    template<typename T, typename... Args>            
+    void ClientProxy::processOutArgs(Message& method_reply, T* outvalue, const Args&... args)
+    {
+        method_reply >> outvalue;
+        processOutArgs(method_reply, args...);
+    }
+
 }
 
 #endif /* DBUSTL_CLIENTPROXY */
