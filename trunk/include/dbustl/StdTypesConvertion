@@ -114,11 +114,85 @@ namespace dbustl {
     {
         return __serializeSignedIntegral<int>(it, arg);
     }
+    template<> dbus_bool_t deserialize<int>(DBusMessageIter* it, int* arg)
+    {
+        switch(dbus_message_iter_get_arg_type(it)) {
+        case DBUS_TYPE_BYTE: {
+            unsigned char d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_INT16: {
+            int16_t d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_UINT16: {
+            if(sizeof(int) >= 4) {
+                int16_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_INT32: {
+            if(sizeof(int) >= 4) {
+                int32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        default:
+            return FALSE;
+        };
+    }
 
     /* unsigned int */
     template<> dbus_bool_t serialize<unsigned int>(DBusMessageIter* it, const unsigned int& arg)
     {
         return __serializeUnsignedIntegral<unsigned int>(it, arg);
+    }
+    template<> dbus_bool_t deserialize<unsigned int>(DBusMessageIter* it, unsigned int* arg)
+    {
+        switch(dbus_message_iter_get_arg_type(it)) {
+        case DBUS_TYPE_BYTE: {
+            unsigned char d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_INT16: {
+            int16_t d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_UINT16: {
+            if(sizeof(int) >= 4) {
+                int16_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT32: {
+            if(sizeof(int) >= 4) {
+                uint32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        default:
+            return FALSE;
+        };
     }
 
     /* long */
