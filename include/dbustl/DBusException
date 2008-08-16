@@ -13,7 +13,7 @@ class DBusException : public std::exception {
         DBusException() throw();
 
         //Creates Exception object from a DBUS exception name -- THOSE MUST BE STATICALLY ALLOCATED STRINGS
-        DBusException(const char *name, const char *description) throw();
+        DBusException(const std::string& name, const std::string& description) throw();
 
         //Copy constructor: special care must be taken
         DBusException(const DBusException& e) throw();
