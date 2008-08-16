@@ -151,7 +151,7 @@ namespace dbustl {
         else {
             std::stringstream ss;
             ss << "Unable to deserialize return parameter at index " << method_reply.parsedArguments() - 1;
-            throw_or_set("TBD", ss.str().c_str());
+            throw_or_set("org.dbustl.ReturnParameterError", ss.str().c_str());
         }
     }
 

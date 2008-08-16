@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 usage = """Usage:
-python example-service.py &
-python example-client.py
-python example-async-client.py
-python example-client.py --exit-service
+python example-service.py
 """
 
 # Copyright (C) 2004-2006 Red Hat Inc. <http://www.redhat.com/>
@@ -42,6 +39,11 @@ class DemoException(dbus.DBusException):
 class SomeObject(dbus.service.Object):
 
     @dbus.service.method("com.example.SampleInterface",
+                         in_signature='', out_signature='')
+    def SimpleProc(self):
+        pass;
+
+    @dbus.service.method("com.example.SampleInterface",
                          in_signature='s', out_signature='s')
     def SimpleHello(self, hello_message):
         print (str(hello_message))
@@ -53,6 +55,31 @@ class SomeObject(dbus.service.Object):
         print (str(hello_message))
         return ["Hello", " from example-service.py", "with unique name",
                 session_bus.get_unique_name()]
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='b', out_signature='b')
+    def test_boolean(self, b):
+        return True;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='y', out_signature='y')
+    def test_byte(self, b):
+        return b + 1;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='n', out_signature='n')
+    def test_int16(self, b):
+        return b - 1;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='q', out_signature='q')
+    def test_uint16(self, b):
+        return b + 1;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='d', out_signature='d')
+    def test_double(self, b):
+        return b;
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='')

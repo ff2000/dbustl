@@ -8,10 +8,10 @@ DBusException::DBusException() throw()
     dbus_error_init(&_dbusError);
 }
 
-DBusException::DBusException(const char *name, const char *message) throw()
+DBusException::DBusException(const std::string& name, const std::string& message) throw()
 {
     dbus_error_init(&_dbusError);
-    dbus_set_error_const(&_dbusError, name, message);
+    dbus_set_error(&_dbusError, name.c_str(), "%s", message.c_str());
 }
 
 //Copy constructor: special care must be taken
