@@ -1,6 +1,7 @@
 #ifndef DBUSTL_MESSAGE
 #define DBUSTL_MESSAGE
 
+#include <iostream>
 #include <dbus/dbus.h>
 
 #include <cassert>
@@ -31,12 +32,15 @@ namespace dbustl {
             
             bool isValid() const { return _valid; };
             
+            int parsedArguments() const { return _parsedArguments; };
+            
             DBusMessage* dbus() { return _msg; };
             
         private:
             DBusMessage *_msg;
             bool _valid;
             bool _iteratorInitialized;
+            int _parsedArguments;
             DBusMessageIter _it;
     };
 
@@ -69,14 +73,21 @@ namespace dbustl {
         }
 
         //If we are past the end, we mark the message as invalid
-        if(dbus_message_iter_get_arg_type(&_it) != DBUS_TYPE_INVALID) {
+        int arg_type = dbus_message_iter_get_arg_type(&_it);
+        if(arg_type != DBUS_TYPE_INVALID) {
             if(_valid) {
                 _valid = (deserialize(&_it, outarg) == TRUE);
+                if(!_valid) {
+                    std::cerr << "The received DBUS format '" << (char)arg_type 
+                    << "' is not compatible with the return argument at index " 
+                    << _parsedArguments << std::endl;
+                }
             }
         }
         else {
             _valid = false;
         }
+        _parsedArguments++;
         return *this;
     }
 
