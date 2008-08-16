@@ -103,6 +103,91 @@ int main()
     }
     
     try {
+        std::cout << ">uint32 parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        unsigned int in = (2^32) - 1;
+        unsigned int out;
+        pythonServerProxy.call("test_uint32", in, &out); 
+        assert(in == (out - 1));            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">int32 parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        int in = 0;
+        int out;
+        pythonServerProxy.call("test_int32", in, &out); 
+        assert(in == (out + 1));            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">uint64 parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        unsigned long long in = (2^64) - 1;
+        unsigned long long out;
+        pythonServerProxy.call("test_uint64", in, &out); 
+        assert(in == (out - 1));            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">int64 parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        long long in = 0;
+        long long out;
+        pythonServerProxy.call("test_int64", in, &out); 
+        assert(in == (out + 1));            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    
+    try {
+        std::cout << ">unsigned long parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        unsigned long in = (2^32) - 1;
+        unsigned long out;
+        pythonServerProxy.call("test_uint32", in, &out); 
+        assert(in == (out - 1));            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">long parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        long in = 0;
+        long out;
+        pythonServerProxy.call("test_int32", in, &out); 
+        assert(in == (out + 1));            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
         std::cout << ">double parameter passing" << std::endl;
         dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");

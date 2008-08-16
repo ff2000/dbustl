@@ -77,6 +77,26 @@ class SomeObject(dbus.service.Object):
         return b + 1;
 
     @dbus.service.method("com.example.SampleInterface",
+                         in_signature='i', out_signature='i')
+    def test_int32(self, b):
+        return b - 1;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='u', out_signature='u')
+    def test_uint32(self, b):
+        return b + 1;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='x', out_signature='x')
+    def test_int64(self, b):
+        return b - 1;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='t', out_signature='t')
+    def test_uint64(self, b):
+        return b + 1;
+
+    @dbus.service.method("com.example.SampleInterface",
                          in_signature='d', out_signature='d')
     def test_double(self, b):
         return b;

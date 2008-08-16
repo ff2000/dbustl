@@ -13,7 +13,7 @@ namespace dbustl {
     
     //helper functions
     template<typename T> 
-    inline bool __serializeSignedIntegral(DBusMessageIter* it, const T& arg)
+    inline dbus_bool_t __serializeSignedIntegral(DBusMessageIter* it, const T& arg)
     {
         int dbus_type = DBUS_TYPE_INVALID;
         switch(sizeof(arg)) {
@@ -33,12 +33,12 @@ namespace dbustl {
             return dbus_message_iter_append_basic(it, dbus_type, &arg);
         }
         else {
-            return false;
+            return FALSE;
         }
     }
 
     template<typename T> 
-    inline bool __serializeUnsignedIntegral(DBusMessageIter* it, const T& arg)
+    inline dbus_bool_t __serializeUnsignedIntegral(DBusMessageIter* it, const T& arg)
     {
         int dbus_type = DBUS_TYPE_INVALID;
         switch(sizeof(arg)) {
@@ -61,10 +61,109 @@ namespace dbustl {
             return dbus_message_iter_append_basic(it, dbus_type, &arg);
         }
         else {
-            return false;
+            return FALSE;
         }
     }
     
+    template<typename T> 
+    inline dbus_bool_t __deserializeSignedIntegral(DBusMessageIter* it, T* arg)
+    {
+        switch(dbus_message_iter_get_arg_type(it)) {
+        case DBUS_TYPE_BYTE: {
+            unsigned char d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_INT16: {
+            int16_t d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_UINT16: {
+            if(sizeof(T) >= 4) {
+                int16_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_INT32: {
+            if(sizeof(T) >= 4) {
+                int32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT32: {
+            if(sizeof(T) >= 8) {
+                uint32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_INT64: {
+            if(sizeof(T) >= 8) {
+                int64_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        default:
+            return FALSE;
+        };
+    }
+
+    template<typename T> 
+    inline dbus_bool_t __deserializeUnsignedIntegral(DBusMessageIter* it, T* arg)
+    {
+        switch(dbus_message_iter_get_arg_type(it)) {
+        case DBUS_TYPE_BYTE: {
+            unsigned char d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_UINT16: {
+            if(sizeof(T) >= 2) {
+                int16_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT32: {
+            if(sizeof(T) >= 4) {
+                uint32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT64: {
+            if(sizeof(T) >= 8) {
+                uint64_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        default:
+            return FALSE;
+        };
+    }
+
     /* bool */
     template<> dbus_bool_t serialize<bool>(DBusMessageIter* it, const bool& arg)
     {
@@ -112,22 +211,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<short>(DBusMessageIter* it, short* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeSignedIntegral<short>(it, arg);
     }
 
     /* unsigned short */
@@ -137,22 +221,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<unsigned short>(DBusMessageIter* it, unsigned short* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            uint16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeUnsignedIntegral<unsigned short>(it, arg);
     }
 
     /* int */
@@ -162,40 +231,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<int>(DBusMessageIter* it, int* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            if(sizeof(*arg) >= 4) {
-                int16_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        case DBUS_TYPE_INT32: {
-            if(sizeof(*arg) >= 4) {
-                int32_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeSignedIntegral<int>(it, arg);
     }
 
     /* unsigned int */
@@ -205,40 +241,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<unsigned int>(DBusMessageIter* it, unsigned int* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            if(sizeof(*arg) >= 4) {
-                int16_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        case DBUS_TYPE_UINT32: {
-            if(sizeof(*arg) >= 4) {
-                uint32_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeUnsignedIntegral<unsigned int>(it, arg);
     }
 
     /* long */
@@ -248,40 +251,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<long>(DBusMessageIter* it, long* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            if(sizeof(*arg) >= 4) {
-                int16_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        case DBUS_TYPE_INT32: {
-            if(sizeof(*arg) >= 4) {
-                int32_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeSignedIntegral<long>(it, arg);
     }
 
     /* unsigned long */
@@ -291,40 +261,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<unsigned long>(DBusMessageIter* it, unsigned long* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            if(sizeof(*arg) >= 4) {
-                int16_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        case DBUS_TYPE_UINT32: {
-            if(sizeof(*arg) >= 4) {
-                uint32_t d;          
-                dbus_message_iter_get_basic(it, &d);
-                *arg = d;
-                return TRUE;
-            }
-            return FALSE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeUnsignedIntegral<unsigned long>(it, arg);
     }
 
     /* long long */
@@ -334,46 +271,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<long long>(DBusMessageIter* it, long long* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT32: {
-            int32_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT32: {
-            uint32_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT64: {
-            int64_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeSignedIntegral<long long>(it, arg);
     }
 
     /* unsigned long long */
@@ -383,52 +281,7 @@ namespace dbustl {
     }
     template<> dbus_bool_t deserialize<unsigned long long>(DBusMessageIter* it, unsigned long long* arg)
     {
-        switch(dbus_message_iter_get_arg_type(it)) {
-        case DBUS_TYPE_BYTE: {
-            unsigned char d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT16: {
-            int16_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT32: {
-            int32_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT32: {
-            uint32_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_INT64: {
-            int64_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        case DBUS_TYPE_UINT64: {
-            uint64_t d;          
-            dbus_message_iter_get_basic(it, &d);
-            *arg = d;
-            return TRUE;
-        }
-        default:
-            return FALSE;
-        };
+        return __deserializeUnsignedIntegral<unsigned long long>(it, arg);
     }
 
     /* float - on way only */
