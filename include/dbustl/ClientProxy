@@ -40,6 +40,15 @@ namespace dbustl {
             Message createMethodCall(const std::string& methodName) const;
             Message call(Message& method_call);
 
+            //Helper class 
+            class Interface {
+            public:    
+                Interface(std::string name) : _name(name) {};
+                const std::string& name() const { return _name; };
+            private:
+                std::string _name;
+            };
+
         private:
             //Disallow the following constructs
             ClientProxy(const ClientProxy& con);
@@ -53,17 +62,25 @@ namespace dbustl {
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
         #endif
             
+            //This method processes input arguments of the form const T&
             template<typename T, typename... Args>            
             void processInArgs(Message& method_call, const T& invalue, const Args&... args);
 
+            //This method processes input arguments of the form const T*
             template<typename T, typename... Args>            
             void processInArgs(Message& method_call, const T* invalue, const Args&... args);
 
+            //This method processes Interface input argument
+            template<typename... Args>            
+            void processInArgs(Message& method_call, const Interface& intf, const Args&... args);
+
+            //This method gets called when all arguments are processed
             template<typename T, typename... Args>            
             void processInArgs(Message& msg, T* outvalue, const Args&... args);
 
             void processInArgs(Message& msg);
 
+            //This method processes output arguments of the form T*
             template<typename T, typename... Args>            
             void processOutArgs(Message& method_call, T* outvalue, const Args&... args);
 
@@ -114,6 +131,13 @@ namespace dbustl {
         if(!_error.isSet()) {
             processOutArgs(msg, outvalue, args...);
         }
+    }
+
+    template<typename... Args>            
+    void ClientProxy::processInArgs(Message& method_call, const Interface& intf, const Args&... args)
+    {
+        dbus_message_set_interface(method_call.dbus(), intf.name().c_str());
+        processInArgs(method_call, args...);
     }
 
     template<typename T, typename... Args>            
