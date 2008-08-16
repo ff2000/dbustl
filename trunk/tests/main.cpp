@@ -13,13 +13,12 @@ int main()
     dbus_connection_setup_with_g_main(conn->dbus(), NULL);
     try {
         dbustl::ClientProxy bluezManager(conn, "/org/bluez", "org.bluez");        
-        bluezManager.setInterface("org.bluez.Manager");
 
         std::string foundService;
-        bluezManager.call("FindService", "audio", &foundService);
+        bluezManager.call("FindService", dbustl::ClientProxy::Interface("org.bluez.Manager"), "audio", &foundService);
         std::cout << foundService << std::endl;
 
-        bluezManager.call("InterfaceVersion");
+        //bluezManager.call("InterfaceVersion");
     }
     catch(...) {
       delete conn;
