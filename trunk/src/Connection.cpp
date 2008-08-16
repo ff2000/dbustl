@@ -4,26 +4,32 @@
 
 namespace dbustl {
 
+class ConnectionInitializer {
+    ~ConnectionInitializer() {
+        Connection::cleanup();  
+    };
+    static ConnectionInitializer _static;
+};
+
+ConnectionInitializer ConnectionInitializer::_static;
+
+Connection* Connection::_system;
+Connection* Connection::_session;
+
 Connection* Connection::systemBus()
 {
-    DBusConnection *c = dbus_bus_get(DBUS_BUS_SYSTEM, 0);
-    if(c) {
-        return new Connection(c);
+    if(!_system) {
+        _system = new Connection(DBUS_BUS_SYSTEM);
     }
-    else {
-        return NULL;
-    }
+    return _system;
 }
 
 Connection* Connection::sessionBus()
 {
-    DBusConnection *c = dbus_bus_get(DBUS_BUS_SESSION, 0);
-    if(c) {
-        return new Connection(c);
+    if(!_session) {
+        _session = new Connection(DBUS_BUS_SESSION);
     }
-    else {
-        return NULL;
-    }
+    return _session;
 }
 
 DBusConnection * Connection::dbus()
@@ -31,14 +37,22 @@ DBusConnection * Connection::dbus()
     return _llconn;
 }
 
-Connection::Connection(DBusConnection* llconn)
+Connection::Connection(DBusBusType bustype)
 {
-    _llconn = llconn;
+    _llconn = dbus_bus_get_private(bustype, 0);
 }
 
 Connection::~Connection()
 {
+    dbus_connection_close(_llconn);
     dbus_connection_unref(_llconn);
+}
+
+void Connection::cleanup() {
+    delete _system;
+    _system = 0;
+    delete _session;
+    _session = 0;
 }
 
 }

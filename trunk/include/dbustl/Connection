@@ -7,25 +7,37 @@
 
 namespace dbustl {
 
+   class ConnectionInitializer;
+
    class Connection {
         public:
+            //Return a singleton to the system BUS. Do not destroy it
             static Connection * systemBus();
+            //Return a singleton to the session BUS. Do not destroy it
             static Connection * sessionBus();
 
+            //Creates a new dedicated connection on the given bus.
+            Connection(DBusBusType bustype);
             ~Connection();
 
             //Should ne be used, reserved for internal use
             DBusConnection * dbus();
 
         private:
-            Connection(DBusConnection* llconn);
-
             //Disallow construct that would bypass the static initializers
             Connection(const Connection& con);
             Connection& operator=(Connection&);
         
             //Low level connection
             DBusConnection *_llconn;
+            //globally shared System bus connection
+            static Connection *_system;
+            //globally shared Session bus connection
+            static Connection *_session;
+            
+            //To be called by ConnectionInitializer only
+            friend class ConnectionInitializer;
+            static void cleanup();
     };
 
 }
