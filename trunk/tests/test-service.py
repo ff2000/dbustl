@@ -99,6 +99,11 @@ class SomeObject(dbus.service.Object):
         return array;
 
     @dbus.service.method("com.example.SampleInterface",
+                         in_signature='ai', out_signature='ai')
+    def test_array_of_int(self, array):
+        return array;
+
+    @dbus.service.method("com.example.SampleInterface",
                          in_signature='aai', out_signature='aai')
     def test_array_of_array_of_integer(self, array):
         return array;

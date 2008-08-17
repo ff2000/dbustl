@@ -231,6 +231,10 @@ namespace dbustl {
     {
         return __dbustlPreferedSignedIntegralType<int>();
     }
+    template<> dbus_bool_t serialize(DBusMessageIter* it, const int& arg)
+    {
+        return dbus_message_iter_append_basic(it, dbustlPreferedType<int>(), &arg);
+    }
     template<> dbus_bool_t deserialize<int>(DBusMessageIter* it, int* arg)
     {
         return __deserializeSignedIntegral<int>(it, arg);
@@ -338,6 +342,8 @@ namespace dbustl {
         return TRUE;
     }
 
+    /* Containers section */
+
     /* Containers helpers */
     // Default implementation : valid for basic types only
     template <typename T> std::string __dbustlGenerateSignature(T&)
@@ -353,7 +359,7 @@ namespace dbustl {
         T element;
         return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbustlGenerateSignature(element);
     }
-    
+        
     template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const std::list<T>& arg)
     {
         typename std::list<T>::const_iterator containerIter;
@@ -370,6 +376,7 @@ namespace dbustl {
         
         return dbus_message_iter_close_container(it, &subIterator);
     }
+    
     template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
     {
         DBusMessageIter subIterator;
@@ -379,11 +386,53 @@ namespace dbustl {
         
         dbus_message_iter_recurse(it, &subIterator);
         while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
-            T temporary;
-            if(deserialize(&subIterator, &temporary) == FALSE) {
+            arg->push_back(T());
+            if(deserialize(&subIterator, &arg->back()) == FALSE) {
                 return FALSE;
             }
-            arg->push_back(temporary);
+            dbus_message_iter_next(&subIterator);
+        }
+        
+        return TRUE;
+    }
+
+    /* std::vector */
+    template <typename T> std::string __dbustlGenerateSignature(std::vector<T>&)
+    {
+        T element;
+        return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbustlGenerateSignature(element);
+    }
+        
+    template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const std::vector<T>& arg)
+    {
+        typename std::vector<T>::const_iterator containerIter;
+        DBusMessageIter subIterator;
+        T element;
+        if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+          __dbustlGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+            return FALSE;
+        }
+        
+        for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+            if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+        }
+        
+        return dbus_message_iter_close_container(it, &subIterator);
+    }
+    
+    template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
+    {
+        DBusMessageIter subIterator;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+            return FALSE;
+        }
+        
+        dbus_message_iter_recurse(it, &subIterator);
+        while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+            arg->push_back(T());
+            if(deserialize(&subIterator, &arg->back()) == FALSE) {
+                return FALSE;
+            }
             dbus_message_iter_next(&subIterator);
         }
         
