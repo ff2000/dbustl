@@ -46,15 +46,7 @@ class SomeObject(dbus.service.Object):
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='s', out_signature='s')
     def SimpleHello(self, hello_message):
-        print (str(hello_message))
         return hello_message;
-
-    @dbus.service.method("com.example.SampleInterface",
-                         in_signature='s', out_signature='as')
-    def HelloWorld(self, hello_message):
-        print (str(hello_message))
-        return ["Hello", " from example-service.py", "with unique name",
-                session_bus.get_unique_name()]
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='b', out_signature='b')
@@ -100,6 +92,16 @@ class SomeObject(dbus.service.Object):
                          in_signature='d', out_signature='d')
     def test_double(self, b):
         return b;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='as', out_signature='as')
+    def test_array_of_string(self, array):
+        return array;
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='aai', out_signature='aai')
+    def test_array_of_array_of_integer(self, array):
+        return array;
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='')
