@@ -231,11 +231,51 @@ int main()
     }
     
     try {
+        std::cout << ">Array of int " << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::list<int32_t> in, out;
+        in.push_back(1);
+        in.push_back(2);
+        in.push_back(3);
+        pythonServerProxy.call("test_array_of_int", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
         std::cout << ">Array of array of integers " << std::endl;
         dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<std::list<int32_t> > in, out;
         std::list<int32_t> l1, l2, l3;
+        l1.push_back(1);
+        l1.push_back(2);
+        l2.push_back(3);
+        l2.push_back(4);
+        l3.push_back(5);
+        l3.push_back(6);
+        in.push_back(l1);
+        in.push_back(l2);
+        in.push_back(l3);
+
+        pythonServerProxy.call("test_array_of_array_of_integer", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">Array as vector" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::vector<std::vector<int32_t> > in, out;
+        std::vector<int32_t> l1, l2, l3;
         l1.push_back(1);
         l1.push_back(2);
         l2.push_back(3);
