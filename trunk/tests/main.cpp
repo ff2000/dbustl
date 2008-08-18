@@ -1,4 +1,5 @@
 #include <dbustl.h>
+#include <dbustl/GlibMainLoopIntegration>
 
 #include <iostream>
 #include <string>
@@ -6,6 +7,7 @@
 
 int main()
 {    
+    dbustl::Connection::useMainLoop(dbustl::GlibMainLoopIntegration());    
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     bool exception_thrown;
     
@@ -327,6 +329,6 @@ int main()
         std::cerr << "No exception thrown !!" << std::endl;
         return 1;
     }
-
+  
     return 0;
 }

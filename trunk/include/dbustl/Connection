@@ -3,11 +3,13 @@
 
 #include <dbus/dbus.h>
 
-#include <string>
+#include <memory>
 
 namespace dbustl {
 
    class ConnectionInitializer;
+   
+   class MainLoopIntegration;
 
    class Connection {
         public:
@@ -16,8 +18,18 @@ namespace dbustl {
             //Return a singleton to the session BUS. Do not destroy it
             static Connection * sessionBus();
 
+            //Specifies the Main Loop (Glib, Qt, others, ...) in which to integrate
+            //the newly created connections
+            //May be called more than once
+            static void useMainLoop(const MainLoopIntegration& mainloop);
+
             //Creates a new dedicated connection on the given bus.
             Connection(DBusBusType bustype);
+            //Creates a new dedicated connection on the given bus. Specifies in which main loop
+            //to process received messages
+            Connection(DBusBusType bustype, 
+              std::auto_ptr<MainLoopIntegration> mainLoop);
+            
             ~Connection();
 
             //Should ne be used, reserved for internal use
@@ -30,11 +42,16 @@ namespace dbustl {
         
             //Low level connection
             DBusConnection *_llconn;
+            //Mainloop used for this connection
+            std::auto_ptr<MainLoopIntegration> _mainLoop;
+            
             //globally shared System bus connection
             static Connection *_system;
             //globally shared Session bus connection
             static Connection *_session;
-            
+            //default main loop
+            static std::auto_ptr<MainLoopIntegration> _defaultMainLoop;
+                        
             //To be called by ConnectionInitializer only
             friend class ConnectionInitializer;
             static void cleanup();

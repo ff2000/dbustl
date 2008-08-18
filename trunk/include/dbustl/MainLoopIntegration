@@ -1,0 +1,32 @@
+#ifndef DBUSTL_MAINLOOPINTEGRATION
+#define DBUSTL_MAINLOOPINTEGRATION
+
+namespace dbustl {
+
+    class Connection;
+
+    //This is an abstract base call for integration of dbustl into native toolkits (Glib, Qt, ...)
+    class MainLoopIntegration {
+        public:
+            virtual ~MainLoopIntegration() {};
+            //Virtual constructor : builds an MainLoopIntegration object with the same
+            //characteristics as this one (same integration method, same thread, same everything ...)
+            virtual MainLoopIntegration* construct() const = 0;
+            //Associates this MainLoopIntegration object with the given DBus connection
+            //A MainLoopIntegration object can only be associated with one Connection at a time : 
+            //this method must be called exactly once
+            virtual void connect(Connection* conn) = 0;
+
+        protected:
+            //Constructor for children
+            MainLoopIntegration() {};
+
+        private:
+            //forbidden methods
+            MainLoopIntegration(const MainLoopIntegration&);
+            MainLoopIntegration& operator=(MainLoopIntegration&);
+    };
+
+}
+
+#endif /* DBUSTL_MAINLOOPINTEGRATION */

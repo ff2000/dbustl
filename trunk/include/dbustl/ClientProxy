@@ -19,7 +19,7 @@ namespace dbustl {
             // Path the object path we target
             // destination is only required if this connection talks to a message bus
             // In this case it must contain the name of the connection this message is intended for,
-            // otherwise givin the connection object is enough
+            // otherwise giving the object path is enough
             ClientProxy(Connection* conn, const std::string& path, const std::string& destination = "");
 
             // For synchronous blocking calls, set the timeout to val.
