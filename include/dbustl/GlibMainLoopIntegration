@@ -1,0 +1,34 @@
+#ifndef DBUSTL_GLIBMAINLOOPINTEGRATION
+#define DBUSTL_GLIBMAINLOOPINTEGRATION
+
+#include <dbustl/MainLoopIntegration>
+
+#include <glib.h>
+
+namespace dbustl {
+
+    class Connection;
+
+    class GlibMainLoopIntegration : public MainLoopIntegration {
+        public:
+            GlibMainLoopIntegration(GMainContext *ctxt = g_main_context_default());
+            virtual ~GlibMainLoopIntegration();
+            //Virtual constructor : builds an MainLoopIntegration object with the same
+            //characteristics as this one (same integration method, same thread, same everything ...)
+            virtual MainLoopIntegration* construct() const;
+            //Associates this MainLoopIntegration object with the given DBus connection
+            //A MainLoopIntegration object can only be associated with one Connection at a time : 
+            //this method must be called exactly once
+            virtual void connect(Connection* conn);
+
+        private:
+            //forbidden methods
+            GlibMainLoopIntegration(const GlibMainLoopIntegration&);
+            GlibMainLoopIntegration& operator=(GlibMainLoopIntegration&);
+            
+            GMainContext *_ctxt;
+    };
+
+}
+
+#endif /* DBUSTL_GLIBMAINLOOPINTEGRATION */
