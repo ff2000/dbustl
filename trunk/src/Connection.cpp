@@ -24,7 +24,6 @@ void Connection::useMainLoop(const MainLoopIntegration& mainloop)
     _defaultMainLoop = std::auto_ptr<MainLoopIntegration>(mainloop.construct());
 }
 
-
 Connection* Connection::systemBus()
 {
     if(!_system) {
@@ -41,7 +40,7 @@ Connection* Connection::sessionBus()
     return _session;
 }
 
-DBusConnection * Connection::dbus()
+DBusConnection* Connection::dbus()
 {
     return _llconn;
 }
