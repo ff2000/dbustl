@@ -39,6 +39,9 @@ DBusConnection * Connection::dbus()
 
 Connection::Connection(DBusBusType bustype)
 {
+    //As per DBUS documentation, it is safe to call it more than once. 
+    //Calls other than the first one are ignored
+    dbus_threads_init_default();
     _llconn = dbus_bus_get_private(bustype, 0);
 }
 
@@ -53,6 +56,8 @@ void Connection::cleanup() {
     _system = 0;
     delete _session;
     _session = 0;
+    //Release all memory allocated internally by dbus library
+    dbus_shutdown();
 }
 
 }
