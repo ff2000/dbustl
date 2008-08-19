@@ -11,7 +11,7 @@ namespace dbustl {
 
     class GlibMainLoopIntegration : public MainLoopIntegration {
         public:
-            GlibMainLoopIntegration(GMainContext *ctxt = g_main_context_default());
+            GlibMainLoopIntegration(GMainContext *ctxt = 0);
             virtual ~GlibMainLoopIntegration();
             //Virtual constructor : builds an MainLoopIntegration object with the same
             //characteristics as this one (same integration method, same thread, same everything ...)

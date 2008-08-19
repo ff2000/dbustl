@@ -7,6 +7,9 @@ namespace dbustl {
 
 GlibMainLoopIntegration::GlibMainLoopIntegration(GMainContext *ctxt) : _ctxt(ctxt)
 {
+    if(!_ctxt) {
+        _ctxt = g_main_context_default();
+    }
     g_main_context_ref(_ctxt);
 }
 
