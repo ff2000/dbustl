@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-#include <glibmm.h>
 
 int main()
 {    
