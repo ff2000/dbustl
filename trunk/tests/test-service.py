@@ -32,6 +32,7 @@ import gobject
 import dbus
 import dbus.service
 import dbus.mainloop.glib
+from os import system
 
 class DemoException(dbus.DBusException):
     _dbus_error_name = 'com.example.DemoException'
@@ -41,72 +42,78 @@ class SomeObject(dbus.service.Object):
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='')
     def SimpleProc(self):
-        pass;
+        pass
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='s', out_signature='s')
     def SimpleHello(self, hello_message):
-        return hello_message;
+        return hello_message
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='b', out_signature='b')
     def test_boolean(self, b):
-        return True;
+        return True
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='y', out_signature='y')
     def test_byte(self, b):
-        return b + 1;
+        return b + 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='n', out_signature='n')
     def test_int16(self, b):
-        return b - 1;
+        return b - 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='q', out_signature='q')
     def test_uint16(self, b):
-        return b + 1;
+        return b + 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='i', out_signature='i')
     def test_int32(self, b):
-        return b - 1;
+        return b - 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='u', out_signature='u')
     def test_uint32(self, b):
-        return b + 1;
+        return b + 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='x', out_signature='x')
     def test_int64(self, b):
-        return b - 1;
+        return b - 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='t', out_signature='t')
     def test_uint64(self, b):
-        return b + 1;
+        return b + 1
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='d', out_signature='d')
     def test_double(self, b):
-        return b;
+        return b
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='as', out_signature='as')
     def test_array_of_string(self, array):
-        return array;
+        return array
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='ai', out_signature='ai')
     def test_array_of_int(self, array):
-        return array;
+        return array
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='aai', out_signature='aai')
     def test_array_of_array_of_integer(self, array):
-        return array;
+        return array
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='', out_signature='')
+    def test_sleep_2s(self):
+        system("sleep 2")
+        return
 
     @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='')
