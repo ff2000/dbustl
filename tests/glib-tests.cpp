@@ -5,26 +5,44 @@
 #include <functional>
 #include <string>
 #include <cassert>
+#include <glibmm.h>
+
+#include <dbus/dbus-glib-lowlevel.h>
+
+Glib::RefPtr<Glib::MainLoop> mainloop;
 
 class UserFunctorCallback : public std::binary_function<dbustl::Message, dbustl::DBusException, void> {
 public:
-    void operator()(const dbustl::Message&, const dbustl::DBusException&) {
+    void operator()(dbustl::Message& m, const dbustl::DBusException& e) {
+        std::string stringReturn;
         std::cout << "FunctorCallback: Call completed" << std::endl;
+        assert(!e.isSet());
+        m >> stringReturn;
+        assert(stringReturn == "Hi");        
     };
 };
 
 class UserMethodCallback {
 public:
-    void method(const dbustl::Message&, const dbustl::DBusException&) {
+    void method(dbustl::Message& m, const dbustl::DBusException& e) {
+        std::string stringReturn;
         std::cout << "UserMethodCallback::method: Call completed" << std::endl;
-    }
-    void constMethod(const dbustl::Message&, const dbustl::DBusException&) const {
-        std::cout << "UserMethodCallback::constMethod: Call completed" << std::endl;
+        assert(!e.isSet());
+        m >> stringReturn;
+        assert(stringReturn == "Hi");        
     }
 };
 
-void userFunctionCallback(const dbustl::Message&, const dbustl::DBusException&) {
+void userFunctionCallback(dbustl::Message& m, const dbustl::DBusException& e) {
+    std::string stringReturn;
     std::cout << "functionCallback: Call completed" << std::endl;
+    assert(!e.isSet());
+    m >> stringReturn;
+    assert(stringReturn == "Hi");        
+}
+
+void stopCallback(dbustl::Message&, const dbustl::DBusException&) {
+    mainloop->quit();
 }
 
 int main()
@@ -32,6 +50,13 @@ int main()
     dbustl::Connection::useMainLoop(dbustl::GlibMainLoopIntegration());    
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     UserMethodCallback object;
+
+    //FIXME : to be removed
+    dbus_connection_setup_with_g_main(session->dbus(), NULL);
+    
+    //TODO: timeout handling
+
+    mainloop = Glib::MainLoop::create();
     
     try {
         std::cout << ">Basis asynchronous call : Functor callback" << std::endl;
@@ -66,5 +91,17 @@ int main()
         return 1;
     }
 
+    try {
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        pythonServerProxy.asyncCall("SimpleHello", &stopCallback); 
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    mainloop->run();
+    mainloop.reset();
     return 0;
 }
