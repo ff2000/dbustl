@@ -68,8 +68,6 @@ int main()
     //FIXME : to be removed
     dbus_connection_setup_with_g_main(session->dbus(), NULL);
     
-    //TODO: timeout handling
-
     mainloop = Glib::MainLoop::create();
     
     try {
