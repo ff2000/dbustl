@@ -1,5 +1,4 @@
-#include <dbustl.h>
-#include <dbustl/GlibMainLoopIntegration>
+#include <dbustl/Glib>
 
 #include <iostream>
 #include <string>
