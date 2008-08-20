@@ -110,6 +110,11 @@ class SomeObject(dbus.service.Object):
         return array
 
     @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{is}', out_signature='a{is}')
+    def test_dict_of_integer_string(self, dict):
+        return dict
+
+    @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='')
     def test_sleep_2s(self):
         system("sleep 2")
