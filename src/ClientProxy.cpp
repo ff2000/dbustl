@@ -40,7 +40,7 @@ void ClientProxy::processInArgs(Message& msg)
         }
     }
     else {
-        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send DBUS message");
     }
 }
 

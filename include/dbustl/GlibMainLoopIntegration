@@ -18,7 +18,7 @@ namespace dbustl {
             virtual MainLoopIntegration* construct() const;
             //Associates this MainLoopIntegration object with the given DBus connection
             //A MainLoopIntegration object can only be associated with one Connection at a time : 
-            //this method must be called exactly once
+            //this method will be called exactly once
             virtual void connect(Connection* conn);
 
         private:
