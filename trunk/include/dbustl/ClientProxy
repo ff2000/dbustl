@@ -47,11 +47,11 @@ namespace dbustl {
             
             //Asynchronous call : pointer to function version
             template<typename... Args>
-            inline bool asyncCall(const std::string& methodName, void (*callback)(const Message&, const DBusException&), const Args&... args);
+            inline bool asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args);
             
             //Asynchronous call : pointer to member version
             template<typename _Class, typename... Args>
-            inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(const Message&, const DBusException&), _Class *c, const Args&... args);
+            inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args);
             
             template<typename MethodCallback>
             void asyncCall(Message& method_call, const MethodCallback& callback);
@@ -215,13 +215,13 @@ namespace dbustl {
     }
     
     template<typename... Args>
-    bool ClientProxy::asyncCall(const std::string& methodName, void (*callback)(const Message&, const DBusException&), const Args&... args)
+    bool ClientProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
     {
         return asyncCall(methodName, std::ptr_fun(callback), args...);
     }
 
     template<typename _Class, typename... Args>
-    bool ClientProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(const Message&, const DBusException&), _Class *c, const Args&... args)
+    bool ClientProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
     {
         return asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
     }
@@ -288,8 +288,6 @@ namespace dbustl {
 
         //call user function
         (*callback)(reply, e);
-
-        delete callback;
 
         dbus_pending_call_unref(pending);
     }

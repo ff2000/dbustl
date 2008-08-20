@@ -26,6 +26,8 @@ namespace dbustl {
             
             template<typename T> Message& operator<<(const T& inarg);
 
+            template<typename T> Message& operator>>(T& outarg);
+
             template<typename T> Message& operator>>(T* outarg);
             
             bool isNull() const { return (_msg == NULL); };
@@ -58,6 +60,11 @@ namespace dbustl {
             _valid = (serialize(&_it, inarg) == TRUE);
         }
         return *this;
+    }
+
+    template<typename T> Message& Message::operator>>(T& outarg)
+    {
+        return this->operator>>(&outarg);
     }
 
     template<typename T> Message& Message::operator>>(T* outarg)
