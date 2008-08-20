@@ -32,7 +32,6 @@ int main()
     dbustl::Connection::useMainLoop(dbustl::GlibMainLoopIntegration());    
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     UserMethodCallback object;
-    const UserMethodCallback& constObject = object;
     
     try {
         std::cout << ">Basis asynchronous call : Functor callback" << std::endl;
@@ -55,30 +54,6 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
-
-    try {
-        std::cout << ">Basis asynchronous call : Const method callback on const object" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
-        pythonServerProxy.setInterface("com.example.SampleInterface");
-        pythonServerProxy.asyncCall("SimpleHello", &UserMethodCallback::constMethod, &constObject, "Hi");
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
-
-    /* FIXME
-    try {
-        std::cout << ">Basis asynchronous call : Const method callback on non const objet" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
-        pythonServerProxy.setInterface("com.example.SampleInterface");
-        pythonServerProxy.asyncCall("SimpleHello", &UserMethodCallback::constMethod, &object, "Hi");
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        return 1;
-    }
-    */
 
     try {
         std::cout << ">Basis asynchronous call : function callback" << std::endl;
