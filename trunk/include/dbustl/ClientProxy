@@ -5,6 +5,7 @@
 
 #include <string>
 #include <sstream>
+#include <functional>
 
 #include <dbustl/DBusException>
 #include <dbustl/TypesConvertion>
@@ -37,9 +38,29 @@ namespace dbustl {
             //If fails returns false and error contains the detailed error value
             template<typename... Args>
             bool call(const std::string& methodName, const Args&... args);
-            
-            Message createMethodCall(const std::string& methodName) const;
             Message call(Message& method_call);
+            
+            //Asynchronous call : functor version
+            
+            template<typename MethodCallback, typename... Args>
+            bool asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args);
+            
+            //Asynchronous call : pointer to function version
+            template<typename... Args>
+            inline bool asyncCall(const std::string& methodName, void (*callback)(const Message&, const DBusException&), const Args&... args);
+            
+            //Asynchronous call : pointer to member version
+            template<typename _Class, typename... Args>
+            inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(const Message&, const DBusException&), _Class *c, const Args&... args);
+            
+            //Asynchronous call : pointer to const member version
+            template<typename _Class, typename... Args>
+            inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(const Message&, const DBusException&) const, const _Class *c, const Args&... args);
+            
+            template<typename MethodCallback>
+            void asyncCall(Message& method_call, const MethodCallback& callback);
+
+            Message createMethodCall(const std::string& methodName) const;
 
             //Helper class 
             class Interface {
@@ -62,6 +83,10 @@ namespace dbustl {
             static inline void throw_or_set(const DBusException& error) {throw error; };
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
         #endif
+            
+            /////////////////////////////////
+            // Synchronous calls templates //
+            /////////////////////////////////
             
             //This method processes input arguments of the form const T&
             template<typename T, typename... Args>            
@@ -87,6 +112,28 @@ namespace dbustl {
 
             void processOutArgs(Message& method_call);
             
+            //////////////////////////////////
+            // Asynchronous calls templates //
+            //////////////////////////////////
+            
+            //This method processes input arguments of the form const T&
+            template<typename T, typename MethodCallback, typename... Args>            
+            void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args);
+
+            //This method processes input arguments of the form const T*
+            template<typename T, typename MethodCallback, typename... Args>            
+            void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args);
+
+            template<typename MethodCallback>            
+            void processAsyncInArgs(Message& msg, const MethodCallback& callback);
+
+            //static methods for asynchronous calls handling
+            template<typename MethodCallback>            
+            static void freeMethodCallbackFunc(void *object);
+
+            template<typename MethodCallback>            
+            static void callCompleted(DBusPendingCall *pending, void *user_data);
+
             Connection *_conn;
             std::string _path;
             std::string _destination;
@@ -103,6 +150,7 @@ namespace dbustl {
         
         if(!method_call.dbus()) {
             throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+            return false;
         }
         
         _error = DBusException();
@@ -155,6 +203,106 @@ namespace dbustl {
         }
     }
 
+    template<typename MethodCallback, typename... Args>
+    bool ClientProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
+    {
+        Message method_call(createMethodCall(methodName));
+        
+        if(!method_call.dbus()) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+            return false;
+        }
+        
+        _error = DBusException();
+        processAsyncInArgs(method_call, callback, args...);
+        return !_error.isSet();
+    }
+    
+    template<typename... Args>
+    bool ClientProxy::asyncCall(const std::string& methodName, void (*callback)(const Message&, const DBusException&), const Args&... args)
+    {
+        return asyncCall(methodName, std::ptr_fun(callback), args...);
+    }
+
+    template<typename _Class, typename... Args>
+    bool ClientProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(const Message&, const DBusException&), _Class *c, const Args&... args)
+    {
+        return asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
+    }
+
+    template<typename _Class, typename... Args>
+    bool ClientProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(const Message&, const DBusException&) const, const _Class *c, const Args&... args)
+    {
+        return asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
+    }
+
+    template<typename MethodCallback>            
+    void ClientProxy::asyncCall(Message& method_call, const MethodCallback& callback)
+    {
+	      DBusPendingCall *pending_return;
+	
+        if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == FALSE) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send DBUS message");
+            return;
+        }
+    
+        if(pending_return) {
+            if(dbus_pending_call_set_notify(pending_return, callCompleted<MethodCallback>, 
+                  new MethodCallback(callback), freeMethodCallbackFunc<MethodCallback>) == FALSE) {
+                throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for DBUS message");
+            }
+        }
+        else {
+            throw_or_set("TBD", "Disconnected");
+        }
+    }
+
+    template<typename T, typename MethodCallback, typename... Args>            
+    void ClientProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args)
+    {
+        method_call << invalue;
+        processAsyncInArgs(method_call, callback, args...);
+    }
+
+    template<typename T, typename MethodCallback, typename... Args>            
+    void ClientProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args)
+    {
+        method_call << invalue;
+        processAsyncInArgs(method_call, callback, args...);
+    }
+
+    template<typename MethodCallback>            
+    void ClientProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
+    {
+        if(msg.isValid()) {
+            asyncCall(msg, callback);
+        }
+    }
+
+    template<typename MethodCallback>            
+    void ClientProxy::freeMethodCallbackFunc(void *object)
+    {
+        MethodCallback *cb = static_cast<MethodCallback*>(object);
+        delete cb;
+    }
+
+    template<typename MethodCallback>            
+    void ClientProxy::callCompleted(DBusPendingCall *pending, void *user_data)
+    {
+        DBusException e;
+        MethodCallback *callback = static_cast<MethodCallback*>(user_data);
+    
+        Message reply(dbus_pending_call_steal_reply(pending));
+     
+        dbus_set_error_from_message(e.dbus(), reply.dbus());
+
+        //call user function
+        (*callback)(reply, e);
+
+        delete callback;
+
+        dbus_pending_call_unref(pending);
+    }
 }
 
 #endif /* DBUSTL_CLIENTPROXY */
