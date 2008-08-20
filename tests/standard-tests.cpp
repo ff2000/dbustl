@@ -307,6 +307,27 @@ int main()
     }
 
     try {
+        std::cout << ">Wrong method test" << std::endl;
+        exception_thrown = false;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        pythonServerProxy.call("InexistingMethod", "Hi"); 
+    }
+    catch(const dbustl::DBusException& e) {
+        if(e.isSet() && e.name() == std::string("org.freedesktop.DBus.Error.UnknownMethod")) {
+            exception_thrown = true;
+        }
+        else {
+            std::cerr << e.what() << std::endl;
+            return 1;
+        }
+    }
+    if(!exception_thrown) {
+        std::cerr << "No exception thrown !!" << std::endl;
+        return 1;
+    }
+
+    try {
         std::cout << ">Wrong return type test" << std::endl;
         exception_thrown = false;
         dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
