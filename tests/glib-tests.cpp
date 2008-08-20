@@ -45,7 +45,7 @@ void userFunctionCallback(dbustl::Message& m, const dbustl::DBusException& e) {
 
 void inexistingMethodCallback(dbustl::Message&, const dbustl::DBusException& e) {
     assert(e.isSet());
-    assert(e.name() == std::string("org.freedesktop.DBus.Error.UnknownMethod"));
+    assert(e.name() == "org.freedesktop.DBus.Error.UnknownMethod");
     n_cbs++;
 }
 
