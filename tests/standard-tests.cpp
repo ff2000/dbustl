@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <string>
+#include <map>
+
 #include <cassert>
 
 int main()
@@ -239,6 +241,22 @@ int main()
         in.push_back(2);
         in.push_back(3);
         pythonServerProxy.call("test_array_of_int", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">Dict of int->string " << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<int32_t, std::string> in, out;
+        in[0] = "Entry 0";
+        in[1] = "Entry 1";
+        in[2] = "Entry 2";
+        pythonServerProxy.call("test_dict_of_integer_string", in, &out); 
         assert(in == out);            
     }
     catch(const std::exception& e) {

@@ -439,6 +439,74 @@ namespace dbustl {
         return TRUE;
     }
 
+    /* std::map */
+    template <typename K, typename V> std::string __dbustlGenerateSignature(std::pair<const K, V>&)
+    {
+        K key;
+        V value;
+        return std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
+            __dbustlGenerateSignature(key) +
+            __dbustlGenerateSignature(value) +
+            DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
+    }
+        
+    template<typename K, typename V> dbus_bool_t serialize(DBusMessageIter* it, const std::map<K, V>& arg)
+    {
+        typename std::map<K, V>::const_iterator containerIter;
+        typename std::map<K, V>::value_type v;
+        DBusMessageIter arrayIterator;
+
+        if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+            __dbustlGenerateSignature(v).c_str(), &arrayIterator) == FALSE) {
+            return FALSE;
+        }
+        
+        for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+            DBusMessageIter dictEntryIterator;
+            if(dbus_message_iter_open_container(&arrayIterator, DBUS_TYPE_DICT_ENTRY, NULL, &dictEntryIterator) == FALSE) {
+                return FALSE;
+            }
+            if(serialize(&dictEntryIterator, containerIter->first) == FALSE) return FALSE;
+            if(serialize(&dictEntryIterator, containerIter->second) == FALSE) return FALSE;
+            if(dbus_message_iter_close_container(&arrayIterator, &dictEntryIterator) == FALSE) return FALSE;
+        }
+        
+        return dbus_message_iter_close_container(it, &arrayIterator);
+    }
+    
+    
+    template<typename K, typename V> dbus_bool_t deserialize(DBusMessageIter* it, std::map<K, V>* arg)
+    {
+        DBusMessageIter arrayIterator;
+        DBusMessageIter dictEntryIterator;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+            return FALSE;
+        }
+        
+        dbus_message_iter_recurse(it, &arrayIterator);
+        while (dbus_message_iter_get_arg_type(&arrayIterator) == DBUS_TYPE_DICT_ENTRY) {
+            dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
+            std::pair<K, V> v;
+            
+            if(deserialize(&dictEntryIterator, &v.first) == FALSE) {
+                return FALSE;
+            }
+            
+            std::pair<typename std::map<K, V>::iterator, bool> ins = arg->insert(v);
+            //Insert should always succeed, otherwiser other side has sent us crap
+            //If not (which we have to deal with due to security issues), we bail out
+            if(!ins.second) return FALSE;
+            
+            dbus_message_iter_next(&dictEntryIterator);
+            if(deserialize(&dictEntryIterator, &(ins.first->second)) == FALSE) {
+                return FALSE;
+            }
+
+            dbus_message_iter_next(&arrayIterator);
+        }
+        
+        return TRUE;
+    }
 }
 
 #endif

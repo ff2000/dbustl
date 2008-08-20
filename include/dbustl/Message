@@ -30,10 +30,13 @@ namespace dbustl {
 
             template<typename T> Message& operator>>(T* outarg);
             
+            //Tells if there is this object is not void (i.e. no DBus message associated)
             bool isNull() const { return (_msg == NULL); };
             
+            //True is no issue while serializing or deserializing arguments
             bool isValid() const { return _valid; };
             
+            //Returns the number of times the >> operator has been called
             int parsedArguments() const { return _parsedArguments; };
             
             DBusMessage* dbus() { return _msg; };
