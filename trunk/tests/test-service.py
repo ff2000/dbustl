@@ -127,6 +127,14 @@ class SomeObject(dbus.service.Object):
                             'expect')
 
     @dbus.service.method("com.example.SampleInterface",
+                         in_signature='', out_signature='')
+    def SendSignals(self):
+        self.exampleSignal()
+        self.exampleSignal2()
+        self.exampleSignal3()
+        self.exampleSignal4()
+
+    @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='(ss)')
     def GetTuple(self):
         return ("Hello Tuple", " from example-service.py")
@@ -141,6 +149,25 @@ class SomeObject(dbus.service.Object):
     def Exit(self):
         mainloop.quit()
 
+    @dbus.service.signal("com.example.SampleInterface",
+                         signature='')
+    def exampleSignal(self):
+        pass
+
+    @dbus.service.signal("com.example.SampleInterface",
+                         signature='')
+    def exampleSignal2(self):
+        pass
+
+    @dbus.service.signal("com.example.SampleInterface",
+                         signature='')
+    def exampleSignal3(self):
+        pass
+
+    @dbus.service.signal("com.example.SampleInterface",
+                         signature='')
+    def exampleSignal4(self):
+        pass
 
 if __name__ == '__main__':
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)

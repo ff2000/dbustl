@@ -39,6 +39,13 @@ namespace dbustl {
             //Returns the number of times the >> operator has been called
             int parsedArguments() const { return _parsedArguments; };
             
+            //Returns the message member, as per defined by DBUS specification
+            //if message is a signal, this returns the signal name
+            std::string member() const;
+            
+            //Returns the message interface, as per defined by DBUS specification
+            std::string interface() const;
+            
             DBusMessage* dbus() { return _msg; };
             
         private:
