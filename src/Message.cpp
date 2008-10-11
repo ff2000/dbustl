@@ -47,7 +47,7 @@ Message& Message::operator=(Message& other) {
 
 Message& Message::operator=(DBusMessage *msg) {
     if(_msg) {
-      dbus_message_unref(_msg);
+        dbus_message_unref(_msg);
     }
     
     _valid = true;
@@ -57,5 +57,22 @@ Message& Message::operator=(DBusMessage *msg) {
     return *this;
 };
 
+std::string Message::member() const
+{
+    const char * mem = NULL;
+    if(_msg) {
+        mem = dbus_message_get_member(_msg);
+    }
+    return mem != NULL ? mem : "";
+}
+
+std::string Message::interface() const
+{
+    const char * intf = NULL;
+    if(_msg) {
+        intf = dbus_message_get_interface(_msg);
+    }
+    return intf != NULL ? intf : "";
+}
 
 }

@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <functional>
+#include <map>
 
 #include <dbustl/DBusException>
 #include <dbustl/TypesConvertion>
@@ -22,6 +23,7 @@ namespace dbustl {
             // In this case it must contain the name of the connection this message is intended for,
             // otherwise giving the object path is enough
             ClientProxy(Connection* conn, const std::string& path, const std::string& destination = "");
+            ~ClientProxy();
 
             // For synchronous blocking calls, set the timeout in milliseconds.
             // -1 means default value
@@ -35,13 +37,15 @@ namespace dbustl {
             const DBusException& error();
         #endif
 
+            //Synchronous call
             //If fails returns false and error contains the detailed error value
             template<typename... Args>
             bool call(const std::string& methodName, const Args&... args);
+            //Synchronous call : legacy C++ syntax
+            Message createMethodCall(const std::string& methodName) const;
             Message call(Message& method_call);
             
-            //Asynchronous call : functor version
-            
+            //Asynchronous call : functor version            
             template<typename MethodCallback, typename... Args>
             bool asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args);
             
@@ -53,10 +57,23 @@ namespace dbustl {
             template<typename _Class, typename... Args>
             inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args);
             
+            //Aynsynchronous call: legacy C++ syntax
             template<typename MethodCallback>
             void asyncCall(Message& method_call, const MethodCallback& callback);
 
-            Message createMethodCall(const std::string& methodName) const;
+            //Signals Handling : functor version
+            template<typename SignalHandler>
+            bool setSignalHandler(const std::string& signalName, const SignalHandler& handler);
+
+            //Signals Handling : pointer to function version
+            inline bool setSignalHandler(const std::string& signalName, void (*handler)(Message& signal));
+
+            //Signals Handling : pointer to member version
+            template<typename _Class>
+            inline bool setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message& signal), _Class *c);
+
+            //Removes one of the handler set by one of the calls above
+            bool removeSignalHandler(const std::string& signalName);
 
             //Helper class 
             class Interface {
@@ -129,17 +146,53 @@ namespace dbustl {
 
             //static methods for asynchronous calls handling
             template<typename MethodCallback>            
-            static void freeMethodCallbackFunc(void *object);
+            static void methodCallbackDelete(void *object);
 
             template<typename MethodCallback>            
             static void callCompleted(DBusPendingCall *pending, void *user_data);
 
+            //static methods for signals handling
+            static DBusHandlerResult signalsProcessingMethod(DBusConnection *connection, 
+                DBusMessage *dbusMessage, void *user_data);
+
+            template<typename SignalHandler>            
+            static void signalHandlerCallback(void *functor, Message& signal);
+
+            template<typename SignalHandler>            
+            static void signalHandlerDelete(void *functor);
+
+            //Helper methods for signals processing
+            bool watchSignal(const std::string& signalName);
+            bool unWatchSignal(const std::string& signalName);
+
             Connection *_conn;
             std::string _path;
             std::string _destination;
+            //Interface used by default for outgoing calls
             std::string _interface;
-            int _timeout; //call timeout in milliseconds, -1 means default
+            //call timeout in milliseconds, -1 means default
+            int _timeout; 
             DBusException _error;
+            
+            struct FunctorWrapper {
+                typedef void (*call_functor_t)(void *functor, Message& signal);
+                typedef void (*delete_functor_t)(void *functor);
+                
+                FunctorWrapper() {};
+                
+                FunctorWrapper(void* lfunctor, call_functor_t lcall_functor, delete_functor_t ldelete_functor)
+                 : functor(lfunctor), call_functor(lcall_functor), delete_functor(ldelete_functor)
+                {
+                }
+                
+                void *functor;
+                call_functor_t call_functor;
+                delete_functor_t delete_functor;
+            };                
+            //Signals callbacks, per signal
+            std::map<std::string, FunctorWrapper> _signalsHandlers;    
+            
+            static DBusObjectPathVTable _vtable;
     };
 
     template<typename... Args>
@@ -241,7 +294,7 @@ namespace dbustl {
     
         if(pending_return) {
             if(dbus_pending_call_set_notify(pending_return, callCompleted<MethodCallback>, 
-                  new MethodCallback(callback), freeMethodCallbackFunc<MethodCallback>) == FALSE) {
+                  new MethodCallback(callback), methodCallbackDelete<MethodCallback>) == FALSE) {
                 throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for DBUS message");
             }
         }
@@ -280,7 +333,7 @@ namespace dbustl {
     }
 
     template<typename MethodCallback>            
-    void ClientProxy::freeMethodCallbackFunc(void *object)
+    void ClientProxy::methodCallbackDelete(void *object)
     {
         MethodCallback *cb = static_cast<MethodCallback*>(object);
         delete cb;
@@ -300,6 +353,51 @@ namespace dbustl {
         (*callback)(reply, e);
 
         dbus_pending_call_unref(pending);
+    }
+    
+    bool ClientProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
+    {
+        return setSignalHandler(signalName, std::ptr_fun(handler));
+    }
+
+    template<typename _Class>
+    bool ClientProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message& signal), _Class *c)
+    {
+        return setSignalHandler(signalName, std::bind(handler, c, std::placeholders::_1));
+    }
+
+    template<typename SignalHandler>
+    bool ClientProxy::setSignalHandler(const std::string& signalName, const SignalHandler& handler)
+    {
+        if(!_signalsHandlers.count(signalName)) {
+            if(!watchSignal(signalName)) {
+                return false;
+            }
+            
+            _signalsHandlers[signalName] = FunctorWrapper(new SignalHandler(handler),
+                                                        signalHandlerCallback<SignalHandler>,
+                                                        signalHandlerDelete<SignalHandler>);
+        }
+        else {
+            _signalsHandlers[signalName] = FunctorWrapper(new SignalHandler(handler),
+                                                        signalHandlerCallback<SignalHandler>,
+                                                        signalHandlerDelete<SignalHandler>);
+        }
+        return true;
+    }
+
+    template<typename SignalHandler>            
+    void ClientProxy::signalHandlerCallback(void *functor, Message& signal)
+    {
+        SignalHandler *sh = static_cast<SignalHandler *>(functor);
+        (*sh)(signal);
+    }
+
+    template<typename SignalHandler>            
+    void ClientProxy::signalHandlerDelete(void *functor)
+    {
+        SignalHandler *sh = static_cast<SignalHandler *>(functor);
+        delete sh;
     }
 }
 

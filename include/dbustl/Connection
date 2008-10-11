@@ -32,18 +32,25 @@ namespace dbustl {
             
             ~Connection();
 
+            //If True, means the connection is not on a system bus, 
+            //but is private between two applications.
+            bool isPrivate() { return _isPrivate;};
+
             //Should ne be used, reserved for internal use
             DBusConnection * dbus();
 
         private:
             //Disallow construct that would bypass the static initializers
-            Connection(const Connection& con);
+            Connection(const Connection&);
             Connection& operator=(Connection&);
         
             //Low level connection
             DBusConnection *_llconn;
             //Mainloop used for this connection
             std::auto_ptr<MainLoopIntegration> _mainLoop;
+            //If True, means the connection is not on a system bus, 
+            //but is private between two applications.
+            bool _isPrivate;
             
             //globally shared System bus connection
             static Connection *_system;

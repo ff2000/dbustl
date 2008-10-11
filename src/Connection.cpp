@@ -45,7 +45,7 @@ DBusConnection* Connection::dbus()
     return _llconn;
 }
 
-Connection::Connection(DBusBusType bustype)
+Connection::Connection(DBusBusType bustype) : _isPrivate(false)
 {
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
@@ -59,7 +59,7 @@ Connection::Connection(DBusBusType bustype)
 }
 
 Connection::Connection(DBusBusType bustype, std::auto_ptr<MainLoopIntegration> mainLoop) : 
-  _mainLoop(mainLoop)
+  _mainLoop(mainLoop), _isPrivate(false)
 {
     assert(_mainLoop.get());
     //As per DBUS documentation, it is safe to call it more than once, as
