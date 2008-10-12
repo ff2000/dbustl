@@ -6,5 +6,5 @@ includedir=@includedir@
 Name: dbustl glib binding
 Description: Dbus template library, a helper C++ library for the Free desktop message bus
 Version: @VERSION@
-Libs: -L${libdir} -ldbustl-glib-0 -ldbustl-0 @DBUS_LIBS@ @GLIB_LIBS@
-Cflags: -I${includedir}/dbustl @DBUS_CFLAGS@ @GLIB_CFLAGS@
+Libs: -L${libdir} -ldbustl-glib-1 -ldbustl-1 @DBUS_LIBS@ @GLIB_LIBS@
+Cflags: -I${includedir}/dbustl-1 @DBUS_CFLAGS@ @GLIB_CFLAGS@

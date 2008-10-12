@@ -1,4 +1,4 @@
-#include <dbustl/Message>
+#include <dbustl-1/Message>
 
 namespace dbustl {
 

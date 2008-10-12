@@ -1,7 +1,7 @@
 #ifndef DBUSTL_GLIBMAINLOOPINTEGRATION
 #define DBUSTL_GLIBMAINLOOPINTEGRATION
 
-#include <dbustl/MainLoopIntegration>
+#include <dbustl-1/MainLoopIntegration>
 
 #include <glib.h>
 

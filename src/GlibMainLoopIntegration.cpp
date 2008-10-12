@@ -1,6 +1,6 @@
-#include <dbustl/Connection>
+#include <dbustl-1/Connection>
 
-#include <dbustl/GlibMainLoopIntegration>
+#include <dbustl-1/GlibMainLoopIntegration>
 #include <iostream>
 
 namespace dbustl {

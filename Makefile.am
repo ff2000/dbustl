@@ -6,17 +6,17 @@ AM_CXXFLAGS = @CXX0X_CFLAGS@ -W -Wall -Iinclude @DBUS_CFLAGS@
 LDADD = @DBUS_LIBS@
 
 lib_LTLIBRARIES = libdbustl-1.la
-libdbustl_0_ladir = $(includedir)/dbustl
-libdbustl_0_la_HEADERS = include/dbustl/Config \
-				   include/dbustl/dbustl \
-                   include/dbustl/ClientProxy \
-                   include/dbustl/Connection \
-                   include/dbustl/DBusException \
-                   include/dbustl/MainLoopIntegration \
-                   include/dbustl/Message \
-                   include/dbustl/StdTypesConvertion \
-                   include/dbustl/TypesConvertion
-libdbustl_0_la_SOURCES = src/ClientProxy.cpp \
+libdbustl_1_ladir = $(includedir)/dbustl-1
+libdbustl_1_la_HEADERS = include/dbustl-1/Config \
+				   include/dbustl-1/dbustl \
+                   include/dbustl-1/ClientProxy \
+                   include/dbustl-1/Connection \
+                   include/dbustl-1/DBusException \
+                   include/dbustl-1/MainLoopIntegration \
+                   include/dbustl-1/Message \
+                   include/dbustl-1/StdTypesConvertion \
+                   include/dbustl-1/TypesConvertion
+libdbustl_1_la_SOURCES = src/ClientProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp
@@ -31,12 +31,12 @@ if HAVE_GLIB
 lib_LTLIBRARIES += libdbustl-glib-1.la
 endif
 
-libdbustl_glib_0_la_CPPFLAGS = @GLIB_CFLAGS@
-libdbustl_glib_0_la_LIBADD = @GLIB_LIBS@
-libdbustl_glib_0_ladir = $(includedir)/dbustl
-libdbustl_glib_0_la_HEADERS = include/dbustl/Glib \
-   	               			include/dbustl/GlibMainLoopIntegration
-libdbustl_glib_0_la_SOURCES = src/GlibMainLoopIntegration.cpp
+libdbustl_glib_1_la_CPPFLAGS = @GLIB_CFLAGS@
+libdbustl_glib_1_la_LIBADD = @GLIB_LIBS@
+libdbustl_glib_1_ladir = $(includedir)/dbustl-1
+libdbustl_glib_1_la_HEADERS = include/dbustl-1/Glib \
+   	               			include/dbustl-1/GlibMainLoopIntegration
+libdbustl_glib_1_la_SOURCES = src/GlibMainLoopIntegration.cpp
 
 #dbustl-glib pkg-config support
 if HAVE_GLIB
