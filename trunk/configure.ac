@@ -7,6 +7,8 @@ AM_INIT_AUTOMAKE([1.9 foreign])
 AM_MAINTAINER_MODE
 
 AC_PROG_CXX
+#Disable libtool shared libraries support, we are way a template library afterall !!
+AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 #Check for optionnal C++0x support
 AC_CXX_COMPILE_STDCXX_0X
@@ -30,5 +32,6 @@ AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIB_LIBS)
 #END check for GLIB
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+                 tests/Makefile])
 AC_OUTPUT

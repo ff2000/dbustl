@@ -1,6 +1,9 @@
+SUBDIRS = . tests
+
 #Common flags definitions
 AM_CXXFLAGS = @CXX0X_CFLAGS@ -W -Wall -Iinclude @DBUS_CFLAGS@
-AM_LDFLAGS = @DBUS_LIBS@
+#Common libraries
+LDADD = @DBUS_LIBS@
 
 lib_LTLIBRARIES = libdbustl-0.la
 libdbustl_0_ladir = $(includedir)/dbustl
@@ -19,10 +22,11 @@ libdbustl_0_la_SOURCES = src/ClientProxy.cpp \
 
 if HAVE_GLIB
 lib_LTLIBRARIES += libdbustl-glib-0.la
+endif
+
 libdbustl_glib_0_la_CPPFLAGS = @GLIB_CFLAGS@
-libdbustl_glib_0_la_LDFLAGS = @GLIB_LIBS@
+libdbustl_glib_0_la_LIBADD = @GLIB_LIBS@
 libdbustl_glib_0_ladir = $(includedir)/dbustl
 libdbustl_glib_0_la_HEADERS = include/dbustl/Glib \
    	               			include/dbustl/GlibMainLoopIntegration
 libdbustl_glib_0_la_SOURCES = src/GlibMainLoopIntegration.cpp
-endif
