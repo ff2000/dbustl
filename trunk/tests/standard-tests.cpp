@@ -7,7 +7,7 @@
 #include <cassert>
 
 #ifdef DBUSTL_VARIADIC_TEMPLATES
-void run_vt_tests()
+int run_vt_tests()
 {
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     bool exception_thrown;
@@ -367,17 +367,23 @@ void run_vt_tests()
         std::cerr << "No exception thrown !!" << std::endl;
         return 1;
     }
+    
+    return 0;
 }
 #else
-void run_vt_tests()
+int run_vt_tests()
 {
+    return 0;
 }
 #endif /* DBUSTL_VARIADIC_TEMPLATES */
 
 
 int main()
 {    
-    run_vt_tests();
+    int ret;
+    ret = run_vt_tests();
+    if(ret)
+        return ret;
       
     dbustl::Connection *session = dbustl::Connection::sessionBus();
 

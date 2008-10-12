@@ -23,6 +23,14 @@ public:
     };
 };
 
+class UserFunctorCallbackNoReturn {
+public:
+    void operator()(dbustl::Message&, const dbustl::DBusException& e) {
+        assert(!e.isSet());
+        n_cbs++;
+    };
+};
+
 class UserMethodCallback {
 public:
     void method(dbustl::Message& m, const dbustl::DBusException& e) {
@@ -34,11 +42,24 @@ public:
     }
 };
 
+class UserMethodCallbackNoReturn {
+public:
+    void method(dbustl::Message&, const dbustl::DBusException& e) {
+        assert(!e.isSet());
+        n_cbs++;
+    }
+};
+
 void userFunctionCallback(dbustl::Message& m, const dbustl::DBusException& e) {
     std::string stringReturn;
     assert(!e.isSet());
     m >> stringReturn;
     assert(stringReturn == "Hi");        
+    n_cbs++;
+}
+
+void userFunctionCallbackNoReturn(dbustl::Message&, const dbustl::DBusException& e) {
+    assert(!e.isSet());
     n_cbs++;
 }
 
@@ -100,6 +121,7 @@ int main()
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     UserMethodCallback object;
     ExampleSignal2MethodCallback object2;
+    UserMethodCallbackNoReturn noreturnobject;
     unsigned int expected_cbs = 0;
 
     mainloop = g_main_loop_new(NULL, FALSE);
@@ -110,7 +132,37 @@ int main()
     pythonServerProxy.setInterface("com.example.SampleInterface");
 
     try {
-        std::cout << ">Basis asynchronous call : Functor callback" << std::endl;
+        std::cout << ">0 arg asynchronous call : Functor callback" << std::endl;
+        pythonServerProxy.asyncCall("SimpleProc", UserFunctorCallbackNoReturn());
+        expected_cbs++; 
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">0 arg asynchronous call : Method callback on non const object" << std::endl;
+        pythonServerProxy.asyncCall("SimpleProc", &UserMethodCallbackNoReturn::method, &noreturnobject);
+        expected_cbs++; 
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">0 arg asynchronous call : function callback" << std::endl;
+        pythonServerProxy.asyncCall("SimpleProc", &userFunctionCallbackNoReturn); 
+        expected_cbs++; 
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">1 arg asynchronous call : Functor callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleHello", UserFunctorCallback(), "Hi");
         expected_cbs++; 
     }
@@ -120,7 +172,7 @@ int main()
     }
     
     try {
-        std::cout << ">Basis asynchronous call : Method callback on non const object" << std::endl;
+        std::cout << ">1 arg asynchronous call : Method callback on non const object" << std::endl;
         pythonServerProxy.asyncCall("SimpleHello", &UserMethodCallback::method, &object, "Hi");
         expected_cbs++; 
     }
@@ -130,7 +182,7 @@ int main()
     }
 
     try {
-        std::cout << ">Basis asynchronous call : function callback" << std::endl;
+        std::cout << ">1 arg asynchronous call : function callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleHello", &userFunctionCallback, "Hi"); 
         expected_cbs++; 
     }
