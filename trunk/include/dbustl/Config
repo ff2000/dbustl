@@ -4,9 +4,9 @@
 /* This file contains detection heuristics for variadic
    templates. For now the only compiler we support id GCC */
 
-#undef HAVE_VARIADIC_TEMPLATE
+#undef DBUSTL_VARIADIC_TEMPLATES
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
-	#define HAVE_VARIADIC_TEMPLATE
+	#define DBUSTL_VARIADIC_TEMPLATES
 #endif
 
 #endif
