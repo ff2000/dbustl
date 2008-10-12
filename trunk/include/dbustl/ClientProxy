@@ -8,6 +8,7 @@
 #include <functional>
 #include <map>
 
+#include <dbustl/Config>
 #include <dbustl/DBusException>
 #include <dbustl/TypesConvertion>
 #include <dbustl/Message>
