@@ -91,7 +91,7 @@ void exampleSignalCallback(dbustl::Message &m) {
 
 class ExampleSignal2MethodCallback {
 public:
-    void method(dbustl::Message& m) {
+    void method(dbustl::Message m) {
         assert(m.member() == "exampleSignal2");
         assert(m.interface() == "com.example.SampleInterface");
         n_cbs++;
@@ -117,11 +117,10 @@ public:
 
 int main()
 {    
-    dbustl::Connection::useMainLoop(dbustl::GlibMainLoopIntegration());    
+    dbustl::GlibMainLoopIntegration mli;
+    dbustl::Connection::useMainLoop(mli);    
     dbustl::Connection *session = dbustl::Connection::sessionBus();
-    UserMethodCallback object;
     ExampleSignal2MethodCallback object2;
-    UserMethodCallbackNoReturn noreturnobject;
     unsigned int expected_cbs = 0;
 
     mainloop = g_main_loop_new(NULL, FALSE);
@@ -131,6 +130,11 @@ int main()
     dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
     pythonServerProxy.setInterface("com.example.SampleInterface");
 
+ 
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    UserMethodCallback object;
+    UserMethodCallbackNoReturn noreturnobject;
+ 
     try {
         std::cout << ">0 arg asynchronous call : Functor callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleProc", UserFunctorCallbackNoReturn());
@@ -225,6 +229,29 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
+#endif /* DBUSTL_VARIADIC_TEMPLATES */
+
+    try {
+        std::cout << ">NOVT: 0 arg asynchronous call : Functor callback" << std::endl;
+        dbustl::Message callMsg = pythonServerProxy.createMethodCall("SimpleProc");
+        pythonServerProxy.asyncCall(callMsg, UserFunctorCallbackNoReturn());
+        expected_cbs++; 
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
+    try {
+        std::cout << ">NOVT: 0 arg asynchronous call : function callback" << std::endl;
+        dbustl::Message callMsg = pythonServerProxy.createMethodCall("SimpleProc");
+        pythonServerProxy.asyncCall(callMsg, &userFunctionCallbackNoReturn); 
+        expected_cbs++; 
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
 
     try {
         std::cout << ">Signal tests" << std::endl;
@@ -232,7 +259,8 @@ int main()
         pythonServerProxy.setSignalHandler("exampleSignal2", &ExampleSignal2MethodCallback::method, &object2); 
         pythonServerProxy.setSignalHandler("exampleSignal3", ExampleSignal3FunctorCallback()); 
         pythonServerProxy.setSignalHandler("", ExampleSignalXFunctorCallback()); 
-        pythonServerProxy.asyncCall("SendSignals", &voidMethodCallback);
+        dbustl::Message callMsg = pythonServerProxy.createMethodCall("SendSignals");
+        pythonServerProxy.asyncCall(callMsg, &voidMethodCallback);
         //We expect 4 signals to be received
         expected_cbs += 4; 
     }
@@ -243,7 +271,8 @@ int main()
 
     //This last call is just to make sure that the mainloop finishes at some time
     try {
-        pythonServerProxy.asyncCall("SimpleProc", &stopMethodCallback); 
+        dbustl::Message callMsg = pythonServerProxy.createMethodCall("SimpleProc");
+        pythonServerProxy.asyncCall(callMsg, &stopMethodCallback); 
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
