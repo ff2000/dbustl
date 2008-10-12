@@ -20,6 +20,12 @@ libdbustl_0_la_SOURCES = src/ClientProxy.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp
 
+#dbustl pkg-config support
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = dbustl-0.pc
+DISTCLEANFILES = dbustl-0.pc
+EXTRA_DIST     = dbustl-O.pc.in           
+
 if HAVE_GLIB
 lib_LTLIBRARIES += libdbustl-glib-0.la
 endif
@@ -30,3 +36,11 @@ libdbustl_glib_0_ladir = $(includedir)/dbustl
 libdbustl_glib_0_la_HEADERS = include/dbustl/Glib \
    	               			include/dbustl/GlibMainLoopIntegration
 libdbustl_glib_0_la_SOURCES = src/GlibMainLoopIntegration.cpp
+
+#dbustl-glib pkg-config support
+if HAVE_GLIB
+pkgconfig_DATA += dbustl-glib-0.pc
+endif
+DISTCLEANFILES += dbustl-glib-0.pc
+EXTRA_DIST     += dbustl-glib-0.pc.in           
+
