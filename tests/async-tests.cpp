@@ -3,11 +3,11 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-#include <glibmm.h>
+#include <glib.h>
 
 #include <dbus/dbus-glib-lowlevel.h>
 
-Glib::RefPtr<Glib::MainLoop> mainloop;
+GMainLoop *mainloop;
 
 //Number of times callbacks were called;
 static unsigned int n_cbs = 0;
@@ -59,7 +59,7 @@ void voidMethodCallback(dbustl::Message&, const dbustl::DBusException&) {
 }
 
 void stopMethodCallback(dbustl::Message&, const dbustl::DBusException&) {
-    mainloop->quit();
+    g_main_loop_quit(mainloop);
 }
 
 void exampleSignalCallback(dbustl::Message &m) {
@@ -102,11 +102,10 @@ int main()
     ExampleSignal2MethodCallback object2;
     unsigned int expected_cbs = 0;
 
-    //FIXME : to be removed
+    mainloop = g_main_loop_new(NULL, FALSE);
+    //FIXME : remove dependancy on dbus-glib
     dbus_connection_setup_with_g_main(session->dbus(), NULL);
-    
-    mainloop = Glib::MainLoop::create();
-    
+        
     dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
     pythonServerProxy.setInterface("com.example.SampleInterface");
 
@@ -199,8 +198,8 @@ int main()
         return 1;
     }
 
-    mainloop->run();
-    mainloop.reset();
+    g_main_loop_run(mainloop);
+    g_main_loop_unref(mainloop);
     
     assert(n_cbs == expected_cbs);
     
