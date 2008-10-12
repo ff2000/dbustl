@@ -1,7 +1,7 @@
 #include <dbus/dbus.h>
 
-#include <dbustl/Connection>
-#include <dbustl/MainLoopIntegration>
+#include <dbustl-1/Connection>
+#include <dbustl-1/MainLoopIntegration>
 #include <cassert>
 
 namespace dbustl {

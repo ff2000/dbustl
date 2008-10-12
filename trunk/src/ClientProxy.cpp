@@ -1,7 +1,7 @@
 #include <dbus/dbus.h>
 
-#include <dbustl/Connection>
-#include <dbustl/ClientProxy>
+#include <dbustl-1/Connection>
+#include <dbustl-1/ClientProxy>
 
 namespace dbustl {
 

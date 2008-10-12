@@ -10,7 +10,7 @@
 #include <cassert>
 #include <dbus/dbus.h>
 
-#include <dbustl/TypesConvertion>
+#include <dbustl-1/TypesConvertion>
 
 namespace dbustl {
   

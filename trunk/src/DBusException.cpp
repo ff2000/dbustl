@@ -1,5 +1,5 @@
 #include <cassert>
-#include <dbustl/DBusException>
+#include <dbustl-1/DBusException>
 
 namespace dbustl {
 
