@@ -6,8 +6,9 @@
 
 #include <cassert>
 
-int main()
-{    
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+void run_vt_tests()
+{
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     bool exception_thrown;
     
@@ -366,6 +367,35 @@ int main()
         std::cerr << "No exception thrown !!" << std::endl;
         return 1;
     }
-  
+}
+#else
+void run_vt_tests()
+{
+}
+#endif /* DBUSTL_VARIADIC_TEMPLATES */
+
+
+int main()
+{    
+    run_vt_tests();
+      
+    dbustl::Connection *session = dbustl::Connection::sessionBus();
+
+    try {
+        std::cout << ">NOVT: bool parameter passing" << std::endl;
+        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        dbustl::Message callMsg = pythonServerProxy.createMethodCall("test_boolean");
+        callMsg << false;
+        dbustl::Message callReply = pythonServerProxy.call(callMsg);
+        bool value;
+        callReply >> value;
+        assert(value == true);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+    
     return 0;
 }
