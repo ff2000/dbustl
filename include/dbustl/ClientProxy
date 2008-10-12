@@ -412,8 +412,9 @@ namespace dbustl {
     template<typename _Class>
     bool ClientProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message& signal), _Class *c)
     {
-        //return setSignalHandler(signalName, std::bind(handler, c, std::placeholders::_1));
-        return  setSignalHandler(signalName, std::bind1st(std::mem_fun1_t<void, _Class, Message&>(handler), c));
+        //FIXME
+        return setSignalHandler(signalName, std::bind(handler, c, std::placeholders::_1));
+        //return  setSignalHandler(signalName, std::bind1st(std::mem_fun1_t<void, _Class, Message&>(handler), c));
     }
 
     template<typename SignalHandler>
