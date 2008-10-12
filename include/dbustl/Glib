@@ -1,2 +1,2 @@
-#include <dbustl/Default>
+#include <dbustl/dbustl>
 #include <dbustl/GlibMainLoopIntegration>
