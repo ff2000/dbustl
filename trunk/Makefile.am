@@ -7,7 +7,8 @@ LDADD = @DBUS_LIBS@
 
 lib_LTLIBRARIES = libdbustl-0.la
 libdbustl_0_ladir = $(includedir)/dbustl
-libdbustl_0_la_HEADERS = include/dbustl/dbustl \
+libdbustl_0_la_HEADERS = include/dbustl/Config \
+				   include/dbustl/dbustl \
                    include/dbustl/ClientProxy \
                    include/dbustl/Connection \
                    include/dbustl/DBusException \

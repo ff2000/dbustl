@@ -1,0 +1,14 @@
+#ifndef DBUSTL_CONFIG
+#define DBUSTL_CONFIG
+
+/* This file contains detection heuristics for variadic
+   templates. For now the only compiler we support id GCC */
+
+#undef HAVE_VARIADIC_TEMPLATE
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+	#define HAVE_VARIADIC_TEMPLATE
+#endif
+
+#endif
+
+__GXX_EXPERIMENTAL_CXX0X__
