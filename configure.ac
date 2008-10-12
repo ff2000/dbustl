@@ -33,5 +33,7 @@ AC_SUBST(GLIB_LIBS)
 #END check for GLIB
 
 AC_CONFIG_FILES([Makefile
+                 dbustl-0.pc
+                 dbustl-glib-0.pc
                  tests/Makefile])
 AC_OUTPUT
