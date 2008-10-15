@@ -28,7 +28,7 @@ libdbustl_1_la_SOURCES = src/ClientProxy.cpp \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = dbustl-1.pc
 DISTCLEANFILES = dbustl-1.pc
-EXTRA_DIST     = dbustl-1.pc.in           
+EXTRA_DIST     += dbustl-1.pc.in           
 
 if HAVE_GLIB
 lib_LTLIBRARIES += libdbustl-glib-1.la
