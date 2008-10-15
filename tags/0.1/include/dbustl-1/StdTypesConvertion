@@ -1,0 +1,534 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_STDTYPESCONVERTION
+#define DBUSTL_STDTYPESCONVERTION
+
+// STL to DBUS arguments types mapping
+
+#include <list>
+#include <vector>
+#include <map>
+#include <string>
+#include <cassert>
+#include <dbus/dbus.h>
+
+#include <dbustl-1/TypesConvertion>
+
+namespace dbustl {
+  
+    /* integral types */
+    
+    //Implemented by dbustl for all basic types : the DBUS type into which the C++ type maps
+    template<typename T> int dbustlPreferedType();
+    
+    template<typename T> int __dbustlPreferedSignedIntegralType()
+    {
+        int dbus_type = DBUS_TYPE_INVALID;
+        switch(sizeof(T)) {
+            case 2:
+                dbus_type = DBUS_TYPE_INT16;
+                break;
+            case 4:
+                dbus_type = DBUS_TYPE_INT32;
+                break;
+            case 8:
+                dbus_type = DBUS_TYPE_INT64;
+                break;
+            default:
+                assert("The supplied argument does not match any integer size supported by DBUS");
+        }
+        return dbus_type;
+    }
+  
+    template<typename T> int __dbustlPreferedUnsignedIntegralType()
+    {
+        int dbus_type = DBUS_TYPE_INVALID;
+        switch(sizeof(T)) {
+            case 1:
+                dbus_type = DBUS_TYPE_BYTE;
+                break;
+            case 2:
+                dbus_type = DBUS_TYPE_UINT16;
+                break;
+            case 4:
+                dbus_type = DBUS_TYPE_UINT32;
+                break;
+            case 8:
+                dbus_type = DBUS_TYPE_UINT64;
+                break;
+            default:
+                assert("The supplied argument does not match any integer size supported by DBUS");
+        }
+        return dbus_type;
+    }
+    
+    template<typename T> 
+    inline dbus_bool_t __deserializeSignedIntegral(DBusMessageIter* it, T* arg)
+    {
+        switch(dbus_message_iter_get_arg_type(it)) {
+        case DBUS_TYPE_BYTE: {
+            uint8_t d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_INT16: {
+            int16_t d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_UINT16: {
+            if(sizeof(T) >= 4) {
+                int16_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_INT32: {
+            if(sizeof(T) >= 4) {
+                int32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT32: {
+            if(sizeof(T) >= 8) {
+                uint32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_INT64: {
+            if(sizeof(T) >= 8) {
+                int64_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        default:
+            return FALSE;
+        };
+    }
+
+    template<typename T> 
+    inline dbus_bool_t __deserializeUnsignedIntegral(DBusMessageIter* it, T* arg)
+    {
+        switch(dbus_message_iter_get_arg_type(it)) {
+        case DBUS_TYPE_BYTE: {
+            uint8_t d;          
+            dbus_message_iter_get_basic(it, &d);
+            *arg = d;
+            return TRUE;
+        }
+        case DBUS_TYPE_UINT16: {
+            if(sizeof(T) >= 2) {
+                int16_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT32: {
+            if(sizeof(T) >= 4) {
+                uint32_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        case DBUS_TYPE_UINT64: {
+            if(sizeof(T) >= 8) {
+                uint64_t d;          
+                dbus_message_iter_get_basic(it, &d);
+                *arg = d;
+                return TRUE;
+            }
+            return FALSE;
+        }
+        default:
+            return FALSE;
+        };
+    }
+
+    /* default serialize implementation */
+    template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const T& arg)
+    {
+        return dbus_message_iter_append_basic(it, dbustlPreferedType<T>(), &arg);
+    }
+
+    /* bool */
+    template<> int dbustlPreferedType<bool>() 
+    {
+        return DBUS_TYPE_BOOLEAN;
+    }
+    template<> dbus_bool_t deserialize<bool>(DBusMessageIter* it, bool *arg)
+    {
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_BOOLEAN) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, arg);
+        return TRUE;
+    }
+
+    /* char */
+    template<> int dbustlPreferedType<char>() 
+    {
+        return __dbustlPreferedUnsignedIntegralType<char>();
+    }
+
+    /* signed char */
+    template<> int dbustlPreferedType<signed char>() 
+    {
+        return __dbustlPreferedSignedIntegralType<signed char>();
+    }
+
+    /* unsigned char */
+    template<> int dbustlPreferedType<unsigned char>() 
+    {
+        return __dbustlPreferedUnsignedIntegralType<unsigned char>();
+    }
+    template<> dbus_bool_t deserialize<unsigned char>(DBusMessageIter* it, unsigned char *arg)
+    {
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_BYTE) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, arg);
+        return TRUE;
+    }
+
+    /* short */
+    template<> int dbustlPreferedType<short>() 
+    {
+        return __dbustlPreferedSignedIntegralType<short>();
+    }
+    template<> dbus_bool_t deserialize<short>(DBusMessageIter* it, short* arg)
+    {
+        return __deserializeSignedIntegral<short>(it, arg);
+    }
+
+    /* unsigned short */
+    template<> int dbustlPreferedType<unsigned short>() 
+    {
+        return __dbustlPreferedUnsignedIntegralType<unsigned short>();
+    }
+    template<> dbus_bool_t deserialize<unsigned short>(DBusMessageIter* it, unsigned short* arg)
+    {
+        return __deserializeUnsignedIntegral<unsigned short>(it, arg);
+    }
+
+    /* int */
+    template<> int dbustlPreferedType<int>() 
+    {
+        return __dbustlPreferedSignedIntegralType<int>();
+    }
+    template<> dbus_bool_t serialize(DBusMessageIter* it, const int& arg)
+    {
+        return dbus_message_iter_append_basic(it, dbustlPreferedType<int>(), &arg);
+    }
+    template<> dbus_bool_t deserialize<int>(DBusMessageIter* it, int* arg)
+    {
+        return __deserializeSignedIntegral<int>(it, arg);
+    }
+
+    /* unsigned int */
+    template<> int dbustlPreferedType<unsigned int>() 
+    {
+        return __dbustlPreferedUnsignedIntegralType<unsigned int>();
+    }
+    template<> dbus_bool_t deserialize<unsigned int>(DBusMessageIter* it, unsigned int* arg)
+    {
+        return __deserializeUnsignedIntegral<unsigned int>(it, arg);
+    }
+
+    /* long */
+    template<> int dbustlPreferedType<long>() 
+    {
+        return __dbustlPreferedSignedIntegralType<long>();
+    }
+    template<> dbus_bool_t deserialize<long>(DBusMessageIter* it, long* arg)
+    {
+        return __deserializeSignedIntegral<long>(it, arg);
+    }
+
+    /* unsigned long */
+    template<> int dbustlPreferedType<unsigned long>() 
+    {
+        return __dbustlPreferedUnsignedIntegralType<unsigned long>();
+    }
+    template<> dbus_bool_t deserialize<unsigned long>(DBusMessageIter* it, unsigned long* arg)
+    {
+        return __deserializeUnsignedIntegral<unsigned long>(it, arg);
+    }
+
+    /* long long */
+    template<> int dbustlPreferedType<long long>() 
+    {
+        return __dbustlPreferedSignedIntegralType<long long>();
+    }
+    template<> dbus_bool_t deserialize<long long>(DBusMessageIter* it, long long* arg)
+    {
+        return __deserializeSignedIntegral<long long>(it, arg);
+    }
+
+    /* unsigned long long */
+    template<> int dbustlPreferedType<unsigned long long>() 
+    {
+        return __dbustlPreferedUnsignedIntegralType<unsigned long long>();
+    }
+    template<> dbus_bool_t deserialize<unsigned long long>(DBusMessageIter* it, unsigned long long* arg)
+    {
+        return __deserializeUnsignedIntegral<unsigned long long>(it, arg);
+    }
+
+    /* float - on way only */
+    template<> int dbustlPreferedType<float>() 
+    {
+        return DBUS_TYPE_DOUBLE;
+    }
+    template<> dbus_bool_t serialize<float>(DBusMessageIter* it, const float& arg)
+    {
+        double val = arg;
+        return dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &val);
+    }
+
+    /* double */
+    template<> int dbustlPreferedType<double>() 
+    {
+        return DBUS_TYPE_DOUBLE;
+    }
+    template<> dbus_bool_t deserialize<double>(DBusMessageIter* it, double *arg)
+    {
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_DOUBLE) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, arg);
+        return TRUE;
+    }
+
+    /* const char* - one way only */
+    template<> int dbustlPreferedType<const char*>() 
+    {
+        return DBUS_TYPE_STRING;
+    }
+    
+    /* std::string */
+    template<> int dbustlPreferedType<std::string>() 
+    {
+        return DBUS_TYPE_STRING;
+    }
+    template<> dbus_bool_t serialize<std::string>(DBusMessageIter* it, const std::string& arg)
+    {
+        const char *cstring = arg.c_str();
+        return dbus_message_iter_append_basic(it, dbustlPreferedType<std::string>(), &cstring);
+    }
+    template<> dbus_bool_t deserialize<std::string>(DBusMessageIter* it, std::string* arg)
+    {
+        const char *str;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_STRING) {
+            return FALSE;
+        }
+        dbus_message_iter_get_basic(it, &str);
+        *arg = str;
+        return TRUE;
+    }
+
+    /* Containers section */
+
+    /* Containers helpers */
+    // Default implementation : valid for basic types only
+    template <typename T> std::string __dbustlGenerateSignature(T&)
+    {
+        char content_type[2] = {0, 0};
+        content_type[0] = (char)dbustlPreferedType<T>();
+        return content_type;
+    }
+    
+    /* std::list */
+    template <typename T> std::string __dbustlGenerateSignature(std::list<T>&)
+    {
+        T element;
+        return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbustlGenerateSignature(element);
+    }
+        
+    template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const std::list<T>& arg)
+    {
+        typename std::list<T>::const_iterator containerIter;
+        DBusMessageIter subIterator;
+        T element;
+        if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+          __dbustlGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+            return FALSE;
+        }
+        
+        for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+            if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+        }
+        
+        return dbus_message_iter_close_container(it, &subIterator);
+    }
+    
+    template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
+    {
+        DBusMessageIter subIterator;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+            return FALSE;
+        }
+        
+        dbus_message_iter_recurse(it, &subIterator);
+        while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+            arg->push_back(T());
+            if(deserialize(&subIterator, &arg->back()) == FALSE) {
+                return FALSE;
+            }
+            dbus_message_iter_next(&subIterator);
+        }
+        
+        return TRUE;
+    }
+
+    /* std::vector */
+    template <typename T> std::string __dbustlGenerateSignature(std::vector<T>&)
+    {
+        T element;
+        return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbustlGenerateSignature(element);
+    }
+        
+    template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const std::vector<T>& arg)
+    {
+        typename std::vector<T>::const_iterator containerIter;
+        DBusMessageIter subIterator;
+        T element;
+        if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+          __dbustlGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+            return FALSE;
+        }
+        
+        for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+            if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+        }
+        
+        return dbus_message_iter_close_container(it, &subIterator);
+    }
+    
+    template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
+    {
+        DBusMessageIter subIterator;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+            return FALSE;
+        }
+        
+        dbus_message_iter_recurse(it, &subIterator);
+        while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+            arg->push_back(T());
+            if(deserialize(&subIterator, &arg->back()) == FALSE) {
+                return FALSE;
+            }
+            dbus_message_iter_next(&subIterator);
+        }
+        
+        return TRUE;
+    }
+
+    /* std::map */
+    template <typename K, typename V> std::string __dbustlGenerateSignature(std::pair<const K, V>&)
+    {
+        K key;
+        V value;
+        return std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
+            __dbustlGenerateSignature(key) +
+            __dbustlGenerateSignature(value) +
+            DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
+    }
+        
+    template<typename K, typename V> dbus_bool_t serialize(DBusMessageIter* it, const std::map<K, V>& arg)
+    {
+        typename std::map<K, V>::const_iterator containerIter;
+        typename std::map<K, V>::value_type v;
+        DBusMessageIter arrayIterator;
+
+        if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+            __dbustlGenerateSignature(v).c_str(), &arrayIterator) == FALSE) {
+            return FALSE;
+        }
+        
+        for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+            DBusMessageIter dictEntryIterator;
+            if(dbus_message_iter_open_container(&arrayIterator, DBUS_TYPE_DICT_ENTRY, NULL, &dictEntryIterator) == FALSE) {
+                return FALSE;
+            }
+            if(serialize(&dictEntryIterator, containerIter->first) == FALSE) return FALSE;
+            if(serialize(&dictEntryIterator, containerIter->second) == FALSE) return FALSE;
+            if(dbus_message_iter_close_container(&arrayIterator, &dictEntryIterator) == FALSE) return FALSE;
+        }
+        
+        return dbus_message_iter_close_container(it, &arrayIterator);
+    }
+    
+    
+    template<typename K, typename V> dbus_bool_t deserialize(DBusMessageIter* it, std::map<K, V>* arg)
+    {
+        DBusMessageIter arrayIterator;
+        DBusMessageIter dictEntryIterator;
+        if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+            return FALSE;
+        }
+        
+        dbus_message_iter_recurse(it, &arrayIterator);
+        while (dbus_message_iter_get_arg_type(&arrayIterator) == DBUS_TYPE_DICT_ENTRY) {
+            dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
+            std::pair<K, V> v;
+            
+            if(deserialize(&dictEntryIterator, &v.first) == FALSE) {
+                return FALSE;
+            }
+            
+            std::pair<typename std::map<K, V>::iterator, bool> ins = arg->insert(v);
+            //Insert should always succeed, otherwiser other side has sent us crap
+            //If not (which we have to deal with due to security issues), we bail out
+            if(!ins.second) return FALSE;
+            
+            dbus_message_iter_next(&dictEntryIterator);
+            if(deserialize(&dictEntryIterator, &(ins.first->second)) == FALSE) {
+                return FALSE;
+            }
+
+            dbus_message_iter_next(&arrayIterator);
+        }
+        
+        return TRUE;
+    }
+}
+
+#endif

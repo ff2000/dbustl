@@ -1,0 +1,57 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_GLIBMAINLOOPINTEGRATION
+#define DBUSTL_GLIBMAINLOOPINTEGRATION
+
+#include <dbustl-1/MainLoopIntegration>
+
+#include <glib.h>
+
+namespace dbustl {
+
+    class Connection;
+
+    class GlibMainLoopIntegration : public MainLoopIntegration {
+        public:
+            GlibMainLoopIntegration(GMainContext *ctxt = 0);
+            virtual ~GlibMainLoopIntegration();
+            //Virtual constructor : builds an MainLoopIntegration object with the same
+            //characteristics as this one (same integration method, same thread, same everything ...)
+            virtual MainLoopIntegration* construct() const;
+            //Associates this MainLoopIntegration object with the given DBus connection
+            //A MainLoopIntegration object can only be associated with one Connection at a time : 
+            //this method will be called exactly once
+            virtual void connect(Connection* conn);
+
+        private:
+            //forbidden methods
+            GlibMainLoopIntegration(const GlibMainLoopIntegration&);
+            GlibMainLoopIntegration& operator=(GlibMainLoopIntegration&);
+            
+            GMainContext *_ctxt;
+    };
+
+}
+
+#endif /* DBUSTL_GLIBMAINLOOPINTEGRATION */

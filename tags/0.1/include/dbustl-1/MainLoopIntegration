@@ -1,0 +1,55 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_MAINLOOPINTEGRATION
+#define DBUSTL_MAINLOOPINTEGRATION
+
+namespace dbustl {
+
+    class Connection;
+
+    //This is an abstract base call for integration of dbustl into native toolkits (Glib, Qt, ...)
+    class MainLoopIntegration {
+        public:
+            virtual ~MainLoopIntegration() {};
+            //Virtual constructor : builds an MainLoopIntegration object with the same
+            //characteristics as this one (same integration method, same thread, same everything ...)
+            virtual MainLoopIntegration* construct() const = 0;
+            //Associates this MainLoopIntegration object with the given DBus connection
+            //A MainLoopIntegration object can only be associated with one Connection at a time : 
+            //this method must be called exactly once
+            virtual void connect(Connection* conn) = 0;
+
+        protected:
+            //Constructor for children
+            MainLoopIntegration() {};
+
+        private:
+            //forbidden methods
+            MainLoopIntegration(const MainLoopIntegration&);
+            MainLoopIntegration& operator=(MainLoopIntegration&);
+    };
+
+}
+
+#endif /* DBUSTL_MAINLOOPINTEGRATION */
