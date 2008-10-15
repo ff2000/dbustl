@@ -1,5 +1,8 @@
 SUBDIRS = . tests
 
+#License files
+EXTRA_DIST = COPYING COPYING.LESSER
+
 #Common flags definitions
 AM_CXXFLAGS = @CXX0X_CFLAGS@ -W -Wall -Iinclude @DBUS_CFLAGS@
 #Common libraries
