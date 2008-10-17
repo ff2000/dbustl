@@ -1,0 +1,92 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_CONNECTION
+#define DBUSTL_CONNECTION
+
+#include <dbus/dbus.h>
+
+#include <memory>
+
+namespace dbustl {
+
+   class ConnectionInitializer;
+   
+   class MainLoopIntegration;
+
+   class Connection {
+        public:
+            //Return a singleton to the system BUS. Do not destroy it
+            static Connection * systemBus();
+            //Return a singleton to the session BUS. Do not destroy it
+            static Connection * sessionBus();
+
+            //Specifies the Main Loop (Glib, Qt, others, ...) in which to integrate
+            //the newly created connections
+            //May be called more than once
+            static void useMainLoop(const MainLoopIntegration& mainloop);
+
+            //Creates a new dedicated connection on the given bus.
+            Connection(DBusBusType bustype);
+            //Creates a new dedicated connection on the given bus. Specifies in which main loop
+            //to process received messages
+            Connection(DBusBusType bustype, 
+              std::auto_ptr<MainLoopIntegration> mainLoop);
+            
+            ~Connection();
+
+            //If True, means the connection is not on a system bus, 
+            //but is private between two applications.
+            bool isPrivate() { return _isPrivate;};
+
+            //Should ne be used, reserved for internal use
+            DBusConnection * dbus();
+
+        private:
+            //Disallow construct that would bypass the static initializers
+            Connection(const Connection&);
+            Connection& operator=(Connection&);
+        
+            //Low level connection
+            DBusConnection *_llconn;
+            //Mainloop used for this connection
+            std::auto_ptr<MainLoopIntegration> _mainLoop;
+            //If True, means the connection is not on a system bus, 
+            //but is private between two applications.
+            bool _isPrivate;
+            
+            //globally shared System bus connection
+            static Connection *_system;
+            //globally shared Session bus connection
+            static Connection *_session;
+            //default main loop
+            static std::auto_ptr<MainLoopIntegration> _defaultMainLoop;
+                        
+            //To be called by ConnectionInitializer only
+            friend class ConnectionInitializer;
+            static void cleanup();
+    };
+
+}
+
+#endif /* DBUSTL_CONNECTION */

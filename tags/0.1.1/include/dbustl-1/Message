@@ -1,0 +1,137 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_MESSAGE
+#define DBUSTL_MESSAGE
+
+#include <iostream>
+#include <dbus/dbus.h>
+
+#include <cassert>
+
+namespace dbustl {
+
+    //Utility class: Handles DBusMessage refcounting automagically and provides
+    //facilities for serialization& deserialisation through uses of << and >> operators
+    class Message {
+        public:
+            Message();
+
+            Message(DBusMessage *msg);
+
+            Message(const Message& other);
+
+            ~Message();
+            
+            Message& operator=(Message& other);
+            
+            Message& operator=(DBusMessage *msg);
+            
+            template<typename T> Message& operator<<(const T& inarg);
+
+            template<typename T> Message& operator>>(T& outarg);
+
+            template<typename T> Message& operator>>(T* outarg);
+            
+            //Tells if there is this object is not void (i.e. no DBus message associated)
+            bool isNull() const { return (_msg == NULL); };
+            
+            //True is no issue while serializing or deserializing arguments
+            bool isValid() const { return _valid; };
+            
+            //Returns the number of times the >> operator has been called
+            int parsedArguments() const { return _parsedArguments; };
+            
+            //Returns the message member, as per defined by DBUS specification
+            //if message is a signal, this returns the signal name
+            std::string member() const;
+            
+            //Returns the message interface, as per defined by DBUS specification
+            std::string interface() const;
+            
+            DBusMessage* dbus() { return _msg; };
+            
+        private:
+            DBusMessage *_msg;
+            bool _valid;
+            bool _iteratorInitialized;
+            int _parsedArguments;
+            DBusMessageIter _it;
+    };
+
+    template<typename T> Message& Message::operator<<(const T& inarg)
+    {
+        assert(_msg);
+        
+        if(!_iteratorInitialized) {
+            dbus_message_iter_init_append(_msg, &_it);
+            _iteratorInitialized = true;
+        }
+
+        //If message is already screwed up, we just discard the other arguments
+        if(_valid) {
+            _valid = (serialize(&_it, inarg) == TRUE);
+        }
+        return *this;
+    }
+
+    template<typename T> Message& Message::operator>>(T& outarg)
+    {
+        return this->operator>>(&outarg);
+    }
+
+    template<typename T> Message& Message::operator>>(T* outarg)
+    {
+        assert(_msg);
+
+        if(_iteratorInitialized) {
+            dbus_message_iter_next(&_it);
+        }
+        else {
+            dbus_message_iter_init(_msg, &_it);
+            _iteratorInitialized = true;
+        }
+
+        //If we are past the end, we mark the message as invalid
+        int arg_type = dbus_message_iter_get_arg_type(&_it);
+        if(arg_type != DBUS_TYPE_INVALID) {
+            if(_valid) {
+                _valid = (deserialize(&_it, outarg) == TRUE);
+                if(!_valid) {
+                    std::cerr << "The received DBUS format '" << (char)arg_type 
+                    << "' is not compatible with the return argument at index " 
+                    << _parsedArguments << std::endl;
+                }
+            }
+        }
+        else {
+            _valid = false;
+        }
+        _parsedArguments++;
+        return *this;
+    }
+
+}
+
+#endif /* DBUSTL_MESSAGE */
+
