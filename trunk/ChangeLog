@@ -1,0 +1,5 @@
+v 0.1.1: BugFix release
+  * Fix pkg-config include path
+  * Added missing unit test file
+
+v 0.1:  Initial Release
