@@ -24,13 +24,13 @@
 #ifndef DBUSTL_CONFIG
 #define DBUSTL_CONFIG
 
-/** \file Config
+/** @file Config
  * This file contains detection heuristics for variadic templates support.
  *
  * For now the only supported compiler is GCC.
  */
 
-/** \def DBUSTL_VARIADIC_TEMPLATES
+/** @def DBUSTL_VARIADIC_TEMPLATES
  * Tells if the compiler that includes this header file supports variadic
  *  templates.
  */
