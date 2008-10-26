@@ -25,10 +25,6 @@
 
 namespace dbustl {
 
-Message::Message() : _msg(NULL), _valid(true), _iteratorInitialized(false), _parsedArguments(0)
-{
-}
-
 Message::Message(DBusMessage *msg)
   : _msg(msg), _valid(true), _iteratorInitialized(false), _parsedArguments(0)
 {
