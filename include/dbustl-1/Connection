@@ -47,7 +47,7 @@ namespace dbustl {
             static void useMainLoop(const MainLoopIntegration& mainloop);
 
             //Creates a new dedicated connection on the given bus.
-            Connection(DBusBusType bustype);
+            explicit Connection(DBusBusType bustype);
             //Creates a new dedicated connection on the given bus. Specifies in which main loop
             //to process received messages
             Connection(DBusBusType bustype, 
