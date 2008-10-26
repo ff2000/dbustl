@@ -54,7 +54,13 @@ ClientProxy::~ClientProxy()
         // Beware : due to the fact the method below erases() the map element while we still
         // need some bits of its (i.e. signal name), we have to make a copy
         std::string sigName = it->first;
-        removeSignalHandler(sigName);
+        //C++ Destructors must not throw, so protect those calls
+        try {
+            removeSignalHandler(sigName);
+        }
+        catch(const DBusException& e) {
+            //Skip exception
+        }
     }
 }
 
