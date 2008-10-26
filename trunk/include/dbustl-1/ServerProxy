@@ -40,7 +40,8 @@ namespace dbustl {
 
     class Connection;
 
-    /** TDB
+    /** 
+     * Defines a proxy, used to call methods an receive signals on a remote DBus object.
      * @nosubgrouping
      */
 
@@ -48,22 +49,48 @@ namespace dbustl {
         public:
             /**@name Proxy settings*/
             /*@{*/
-            // Path the object path we target
-            // destination is only required if this connection talks to a message bus
-            // In this case it must contain the name of the connection this message is intended for,
-            // otherwise giving the object path is enough
+            /**
+             * Creates a proxy for the object uniquely identified by the (conn, path, destination) triplet.
+             * 
+             * Beware: It is a design error to create more that one proxy on the same object on the same connection.
+             * 
+             * @param conn The DBus Connection used on which the object to call on is found.
+             *  Usually one of Connection::systemBus or Connection::sessionBus
+             * @param path The DBus object path of the target objet
+             * @param destination The DBus connection name on the given bus where the object we which
+             *  to call on is found. Destination is only required if this connection talks to a message bus.
+             *  In this case it must contain the name of the connection this message is intended for.
+             */
             ServerProxy(Connection* conn, const std::string& path, const std::string& destination = "");
+
+            /**
+             * Destructor
+             * 
+             * The destructor is non virtual on purpose, this class is not
+             * designed for inheritance.
+             */
             ~ServerProxy();
 
-            // For synchronous blocking calls, set the timeout in milliseconds.
-            // -1 means default value (very long)
+            /** 
+             * For synchronous blocking calls, set the timeout in milliseconds.
+             *
+             *  -1 means default value (very long)
+             */
+
             void setTimeout(int timeout) { _timeout = timeout; };
-            // Sets the interface to use for the remote object.
-            // If empty(the default), the default interface is used
+
+            /**
+             * Sets the interface to use for all the calls on the remote object.
+             * 
+             * If empty (the default), the default interface is used.
+             * @param interface dbus interface name
+             */
             void setInterface(const std::string& interface) { _interface = interface; };
 
         #ifndef DBUSTL_NO_EXCEPTIONS
-            //Returns the last error that happened
+            /**
+             * In case exception are not enabled, returns the last error that happened.
+             */
             const DBusException& error();
         #endif
             /*@}*/
@@ -133,7 +160,7 @@ namespace dbustl {
             public:    
                 /**
                  * Public constructor.
-                 * @name the interface to call method on.
+                 * @param name the interface to call method on.
                  */
                 Interface(std::string name) : _name(name) {};
                 /**
@@ -393,7 +420,7 @@ namespace dbustl {
             }
         }
         else {
-            throw_or_set("TBD", "Disconnected");
+            throw_or_set("org.dbustl", "The remote side of has closed the connection prematurely");
         }
     }
 
