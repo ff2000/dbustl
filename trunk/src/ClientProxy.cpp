@@ -63,7 +63,8 @@ Message ClientProxy::createMethodCall(const std::string& methodName) const
     const char *dest = _destination.empty() ? NULL : _destination.c_str();
     const char *intf = _interface.empty() ? NULL : _interface.c_str();
     
-    return dbus_message_new_method_call(dest, _path.c_str(), intf, methodName.c_str());
+    return Message(dbus_message_new_method_call(dest, _path.c_str(), 
+                    intf, methodName.c_str()));
 }
 
 Message ClientProxy::call(Message& method_call)

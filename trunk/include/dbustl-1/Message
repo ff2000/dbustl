@@ -37,7 +37,7 @@ namespace dbustl {
         public:
             Message();
 
-            Message(DBusMessage *msg);
+            explicit Message(DBusMessage *msg);
 
             Message(const Message& other);
 
