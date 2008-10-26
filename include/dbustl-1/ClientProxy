@@ -109,10 +109,21 @@ namespace dbustl {
             //Removes one of the handler set by one of the calls above
             bool removeSignalHandler(const std::string& signalName);
 
-            //Helper class 
+            /**
+             * This class is used in call() member of ClientProxy class to use
+             * an alternative Interface name for that particular method call only.
+             */
             class Interface {
             public:    
+                /**
+                 * Public constructor.
+                 * @name the interface to call method on.
+                 */
                 Interface(std::string name) : _name(name) {};
+                /**
+                 * Public accessor.
+                 * @returns the interface name.
+                 */
                 const std::string& name() const { return _name; };
             private:
                 std::string _name;
