@@ -55,7 +55,8 @@ namespace dbustl {
              * Beware: It is a design error to create more that one proxy on the same object on the same connection.
              * 
              * @param conn The DBus Connection used on which the object to call on is found.
-             *  Usually one of Connection::systemBus or Connection::sessionBus
+             *  Usually one of Connection::systemBus or Connection::sessionBus. The conn object must remain valid
+             *  until the proxy object is destroyed.
              * @param path The DBus object path of the target objet
              * @param destination The DBus connection name on the given bus where the object we which
              *  to call on is found. Destination is only required if this connection talks to a message bus.
@@ -277,6 +278,8 @@ namespace dbustl {
             int _timeout; 
             DBusException _error;
             
+            /** @cond */
+            //This does not show up in doxygen
             struct FunctorWrapper {
                 typedef void (*call_functor_t)(void *functor, Message& signal);
                 typedef void (*delete_functor_t)(void *functor);
@@ -292,6 +295,7 @@ namespace dbustl {
                 call_functor_t call_functor;
                 delete_functor_t delete_functor;
             };                
+            /** @endcond */
             //Signals callbacks, per signal
             std::map<std::string, FunctorWrapper> _signalsHandlers;    
             

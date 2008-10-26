@@ -149,6 +149,9 @@ namespace dbustl {
             
             /**
              * The DBUS C api structure: don't use it!
+             * 
+             * You should only use it if you <strong>really</strong> know
+             * what you are doing.
              */
             DBusMessage* dbus() { return _msg; };
             
