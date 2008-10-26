@@ -63,6 +63,10 @@ namespace dbustl {
             /**
              * Returns a singleton to the system bus.
              * 
+             * If Connection::useMainLoop has been called beforehand, this connection
+             * is associated with the provided mainloop. Otherwise
+             * this connection is not associated with any main loop.
+             * 
              * Do not destroy it, it will be automatically freed at
              * program shutdown
              */
@@ -70,6 +74,10 @@ namespace dbustl {
 
             /**
              * Returns a singleton to the session bus.
+             * 
+             * If Connection::useMainLoop has been called beforehand, this connection
+             * is associated with the provided mainloop. Otherwise
+             * this connection is not associated with any main loop.
              * 
              * Do not destroy it, it will be automatically freed at
              * program shutdown
@@ -84,6 +92,10 @@ namespace dbustl {
             static void useMainLoop(const MainLoopIntegration& mainloop);
 
             /** Creates a new dedicated connection on the given bus.
+             * 
+             * If Connection::useMainLoop has been called beforehand, this connection
+             * is associated with the provided mainloop. Otherwise
+             * this connection is not associated with any main loop.
              * 
              * @param bustype one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION}
              */
