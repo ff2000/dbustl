@@ -30,36 +30,92 @@
 
 namespace dbustl {
 
-   class ConnectionInitializer;
+    class ConnectionInitializer;
    
-   class MainLoopIntegration;
+    class MainLoopIntegration;
 
-   class Connection {
+    /**
+     * Provides an abstraction of a DBus Connection. 
+     * 
+     * A DBUS connection is a dedicated link between two applications
+     * that wish to exchange DBUS messages.
+     * DBus connections can be either private (which is not supported
+     * at the moment), or be connections to a bus, which is in charge
+     * of routing messages to the right process.
+     * 
+     * A DBus Connection is needed to instantiate ServerProxy objects.
+     * 
+     * The simplest way to have a connection to a bus is through a call 
+     * to Connection::systemBus or Connection::sessionBus
+     * 
+     * To be able to process signals, the connection must be associated 
+     * with a main loop. A main loop must be provided either:
+     *   - before any call to Connection::Connection, Connection::systemBus or Connection::sessionBus, using
+     *     Connection::useMainLoop static member.
+     *   - during object construction, through the use of 
+     *     the alternate Connection(DBusBusType bustype,std::auto_ptr<MainLoopIntegration> mainLoop) constructor
+     * 
+     * If no signals are to be received, then main loop association 
+     * remains optionnal.
+     */
+    class Connection {
         public:
-            //Return a singleton to the system BUS. Do not destroy it
+            /**
+             * Returns a singleton to the system bus.
+             * 
+             * Do not destroy it, it will be automatically freed at
+             * program shutdown
+             */
             static Connection * systemBus();
-            //Return a singleton to the session BUS. Do not destroy it
+
+            /**
+             * Returns a singleton to the session bus.
+             * 
+             * Do not destroy it, it will be automatically freed at
+             * program shutdown
+             */
             static Connection * sessionBus();
 
-            //Specifies the Main Loop (Glib, Qt, others, ...) in which to integrate
-            //the newly created connections
-            //May be called more than once
+            /**
+             * Specifies the Main Loop (Glib, Qt, any other) in which to integrate
+             * the newly created connections.
+             * It is safe to call it more than once.
+             */
             static void useMainLoop(const MainLoopIntegration& mainloop);
 
-            //Creates a new dedicated connection on the given bus.
+            /** Creates a new dedicated connection on the given bus.
+             * 
+             * @param bustype one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION}
+             */
             explicit Connection(DBusBusType bustype);
-            //Creates a new dedicated connection on the given bus. Specifies in which main loop
-            //to process received messages
+            
+            /**
+             * Creates a new dedicated connection on the given bus, specifying in which main loop
+             * to process received messages
+             */
             Connection(DBusBusType bustype, 
               std::auto_ptr<MainLoopIntegration> mainLoop);
             
+            /**
+             * Destructor
+             * 
+             * The destructor is non virtual on purpose, this class is not
+             * designed for inheritance.
+             */
             ~Connection();
 
-            //If True, means the connection is not on a system bus, 
-            //but is private between two applications.
+            /**
+             * If True, means the connection is not on a system or session bus, 
+             * but is private between two applications.
+             */
             bool isPrivate() { return _isPrivate;};
 
-            //Should ne be used, reserved for internal use
+            /**
+             * The DBUS C api structure: don't use it!
+             * 
+             * You should only use it if you <strong>really</strong> know
+             * what you are doing.
+             */
             DBusConnection * dbus();
 
         private:
@@ -71,8 +127,6 @@ namespace dbustl {
             DBusConnection *_llconn;
             //Mainloop used for this connection
             std::auto_ptr<MainLoopIntegration> _mainLoop;
-            //If True, means the connection is not on a system bus, 
-            //but is private between two applications.
             bool _isPrivate;
             
             //globally shared System bus connection
@@ -82,8 +136,10 @@ namespace dbustl {
             //default main loop
             static std::auto_ptr<MainLoopIntegration> _defaultMainLoop;
                         
-            //To be called by ConnectionInitializer only
+            /** @cond */
             friend class ConnectionInitializer;
+            /** @endcond */
+            //To be called by ConnectionInitializer only
             static void cleanup();
     };
 
