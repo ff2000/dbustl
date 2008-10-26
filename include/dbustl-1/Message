@@ -31,44 +31,125 @@
 
 namespace dbustl {
 
-    //Utility class: Handles DBusMessage refcounting automagically and provides
-    //facilities for serialization& deserialisation through uses of << and >> operators
+    /**
+      * Message is a lightweight wrapper class around DBus C API DBusMessage struct.
+      * 
+      * This class encapsulates  a DBusMessage DBus C API object.
+      * 
+      * This class provides the following benefits over its C counterpart:
+      *   - Partial encapsulation of a what a DBUS message is, so that the end user
+      * does not have to manipulate the DBus C API directly.
+      *   - Automatic reference counting of underlying C struct
+      *   - operator >> to deserialize messages arguments
+      *   - operator << to serialize messages arguments
+      * 
+      * This class is implicitly shared, which means that if you make a copy
+      * of it, the new copy with share its internal data and state with the original.
+      * 
+      * Please note that as end user of DBus library, you are not supposed
+      * to instantiate objects from this class by yourself, but use instances that
+      * are built for your by DBUSTL.
+      * 
+      * You will have to use this class for signals reception or asynchronous
+      * method calls reply. In all other cases everything should be handled
+      * behind the scene for you.
+      * 
+      * This class provides a dbus() method that is public but that you are not
+      * supposed to use, unless you *really* know what you are doing. 
+      */
+
     class Message {
         public:
-            Message();
-
+            /**
+             * Builds a Message from a DBusMessage C-API struct.
+             *
+             * Once the object has been created, it takes ownership of
+             * the underlying DBusMessage C struct and is responsible
+             * to unref it when it is not needed anymore.
+             *  
+             * If you are using this constructor in your code, then you probably
+             * are trying to abuse DBUSTL in a way it was never design to be
+             * used. Do it at your own risk.
+             */
             explicit Message(DBusMessage *msg);
 
+            /**
+             * Copy constructor
+             * 
+             * Handles refcounting of unrelying DBusMessage C struct
+             */
             Message(const Message& other);
 
+            /**
+             * Destructor
+             * 
+             * The destructor is non virtual on purpose, this class is not
+             * designed for inheritance.
+             */
             ~Message();
             
+            /**
+             * Copy operator
+             * 
+             * Handles refcounting of unrelying DBusMessage C struct
+             */
             Message& operator=(Message& other);
             
+            /**
+             * Copy operator
+             * 
+             * Handles refcounting of unrelying DBusMessage C struct
+             */
             Message& operator=(DBusMessage *msg);
             
+            /**
+             * Adds an argument to the message.
+             */
             template<typename T> Message& operator<<(const T& inarg);
 
+            /**
+             * Reads an argument from the message.
+             */
             template<typename T> Message& operator>>(T& outarg);
 
+            /**
+             * Reads an argument from the message.
+             */
             template<typename T> Message& operator>>(T* outarg);
             
-            //Tells if there is this object is not void (i.e. no DBus message associated)
+            /**
+             * Tells if the underlying C struct is NULL.
+             * 
+             * If it is null then calling any other method is invalid.
+             */
             bool isNull() const { return (_msg == NULL); };
             
-            //True is no issue while serializing or deserializing arguments
+            /**
+             * A message is invalid if some issues (such as arguments type mismatch)
+             * happens during serialization or deserialization.
+             */
             bool isValid() const { return _valid; };
             
-            //Returns the number of times the >> operator has been called
+            /**
+             * Returns the number of times the >> operator has been called
+             */
             int parsedArguments() const { return _parsedArguments; };
             
-            //Returns the message member, as per defined by DBUS specification
-            //if message is a signal, this returns the signal name
+            /**
+             * Returns the message member, as per the DBUS specification.
+             * 
+             * If the message is a signal, this equivalentto the signal name
+             */
             std::string member() const;
             
-            //Returns the message interface, as per defined by DBUS specification
+            /**
+             * Returns the message interface, as per the DBUS specification
+             */
             std::string interface() const;
             
+            /**
+             * The DBUS C api structure: don't use it!
+             */
             DBusMessage* dbus() { return _msg; };
             
         private:
