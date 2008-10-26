@@ -1,13 +1,13 @@
 AC_PREREQ(2.59)
 
-AC_INIT([dbustl], [0.1.1], [fabchevalier@free.fr])
+AC_INIT([dbustl], [0.2], [fabchevalier@free.fr])
 AC_CONFIG_AUX_DIR([config])
 
 AM_INIT_AUTOMAKE([1.9 foreign])
 AM_MAINTAINER_MODE
 
 AC_PROG_CXX
-#Disable libtool shared libraries support, we are way a template library afterall !!
+#Disable libtool shared libraries support, we are a template library afterall !!
 AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 #Check for optionnal C++0x support
@@ -35,5 +35,6 @@ AC_SUBST(GLIB_LIBS)
 AC_CONFIG_FILES([Makefile
                  dbustl-1.pc
                  dbustl-glib-1.pc
+                 Doxyfile
                  tests/Makefile])
 AC_OUTPUT
