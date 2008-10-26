@@ -150,7 +150,7 @@ int main()
     //FIXME : remove dependancy on dbus-glib
     dbus_connection_setup_with_g_main(session->dbus(), NULL);
         
-    dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+    dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
     pythonServerProxy.setInterface("com.example.SampleInterface");
 
  
@@ -222,7 +222,7 @@ int main()
         std::cout << ">Interface modifier" << std::endl;
         pythonServerProxy.setInterface("BOGUS.INTERFACE");
         pythonServerProxy.asyncCall("SimpleHello", &userFunctionCallback,
-          dbustl::ClientProxy::Interface("com.example.SampleInterface"), "Hi"); 
+          dbustl::ServerProxy::Interface("com.example.SampleInterface"), "Hi"); 
         pythonServerProxy.setInterface("com.example.SampleInterface");
         expected_cbs++; 
     }

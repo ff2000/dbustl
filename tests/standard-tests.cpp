@@ -37,7 +37,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">Basic procedure call" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::string message;
         pythonServerProxy.call("SimpleProc"); 
@@ -49,7 +49,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">String parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::string message;
         pythonServerProxy.call("SimpleHello", std::string("Hi"), &message); 
@@ -62,7 +62,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">char* parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::string message;
         pythonServerProxy.call("SimpleHello", "Hi", &message); 
@@ -75,7 +75,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">bool parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         bool value;
         pythonServerProxy.call("test_boolean", false, &value); 
@@ -88,7 +88,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">byte parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         unsigned int in = 254;
         unsigned int out;
@@ -102,7 +102,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">uint16 parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         uint16_t in = 65534;
         uint16_t out;
@@ -116,7 +116,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">int16 parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         int16_t in = 0;
         int16_t out;
@@ -130,7 +130,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">uint32 parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         uint32_t in = (2^32) - 1;
         uint32_t out;
@@ -144,7 +144,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">int32 parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         int32_t in = 0;
         int32_t out;
@@ -158,7 +158,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">uint64 parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         uint64_t in = (2^64) - 1;
         uint64_t out;
@@ -172,7 +172,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">int64 parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         int64_t in = 0;
         int64_t out;
@@ -186,7 +186,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">unsigned long parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         unsigned long in = (2^32) - 1;
         unsigned long out;
@@ -200,7 +200,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">long parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         long in = 0;
         long out;
@@ -214,7 +214,7 @@ int run_vt_tests()
 
     try {
         std::cout << ">double parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         double in = 1.11;
         double out;
@@ -228,7 +228,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">float promotion to double " << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         float in = 1.11;
         double out;
@@ -242,7 +242,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">Array of string " << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<std::string> in, out;
         in.push_back("String 1");
@@ -258,7 +258,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">Array of int " << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<int32_t> in, out;
         in.push_back(1);
@@ -274,7 +274,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">Dict of int->string " << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::map<int32_t, std::string> in, out;
         in[0] = "Entry 0";
@@ -290,7 +290,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">Array of array of integers " << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<std::list<int32_t> > in, out;
         std::list<int32_t> l1, l2, l3;
@@ -314,7 +314,7 @@ int run_vt_tests()
     
     try {
         std::cout << ">Array as vector" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::vector<std::vector<int32_t> > in, out;
         std::vector<int32_t> l1, l2, l3;
@@ -338,10 +338,10 @@ int run_vt_tests()
     
     try {
         std::cout << ">Interface modifier" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         std::string message;
         pythonServerProxy.call("SimpleHello", 
-          dbustl::ClientProxy::Interface("com.example.SampleInterface"), "Hi", &message); 
+          dbustl::ServerProxy::Interface("com.example.SampleInterface"), "Hi", &message); 
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
@@ -351,7 +351,7 @@ int run_vt_tests()
     try {
         std::cout << ">Wrong method test" << std::endl;
         exception_thrown = false;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         pythonServerProxy.call("InexistingMethod", "Hi"); 
     }
@@ -372,7 +372,7 @@ int run_vt_tests()
     try {
         std::cout << ">Wrong return type test" << std::endl;
         exception_thrown = false;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         int message;
         pythonServerProxy.call("SimpleHello", "Hi", &message); 
@@ -412,7 +412,7 @@ int main()
 
     try {
         std::cout << ">NOVT: bool parameter passing" << std::endl;
-        dbustl::ClientProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         dbustl::Message callMsg = pythonServerProxy.createMethodCall("test_boolean");
         callMsg << false;
