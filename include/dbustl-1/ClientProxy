@@ -212,8 +212,7 @@ namespace dbustl {
             static void signalHandlerDelete(void *functor);
 
             //Helper methods for signals processing
-            bool watchSignal(const std::string& signalName);
-            bool unWatchSignal(const std::string& signalName);
+            bool setWatchSignal(const std::string& signalName, bool enable);
 
             Connection *_conn;
             std::string _path;
@@ -449,7 +448,7 @@ namespace dbustl {
     bool ClientProxy::setSignalHandler(const std::string& signalName, const SignalHandler& handler)
     {
         if(!_signalsHandlers.count(signalName)) {
-            if(!watchSignal(signalName)) {
+            if(!setWatchSignal(signalName, true)) {
                 return false;
             }
             

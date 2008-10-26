@@ -151,12 +151,12 @@ bool ClientProxy::removeSignalHandler(const std::string& signalName)
     if(_signalsHandlers.count(signalName)) {
         _signalsHandlers[signalName].delete_functor(_signalsHandlers[signalName].functor);
         _signalsHandlers.erase(signalName);
-        return unWatchSignal(signalName);
+        return setWatchSignal(signalName, false);
     }
     return true;
 }
 
-bool ClientProxy::watchSignal(const std::string& signalName)
+bool ClientProxy::setWatchSignal(const std::string& signalName, bool enable)
 {
     if(!_conn->isPrivate()) {
         std::stringstream match;
@@ -168,28 +168,13 @@ bool ClientProxy::watchSignal(const std::string& signalName)
             match << ",member='" << signalName << "'";
         }
         
-        dbus_bus_add_match(_conn->dbus(), match.str().c_str(), error.dbus());
-        if(error.isSet()) {
-            throw_or_set(error);
-            return false;
+        if(enable) {
+            dbus_bus_add_match(_conn->dbus(), match.str().c_str(), error.dbus());
         }
-    }
-    return true;
-}
-
-bool ClientProxy::unWatchSignal(const std::string& signalName)
-{
-    if(!_conn->isPrivate()) {
-        std::stringstream match;
-        DBusException error;
-        
-        match << "type='signal',path='" << _path << "'";
-        
-        if(signalName.size()) {
-            match << ",member='" << signalName << "'";
+        else {
+            dbus_bus_remove_match(_conn->dbus(), match.str().c_str(), error.dbus());
         }
         
-        dbus_bus_remove_match(_conn->dbus(), match.str().c_str(), error.dbus());
         if(error.isSet()) {
             throw_or_set(error);
             return false;
