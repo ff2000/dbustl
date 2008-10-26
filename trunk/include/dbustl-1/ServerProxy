@@ -150,7 +150,7 @@ namespace dbustl {
 
             //Removes one of the handler set by one of the calls above
             bool removeSignalHandler(const std::string& signalName);
-            /*@}/
+            /*@}*/
 
             /**
              * This class is used in call() member of ServerProxy class to use
