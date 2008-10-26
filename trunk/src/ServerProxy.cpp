@@ -24,20 +24,20 @@
 #include <dbus/dbus.h>
 
 #include <dbustl-1/Connection>
-#include <dbustl-1/ClientProxy>
+#include <dbustl-1/ServerProxy>
 
 namespace dbustl {
 
-DBusObjectPathVTable ClientProxy::_vtable = {
+DBusObjectPathVTable ServerProxy::_vtable = {
     NULL,
-    &ClientProxy::signalsProcessingMethod, 
+    &ServerProxy::signalsProcessingMethod, 
     0,
     0,
     0,
     0
 };
 
-ClientProxy::ClientProxy(Connection* conn, const std::string& path, const std::string& destination) :
+ServerProxy::ServerProxy(Connection* conn, const std::string& path, const std::string& destination) :
   _conn(conn), _path(path), _destination(destination), _timeout(-1)
 {
     if(!dbus_connection_register_object_path(_conn->dbus(), _path.c_str(), &_vtable, this)) {
@@ -45,7 +45,7 @@ ClientProxy::ClientProxy(Connection* conn, const std::string& path, const std::s
     }
 }
 
-ClientProxy::~ClientProxy()
+ServerProxy::~ServerProxy()
 {
     dbus_connection_unregister_object_path(_conn->dbus(), _path.c_str());
 
@@ -64,7 +64,7 @@ ClientProxy::~ClientProxy()
     }
 }
 
-Message ClientProxy::createMethodCall(const std::string& methodName) const
+Message ServerProxy::createMethodCall(const std::string& methodName) const
 {
     const char *dest = _destination.empty() ? NULL : _destination.c_str();
     const char *intf = _interface.empty() ? NULL : _interface.c_str();
@@ -73,7 +73,7 @@ Message ClientProxy::createMethodCall(const std::string& methodName) const
                     intf, methodName.c_str()));
 }
 
-Message ClientProxy::call(Message& method_call)
+Message ServerProxy::call(Message& method_call)
 {
     DBusException error;
     DBusMessage *reply;
@@ -85,7 +85,7 @@ Message ClientProxy::call(Message& method_call)
     return Message(reply);
 }
 
-void ClientProxy::processInArgs(Message& msg)
+void ServerProxy::processInArgs(Message& msg)
 {
     if(msg.isValid()) {
         Message reply(call(msg));
@@ -99,17 +99,17 @@ void ClientProxy::processInArgs(Message& msg)
     }
 }
 
-void ClientProxy::processOutArgs(Message&)
+void ServerProxy::processOutArgs(Message&)
 {
     //TODO handle case where:
     // Not enough return arguments where provided
     // Too much return arguments are provided
 }
 
-DBusHandlerResult ClientProxy::signalsProcessingMethod(DBusConnection *, 
+DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *, 
     DBusMessage *dbusMessage, void *user_data)
 {
-    ClientProxy* proxy = static_cast<ClientProxy *>(user_data);
+    ServerProxy* proxy = static_cast<ServerProxy *>(user_data);
     
     /* Basic sanity check : libdbus tries an approximate match on objects
      * paths, but we want a perfect match */
@@ -152,7 +152,7 @@ DBusHandlerResult ClientProxy::signalsProcessingMethod(DBusConnection *,
     }
 }
 
-bool ClientProxy::removeSignalHandler(const std::string& signalName)
+bool ServerProxy::removeSignalHandler(const std::string& signalName)
 {
     if(_signalsHandlers.count(signalName)) {
         _signalsHandlers[signalName].delete_functor(_signalsHandlers[signalName].functor);
@@ -162,7 +162,7 @@ bool ClientProxy::removeSignalHandler(const std::string& signalName)
     return true;
 }
 
-bool ClientProxy::setWatchSignal(const std::string& signalName, bool enable)
+bool ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
 {
     if(!_conn->isPrivate()) {
         std::stringstream match;

@@ -23,5 +23,5 @@
 
 #include <dbustl-1/Message>
 #include <dbustl-1/Connection>
-#include <dbustl-1/ClientProxy>
+#include <dbustl-1/ServerProxy>
 #include <dbustl-1/StdTypesConvertion>

@@ -12,14 +12,14 @@ lib_LTLIBRARIES = libdbustl-1.la
 libdbustl_1_ladir = $(includedir)/dbustl-1
 libdbustl_1_la_HEADERS = include/dbustl-1/Config \
 				   include/dbustl-1/dbustl \
-                   include/dbustl-1/ClientProxy \
+                   include/dbustl-1/ServerProxy \
                    include/dbustl-1/Connection \
                    include/dbustl-1/DBusException \
                    include/dbustl-1/MainLoopIntegration \
                    include/dbustl-1/Message \
                    include/dbustl-1/StdTypesConvertion \
                    include/dbustl-1/TypesConvertion
-libdbustl_1_la_SOURCES = src/ClientProxy.cpp \
+libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp
