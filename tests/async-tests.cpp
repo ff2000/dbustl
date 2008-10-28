@@ -28,8 +28,6 @@
 #include <cassert>
 #include <glib.h>
 
-#include <dbus/dbus-glib-lowlevel.h>
-
 GMainLoop *mainloop;
 
 //Number of times callbacks were called;
@@ -147,8 +145,6 @@ int main()
     unsigned int expected_cbs = 0;
 
     mainloop = g_main_loop_new(NULL, FALSE);
-    //FIXME : remove dependancy on dbus-glib
-    dbus_connection_setup_with_g_main(session->dbus(), NULL);
         
     dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
     pythonServerProxy.setInterface("com.example.SampleInterface");

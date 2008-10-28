@@ -24,7 +24,9 @@
 #include <dbustl-1/Connection>
 
 #include <dbustl-1/GlibMainLoopIntegration>
-#include <iostream>
+
+//FIXME: remove dependancy on dbus-glib
+#include <dbus/dbus-glib-lowlevel.h>
 
 namespace dbustl {
 
@@ -46,8 +48,10 @@ MainLoopIntegration* GlibMainLoopIntegration::clone() const
     return new GlibMainLoopIntegration(_ctxt);
 }
 
-void GlibMainLoopIntegration::connect(Connection*)
+void GlibMainLoopIntegration::connect(Connection* conn)
 {
+    //FIXME: remove dependancy on dbus-glib
+    dbus_connection_setup_with_g_main(conn->dbus(), NULL);
 }
 
 }
