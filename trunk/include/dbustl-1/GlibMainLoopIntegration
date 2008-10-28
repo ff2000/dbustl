@@ -39,16 +39,15 @@ namespace dbustl {
             //Virtual constructor : builds an MainLoopIntegration object with the same
             //characteristics as this one (same integration method, same thread, same everything ...)
             virtual MainLoopIntegration* clone() const;
-            //Associates this MainLoopIntegration object with the given DBus connection
-            //A MainLoopIntegration object can only be associated with one Connection at a time : 
-            //this method will be called exactly once
-            virtual void connect(Connection* conn);
 
         private:
             //forbidden methods
             GlibMainLoopIntegration(const GlibMainLoopIntegration&);
             GlibMainLoopIntegration& operator=(GlibMainLoopIntegration&);
             
+            //This method is guaranteed to be called no more than once.
+            virtual bool internalConnect(Connection* conn);
+
             GMainContext *_ctxt;
     };
 

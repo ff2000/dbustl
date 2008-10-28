@@ -22,7 +22,8 @@ libdbustl_1_la_HEADERS = include/dbustl-1/Config \
 libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
-                   src/Message.cpp
+                   src/Message.cpp \
+                   src/MainLoopIntegration.cpp
 
 #dbustl pkg-config support
 pkgconfigdir = $(libdir)/pkgconfig

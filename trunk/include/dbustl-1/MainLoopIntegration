@@ -31,23 +31,28 @@ namespace dbustl {
     //This is an abstract base call for integration of dbustl into native toolkits (Glib, Qt, ...)
     class MainLoopIntegration {
         public:
-            virtual ~MainLoopIntegration() {};
+            virtual ~MainLoopIntegration();
             //Virtual constructor : builds an MainLoopIntegration object with the same
             //characteristics as this one (same integration method, same thread, same everything ...)
             virtual MainLoopIntegration* clone() const = 0;
             //Associates this MainLoopIntegration object with the given DBus connection
             //A MainLoopIntegration object can only be associated with one Connection at a time : 
             //this method must be called exactly once
-            virtual void connect(Connection* conn) = 0;
+            void connect(Connection* conn);
 
         protected:
             //Constructor for children
-            MainLoopIntegration() {};
+            MainLoopIntegration();
+            
+            //This method is guaranteed to be called no more than once.
+            virtual bool internalConnect(Connection* conn) = 0;
 
         private:
             //forbidden methods
             MainLoopIntegration(const MainLoopIntegration&);
             MainLoopIntegration& operator=(MainLoopIntegration&);
+            
+            Connection* _conn;
     };
 
 }
