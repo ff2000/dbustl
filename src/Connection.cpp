@@ -40,11 +40,11 @@ ConnectionInitializer ConnectionInitializer::_static;
 
 Connection* Connection::_system;
 Connection* Connection::_session;
-std::auto_ptr<MainLoopIntegration> Connection::_defaultMainLoop;
+MainLoopIntegration* Connection::_defaultMainLoop;
 
 void Connection::useMainLoop(const MainLoopIntegration& mainloop)
 {
-    _defaultMainLoop = std::auto_ptr<MainLoopIntegration>(mainloop.construct());
+    _defaultMainLoop = mainloop.clone();
 }
 
 Connection* Connection::systemBus()
@@ -68,23 +68,22 @@ DBusConnection* Connection::dbus()
     return _llconn;
 }
 
-Connection::Connection(DBusBusType bustype) : _isPrivate(false)
+Connection::Connection(DBusBusType bustype) : _mainLoop(0), _isPrivate(false)
 {
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
     dbus_threads_init_default();
     _llconn = dbus_bus_get_private(bustype, 0);
 
-    if(_defaultMainLoop.get()) {
-        _mainLoop = std::auto_ptr<MainLoopIntegration>(_defaultMainLoop->construct());
+    if(_defaultMainLoop != 0) {
+        _mainLoop = _defaultMainLoop->clone();
         _mainLoop->connect(this);
     }
 }
 
-Connection::Connection(DBusBusType bustype, std::auto_ptr<MainLoopIntegration> mainLoop) : 
-  _mainLoop(mainLoop), _isPrivate(false)
+Connection::Connection(DBusBusType bustype, const MainLoopIntegration& mainLoop) : 
+  _mainLoop(mainLoop.clone()), _isPrivate(false)
 {
-    assert(_mainLoop.get());
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
     dbus_threads_init_default();
@@ -95,11 +94,14 @@ Connection::Connection(DBusBusType bustype, std::auto_ptr<MainLoopIntegration> m
 
 Connection::~Connection()
 {
+    delete _mainLoop;
     dbus_connection_close(_llconn);
     dbus_connection_unref(_llconn);
 }
 
 void Connection::cleanup() {
+    delete _defaultMainLoop;
+    _defaultMainLoop = 0;
     delete _system;
     _system = 0;
     delete _session;

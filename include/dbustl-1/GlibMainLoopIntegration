@@ -38,7 +38,7 @@ namespace dbustl {
             virtual ~GlibMainLoopIntegration();
             //Virtual constructor : builds an MainLoopIntegration object with the same
             //characteristics as this one (same integration method, same thread, same everything ...)
-            virtual MainLoopIntegration* construct() const;
+            virtual MainLoopIntegration* clone() const;
             //Associates this MainLoopIntegration object with the given DBus connection
             //A MainLoopIntegration object can only be associated with one Connection at a time : 
             //this method will be called exactly once
