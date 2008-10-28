@@ -48,10 +48,11 @@ MainLoopIntegration* GlibMainLoopIntegration::clone() const
     return new GlibMainLoopIntegration(_ctxt);
 }
 
-void GlibMainLoopIntegration::connect(Connection* conn)
+bool GlibMainLoopIntegration::internalConnect(Connection* conn)
 {
     //FIXME: remove dependancy on dbus-glib
-    dbus_connection_setup_with_g_main(conn->dbus(), NULL);
+    dbus_connection_setup_with_g_main(conn->dbus(), _ctxt);
+    return true;
 }
 
 }
