@@ -41,7 +41,7 @@ GlibMainLoopIntegration::~GlibMainLoopIntegration()
     g_main_context_unref(_ctxt);
 }
 
-MainLoopIntegration* GlibMainLoopIntegration::construct() const
+MainLoopIntegration* GlibMainLoopIntegration::clone() const
 {
     return new GlibMainLoopIntegration(_ctxt);
 }

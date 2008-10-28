@@ -26,8 +26,6 @@
 
 #include <dbus/dbus.h>
 
-#include <memory>
-
 namespace dbustl {
 
     class ConnectionInitializer;
@@ -53,7 +51,7 @@ namespace dbustl {
      *   - before any call to Connection::Connection, Connection::systemBus or Connection::sessionBus, using
      *     Connection::useMainLoop static member.
      *   - during object construction, through the use of 
-     *     the alternate Connection(DBusBusType bustype,std::auto_ptr<MainLoopIntegration> mainLoop) constructor
+     *     the alternate Connection(DBusBusType bustype, const MainLoopIntegration& mainLoop) constructor
      * 
      * If no signals are to be received, then main loop association 
      * remains optionnal.
@@ -106,7 +104,7 @@ namespace dbustl {
              * to process received messages
              */
             Connection(DBusBusType bustype, 
-              std::auto_ptr<MainLoopIntegration> mainLoop);
+              const MainLoopIntegration& mainLoop);
             
             /**
              * Destructor
@@ -138,7 +136,7 @@ namespace dbustl {
             //Low level connection
             DBusConnection *_llconn;
             //Mainloop used for this connection
-            std::auto_ptr<MainLoopIntegration> _mainLoop;
+            MainLoopIntegration* _mainLoop;
             bool _isPrivate;
             
             //globally shared System bus connection
@@ -146,7 +144,7 @@ namespace dbustl {
             //globally shared Session bus connection
             static Connection *_session;
             //default main loop
-            static std::auto_ptr<MainLoopIntegration> _defaultMainLoop;
+            static MainLoopIntegration* _defaultMainLoop;
                         
             /** @cond */
             friend class ConnectionInitializer;

@@ -34,7 +34,7 @@ namespace dbustl {
             virtual ~MainLoopIntegration() {};
             //Virtual constructor : builds an MainLoopIntegration object with the same
             //characteristics as this one (same integration method, same thread, same everything ...)
-            virtual MainLoopIntegration* construct() const = 0;
+            virtual MainLoopIntegration* clone() const = 0;
             //Associates this MainLoopIntegration object with the given DBus connection
             //A MainLoopIntegration object can only be associated with one Connection at a time : 
             //this method must be called exactly once
