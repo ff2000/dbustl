@@ -106,17 +106,20 @@ namespace dbustl {
             /**
              * Adds an argument to the message.
              */
-            template<typename T> Message& operator<<(const T& inarg);
+            template<typename T> 
+            Message& operator<<(const T& inarg);
 
             /**
              * Reads an argument from the message.
              */
-            template<typename T> Message& operator>>(T& outarg);
+            template<typename T> 
+            Message& operator>>(T& outarg);
 
             /**
              * Reads an argument from the message.
              */
-            template<typename T> Message& operator>>(T* outarg);
+            template<typename T> 
+            Message& operator>>(T* outarg);
             
             /**
              * Tells if the underlying C struct is NULL.
@@ -164,7 +167,8 @@ namespace dbustl {
             DBusMessageIter _it;
     };
 
-    template<typename T> Message& Message::operator<<(const T& inarg)
+    template<typename T>
+    Message& Message::operator<<(const T& inarg)
     {
         using namespace types;
         assert(_msg);
@@ -181,12 +185,14 @@ namespace dbustl {
         return *this;
     }
 
-    template<typename T> Message& Message::operator>>(T& outarg)
+    template<typename T>
+    Message& Message::operator>>(T& outarg)
     {
         return this->operator>>(&outarg);
     }
 
-    template<typename T> Message& Message::operator>>(T* outarg)
+    template<typename T>
+    Message& Message::operator>>(T* outarg)
     {
         using namespace types;
         assert(_msg);
