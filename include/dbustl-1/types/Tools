@@ -40,48 +40,29 @@ namespace types {
 
 	/* Implementation */
 	
-	template<typename T>
-	inline int __dbusPreferedSignedIntegralType()
-	{
-		int dbus_type = DBUS_TYPE_INVALID;
-		switch(sizeof(T)) {
-			case 2:
-				dbus_type = DBUS_TYPE_INT16;
-				break;
-			case 4:
-				dbus_type = DBUS_TYPE_INT32;
-				break;
-			case 8:
-				dbus_type = DBUS_TYPE_INT64;
-				break;
-			default:
-				assert("The supplied argument does not match any integer size supported by DBUS");
-		}
-		return dbus_type;
-	}
+	template<int N>
+	inline int __dbusPreferedSignedIntegralType();
+	
+	template<> 
+	inline int __dbusPreferedSignedIntegralType<1>() {return DBUS_TYPE_INT16;};
+	template<>
+	inline int __dbusPreferedSignedIntegralType<2>() {return DBUS_TYPE_INT16;};
+	template<>
+	inline int __dbusPreferedSignedIntegralType<4>() {return DBUS_TYPE_INT32;};
+	template<>
+	inline int __dbusPreferedSignedIntegralType<8>() {return DBUS_TYPE_INT64;};
+	
+	template<int N> 
+	inline int __dbusPreferedUnsignedIntegralType();
 
-	template<typename T> 
-	inline int __dbusPreferedUnsignedIntegralType()
-	{
-		int dbus_type = DBUS_TYPE_INVALID;
-		switch(sizeof(T)) {
-			case 1:
-				dbus_type = DBUS_TYPE_BYTE;
-				break;
-			case 2:
-				dbus_type = DBUS_TYPE_UINT16;
-				break;
-			case 4:
-				dbus_type = DBUS_TYPE_UINT32;
-				break;
-			case 8:
-				dbus_type = DBUS_TYPE_UINT64;
-				break;
-			default:
-				assert("The supplied argument does not match any integer size supported by DBUS");
-		}
-		return dbus_type;
-	}
+	template<> 
+	inline int __dbusPreferedUnsignedIntegralType<1>() {return DBUS_TYPE_BYTE;};
+	template<> 
+	inline int __dbusPreferedUnsignedIntegralType<2>() {return DBUS_TYPE_UINT16;};
+	template<> 
+	inline int __dbusPreferedUnsignedIntegralType<4>() {return DBUS_TYPE_UINT32;};
+	template<> 
+	inline int __dbusPreferedUnsignedIntegralType<8>() {return DBUS_TYPE_UINT64;};
 	
 	template<>
 	inline int dbusPreferedType<bool>() 
@@ -92,67 +73,67 @@ namespace types {
 	template<> 
 	inline int dbusPreferedType<char>() 
 	{
-    	return __dbusPreferedUnsignedIntegralType<char>();
+    	return __dbusPreferedUnsignedIntegralType<sizeof(char)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<signed char>() 
 	{
-    	return __dbusPreferedSignedIntegralType<signed char>();
+    	return __dbusPreferedSignedIntegralType<sizeof(signed char)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<unsigned char>() 
 	{
-    	return __dbusPreferedUnsignedIntegralType<unsigned char>();
+    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned char)>();
 	}
 
 	template<>
 	inline int dbusPreferedType<short>() 
 	{
-    	return __dbusPreferedSignedIntegralType<short>();
+    	return __dbusPreferedSignedIntegralType<sizeof(short)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<unsigned short>() 
 	{
-    	return __dbusPreferedUnsignedIntegralType<unsigned short>();
+    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned short)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<int>() 
 	{
-    	return __dbusPreferedSignedIntegralType<int>();
+    	return __dbusPreferedSignedIntegralType<sizeof(int)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<unsigned int>() 
 	{
-    	return __dbusPreferedUnsignedIntegralType<unsigned int>();
+    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned int)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<long>() 
 	{
-    	return __dbusPreferedSignedIntegralType<long>();
+    	return __dbusPreferedSignedIntegralType<sizeof(long)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<unsigned long>() 
 	{
-    	return __dbusPreferedUnsignedIntegralType<unsigned long>();
+    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned long)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<long long>() 
 	{	
-    	return __dbusPreferedSignedIntegralType<long long>();
+    	return __dbusPreferedSignedIntegralType<sizeof(long long)>();
 	}
 
 	template<> 
 	inline int dbusPreferedType<unsigned long long>() 
 	{
-    	return __dbusPreferedUnsignedIntegralType<unsigned long long>();
+    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned long long)>();
 	}
 
 	template<> 
