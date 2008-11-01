@@ -28,8 +28,6 @@
 #include <dbus/dbus.h>
 #include <dbustl-1/types/Serialization>
 
-#include <cassert>
-
 namespace dbustl {
 
     /**
@@ -160,6 +158,9 @@ namespace dbustl {
             DBusMessage* dbus() { return _msg; };
             
         private:
+            void serializationInit();
+            void deSerializationInit();
+            
             DBusMessage *_msg;
             bool _valid;
             bool _iteratorInitialized;
@@ -171,12 +172,8 @@ namespace dbustl {
     Message& Message::operator<<(const T& inarg)
     {
         using namespace types;
-        assert(_msg);
-        
-        if(!_iteratorInitialized) {
-            dbus_message_iter_init_append(_msg, &_it);
-            _iteratorInitialized = true;
-        }
+
+        serializationInit();
 
         //If message is already screwed up, we just discard the other arguments
         if(_valid) {
@@ -195,15 +192,8 @@ namespace dbustl {
     Message& Message::operator>>(T* outarg)
     {
         using namespace types;
-        assert(_msg);
 
-        if(_iteratorInitialized) {
-            dbus_message_iter_next(&_it);
-        }
-        else {
-            dbus_message_iter_init(_msg, &_it);
-            _iteratorInitialized = true;
-        }
+        deSerializationInit();
 
         //If we are past the end, we mark the message as invalid
         int arg_type = dbus_message_iter_get_arg_type(&_it);
