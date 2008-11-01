@@ -6,6 +6,9 @@ LDADD = @DBUS_LIBS@ ../libdbustl-1.la
 noinst_PROGRAMS = standard-tests
 standard_tests_SOURCES = standard-tests.cpp
 
+noinst_PROGRAMS += link-test
+link_test_SOURCES = link-test-1.cpp link-test-2.cpp
+
 if HAVE_GLIB
 noinst_PROGRAMS += async-tests
 endif
