@@ -17,13 +17,15 @@ libdbustl_1_la_HEADERS = include/dbustl-1/Config \
                    include/dbustl-1/DBusException \
                    include/dbustl-1/MainLoopIntegration \
                    include/dbustl-1/Message \
-                   include/dbustl-1/StdTypesConvertion \
-                   include/dbustl-1/TypesConvertion
+                   include/dbustl-1/types/Tools \
+                   include/dbustl-1/types/Serialization \
+                   include/dbustl-1/types/Std
 libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp \
-                   src/MainLoopIntegration.cpp
+                   src/MainLoopIntegration.cpp \
+                   src/types/Basic.cpp
 
 #dbustl pkg-config support
 pkgconfigdir = $(libdir)/pkgconfig

@@ -1,0 +1,209 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_TYPES_STD
+#define DBUSTL_TYPES_STD
+
+// STL to DBUS arguments types mapping
+
+#include <list>
+#include <vector>
+#include <map>
+#include <string>
+#include <cassert>
+
+#include <dbustl-1/types/Serialization>
+#include <dbustl-1/types/Tools>
+
+namespace dbustl {
+namespace types {
+
+/* Containers helpers */
+
+// Generate a DBUS signature for a given C++ type
+template <typename T> std::string __dbusGenerateSignature(T&)
+{
+    char content_type[2] = {0, 0};
+    content_type[0] = (char)dbusPreferedType<T>();
+    return content_type;
+}
+
+/* std::list */
+template <typename T> std::string __dbusGenerateSignature(std::list<T>&)
+{
+    T element;
+    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbusGenerateSignature(element);
+}
+    
+template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const std::list<T>& arg)
+{
+    typename std::list<T>::const_iterator containerIter;
+    DBusMessageIter subIterator;
+    T element;
+    if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+      __dbusGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+        return FALSE;
+    }
+    
+    for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+        if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+    }
+    
+    return dbus_message_iter_close_container(it, &subIterator);
+}
+
+template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
+{
+    DBusMessageIter subIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &subIterator);
+    while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+        arg->push_back(T());
+        if(deserialize(&subIterator, &arg->back()) == FALSE) {
+            return FALSE;
+        }
+        dbus_message_iter_next(&subIterator);
+    }
+    
+    return TRUE;
+}
+
+/* std::vector */
+template <typename T> std::string __dbusGenerateSignature(std::vector<T>&)
+{
+    T element;
+    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbusGenerateSignature(element);
+}
+    
+template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const std::vector<T>& arg)
+{
+    typename std::vector<T>::const_iterator containerIter;
+    DBusMessageIter subIterator;
+    T element;
+    if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+      __dbusGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+        return FALSE;
+    }
+    
+    for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+        if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+    }
+    
+    return dbus_message_iter_close_container(it, &subIterator);
+}
+
+template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
+{
+    DBusMessageIter subIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &subIterator);
+    while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+        arg->push_back(T());
+        if(deserialize(&subIterator, &arg->back()) == FALSE) {
+            return FALSE;
+        }
+        dbus_message_iter_next(&subIterator);
+    }
+    
+    return TRUE;
+}
+
+/* std::map */
+template <typename K, typename V> std::string __dbusGenerateSignature(std::pair<const K, V>&)
+{
+    K key;
+    V value;
+    return std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
+        __dbusGenerateSignature(key) +
+        __dbusGenerateSignature(value) +
+        DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
+}
+    
+template<typename K, typename V> dbus_bool_t serialize(DBusMessageIter* it, const std::map<K, V>& arg)
+{
+    typename std::map<K, V>::const_iterator containerIter;
+    typename std::map<K, V>::value_type v;
+    DBusMessageIter arrayIterator;
+
+    if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+        __dbusGenerateSignature(v).c_str(), &arrayIterator) == FALSE) {
+        return FALSE;
+    }
+    
+    for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+        DBusMessageIter dictEntryIterator;
+        if(dbus_message_iter_open_container(&arrayIterator, DBUS_TYPE_DICT_ENTRY, NULL, &dictEntryIterator) == FALSE) {
+            return FALSE;
+        }
+        if(serialize(&dictEntryIterator, containerIter->first) == FALSE) return FALSE;
+        if(serialize(&dictEntryIterator, containerIter->second) == FALSE) return FALSE;
+        if(dbus_message_iter_close_container(&arrayIterator, &dictEntryIterator) == FALSE) return FALSE;
+    }
+    
+    return dbus_message_iter_close_container(it, &arrayIterator);
+}
+
+
+template<typename K, typename V> dbus_bool_t deserialize(DBusMessageIter* it, std::map<K, V>* arg)
+{
+    DBusMessageIter arrayIterator;
+    DBusMessageIter dictEntryIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &arrayIterator);
+    while (dbus_message_iter_get_arg_type(&arrayIterator) == DBUS_TYPE_DICT_ENTRY) {
+        dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
+        std::pair<K, V> v;
+        
+        if(deserialize(&dictEntryIterator, &v.first) == FALSE) {
+            return FALSE;
+        }
+        
+        std::pair<typename std::map<K, V>::iterator, bool> ins = arg->insert(v);
+        //Insert should always succeed, otherwiser other side has sent us crap
+        //If not (which we have to deal with due to security issues), we bail out
+        if(!ins.second) return FALSE;
+        
+        dbus_message_iter_next(&dictEntryIterator);
+        if(deserialize(&dictEntryIterator, &(ins.first->second)) == FALSE) {
+            return FALSE;
+        }
+
+        dbus_message_iter_next(&arrayIterator);
+    }
+    
+    return TRUE;
+}
+    
+}
+}
+
+#endif /* DBUSTL_TYPES_STD */
