@@ -26,6 +26,8 @@
 #include <dbustl-1/Connection>
 #include <dbustl-1/ServerProxy>
 
+#include <sstream>
+
 namespace dbustl {
 
 DBusObjectPathVTable ServerProxy::_vtable = {
@@ -104,6 +106,13 @@ void ServerProxy::processOutArgs(Message&)
     //TODO handle case where:
     // Not enough return arguments where provided
     // Too much return arguments are provided
+}
+
+void ServerProxy::outArgsIssue(int argIndex)
+{
+    std::stringstream ss;
+    ss << "Unable to deserialize return parameter at index " << argIndex;
+    throw_or_set("org.dbustl.ReturnParameterError", ss.str().c_str());
 }
 
 DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *, 
