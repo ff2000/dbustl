@@ -178,7 +178,7 @@ namespace dbustl {
             
         #ifdef DBUSTL_NO_EXCEPTIONS
             inline void throw_or_set(const DBusException& error) {_error = error; };
-            inline void throw_or_set(const chat *name, const char *message) {_error = DBusException(name, message); };
+            inline void throw_or_set(const char *name, const char *message) {_error = DBusException(name, message); };
         #else
             static inline void throw_or_set(const DBusException& error) {throw error; };
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
