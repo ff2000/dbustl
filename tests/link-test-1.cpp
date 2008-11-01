@@ -118,7 +118,7 @@ void testMessage1(dbustl::Message& m)
 	
 	
 	{
-		char * t;
+		const char * t;
 		//Note : deserialization does not exist;
 		m << t;
 	}
