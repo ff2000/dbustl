@@ -26,6 +26,7 @@
 
 #include <iostream>
 #include <dbus/dbus.h>
+#include <dbustl-1/types/Serialization>
 
 #include <cassert>
 
@@ -165,6 +166,7 @@ namespace dbustl {
 
     template<typename T> Message& Message::operator<<(const T& inarg)
     {
+        using namespace types;
         assert(_msg);
         
         if(!_iteratorInitialized) {
@@ -186,6 +188,7 @@ namespace dbustl {
 
     template<typename T> Message& Message::operator>>(T* outarg)
     {
+        using namespace types;
         assert(_msg);
 
         if(_iteratorInitialized) {

@@ -21,25 +21,24 @@
  *
  */
 
-#ifndef DBUSTL_TYPESCONVERTION
-#define DBUSTL_TYPESCONVERTION
+#ifndef DBUSTL_TYPES_SERIALIZATION
+#define DBUSTL_TYPES_SERIALIZATION
 
 // DBUS arguments types convertion
 
 //This file only declares the templates used for arguments serialization/deserialization
-//Actual implementation is either : 
-//  - left to the user of dbustl
-//  - shipped with ToolKit specific convertion templates as StlTypesConvertion, 
-//    GlibTypesConvertion or QtTypesConvertion
+//Implementations live in other files
 
 #include <dbus/dbus.h>
 
 namespace dbustl {
+namespace types {
 
-    template<typename T> inline dbus_bool_t serialize(DBusMessageIter* it, const T& arg);
+    template<typename T> dbus_bool_t serialize(DBusMessageIter* it, const T& arg);
 
-    template<typename T> inline dbus_bool_t deserialize(DBusMessageIter* it, T* arg);
+    template<typename T> dbus_bool_t deserialize(DBusMessageIter* it, T* arg);
 
 }
+}
 
-#endif
+#endif /* DBUSTL_TYPES_SERIALIZATION */

@@ -1,3 +1,4 @@
+#include <dbustl-1/types/Std>
 #include <dbustl-1/Message>
 
 #include <cstdlib>
@@ -13,7 +14,8 @@ void testMessage1(dbustl::Message& m)
 	
 	{
 		char t;
-		//Note : deserialization does not exist for char
+		//Note : deserialization does not exist for signed char due to lack of 
+		//adequate DBUS representation
 		m << t;
 	}
 	
@@ -109,13 +111,11 @@ void testMessage1(dbustl::Message& m)
 		m << t;
 	}
 	
-	
 	{
 		double t;
 		m >> t;
 		m << t;
-	}
-	
+	}	
 	
 	{
 		const char * t;
@@ -123,13 +123,32 @@ void testMessage1(dbustl::Message& m)
 		m << t;
 	}
 	
+	{
+		char * t;
+		//Note : deserialization does not exist;
+		m << t;
+	}
 	
 	{
 		std::string t;
 		m >> t;
 		m << t;
 	}
-	
+	{
+		std::vector<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::list<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::map<double, std::string> v;
+		m >> v;
+		m << v;
+	}
 }
 
 void testMessage2(dbustl::Message& m);
@@ -145,3 +164,4 @@ int main()
 	testMessage2(m);
 	return 0;
 }
+

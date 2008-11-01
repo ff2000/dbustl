@@ -33,7 +33,6 @@
 
 #include <dbustl-1/Config>
 #include <dbustl-1/DBusException>
-#include <dbustl-1/TypesConvertion>
 #include <dbustl-1/Message>
 
 namespace dbustl {
