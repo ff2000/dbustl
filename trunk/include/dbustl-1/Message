@@ -158,8 +158,8 @@ namespace dbustl {
             DBusMessage* dbus() { return _msg; };
             
         private:
-            void serializationInit();
-            void deSerializationInit();
+            bool serializationInit();
+            bool deSerializationInit(int *arg_type);
             
             DBusMessage *_msg;
             bool _valid;
@@ -173,12 +173,10 @@ namespace dbustl {
     {
         using namespace types;
 
-        serializationInit();
-
-        //If message is already screwed up, we just discard the other arguments
-        if(_valid) {
+        if(serializationInit()) {
             _valid = (serialize(&_it, inarg) == TRUE);
         }
+
         return *this;
     }
 
@@ -192,23 +190,10 @@ namespace dbustl {
     Message& Message::operator>>(T* outarg)
     {
         using namespace types;
+        int arg_type;
 
-        deSerializationInit();
-
-        //If we are past the end, we mark the message as invalid
-        int arg_type = dbus_message_iter_get_arg_type(&_it);
-        if(arg_type != DBUS_TYPE_INVALID) {
-            if(_valid) {
-                _valid = (deserialize(&_it, outarg) == TRUE);
-                if(!_valid) {
-                    std::cerr << "The received DBUS format '" << (char)arg_type 
-                    << "' is not compatible with the return argument at index " 
-                    << _parsedArguments << std::endl;
-                }
-            }
-        }
-        else {
-            _valid = false;
+        if(deSerializationInit(&arg_type)) {
+            _valid = (deserialize(&_it, outarg) == TRUE);
         }
         _parsedArguments++;
         return *this;

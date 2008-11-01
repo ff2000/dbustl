@@ -96,7 +96,7 @@ std::string Message::interface() const
     return intf != NULL ? intf : "";
 }
 
-void Message::serializationInit()
+bool Message::serializationInit()
 {
     assert(_msg);
     
@@ -104,9 +104,12 @@ void Message::serializationInit()
         dbus_message_iter_init_append(_msg, &_it);
         _iteratorInitialized = true;
     }
+    
+    //If message is already screwed up, we just discard the other arguments
+    return _valid;
 }
 
-void Message::deSerializationInit()
+bool Message::deSerializationInit(int *arg_type)
 {
     assert(_msg);
 
@@ -117,7 +120,17 @@ void Message::deSerializationInit()
         dbus_message_iter_init(_msg, &_it);
         _iteratorInitialized = true;
     }
-}
 
+    //If we are past the end, we mark the message as invalid
+    int type = dbus_message_iter_get_arg_type(&_it);
+    if(type != DBUS_TYPE_INVALID) {
+        *arg_type = type;
+    }
+    else {
+        _valid = false;
+    }
+
+    return _valid;
+}
 
 }
