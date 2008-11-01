@@ -1,4 +1,4 @@
-SUBDIRS = . tests
+SUBDIRS = . tests examples
 
 #License files
 EXTRA_DIST = COPYING COPYING.LESSER ChangeLog
