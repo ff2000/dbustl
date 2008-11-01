@@ -507,16 +507,10 @@ namespace dbustl {
             if(!setWatchSignal(signalName, true)) {
                 return false;
             }
-            
-            _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
-                                                        signalHandlerCallback<SignalHandlerFunctor>,
-                                                        signalHandlerDelete<SignalHandlerFunctor>);
         }
-        else {
-            _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
-                                                        signalHandlerCallback<SignalHandlerFunctor>,
-                                                        signalHandlerDelete<SignalHandlerFunctor>);
-        }
+        _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
+                                            signalHandlerCallback<SignalHandlerFunctor>,
+                                            signalHandlerDelete<SignalHandlerFunctor>);
         return true;
     }
 
