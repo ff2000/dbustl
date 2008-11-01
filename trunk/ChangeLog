@@ -1,5 +1,10 @@
-v 0.1.1: BugFix release
+v0.2.0: Feature release
+ * Renamed Clientproxy as ServerProxy
+ * Revamped serialization/deserialization system
+ * Interface DoxygenInification
+
+v0.1.1: BugFix release
   * Fix pkg-config include path
   * Added missing unit test file
 
-v 0.1:  Initial Release
+v0.1:  Initial Release
