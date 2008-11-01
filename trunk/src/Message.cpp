@@ -23,6 +23,8 @@
 
 #include <dbustl-1/Message>
 
+#include <cassert>
+
 namespace dbustl {
 
 Message::Message(DBusMessage *msg)
@@ -93,5 +95,29 @@ std::string Message::interface() const
     }
     return intf != NULL ? intf : "";
 }
+
+void Message::serializationInit()
+{
+    assert(_msg);
+    
+    if(!_iteratorInitialized) {
+        dbus_message_iter_init_append(_msg, &_it);
+        _iteratorInitialized = true;
+    }
+}
+
+void Message::deSerializationInit()
+{
+    assert(_msg);
+
+    if(_iteratorInitialized) {
+        dbus_message_iter_next(&_it);
+    }
+    else {
+        dbus_message_iter_init(_msg, &_it);
+        _iteratorInitialized = true;
+    }
+}
+
 
 }
