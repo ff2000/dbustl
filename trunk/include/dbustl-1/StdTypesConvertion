@@ -37,11 +37,11 @@
 
 namespace dbustl {
   
-    /* integral types */
-    
     //Implemented by dbustl for all basic types : the DBUS type into which the C++ type maps
-    template<typename T> int dbustlPreferedType();
-    
+    template<typename T> inline int dbustlPreferedType();
+
+    /* integral types */
+        
     template<typename T> int __dbustlPreferedSignedIntegralType()
     {
         int dbus_type = DBUS_TYPE_INVALID;
@@ -189,11 +189,11 @@ namespace dbustl {
     }
 
     /* bool */
-    template<> int dbustlPreferedType<bool>() 
+    template<> inline int dbustlPreferedType<bool>() 
     {
         return DBUS_TYPE_BOOLEAN;
     }
-    template<> dbus_bool_t deserialize<bool>(DBusMessageIter* it, bool *arg)
+    template<> inline dbus_bool_t deserialize<bool>(DBusMessageIter* it, bool *arg)
     {
         if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_BOOLEAN) {
             return FALSE;
@@ -203,23 +203,23 @@ namespace dbustl {
     }
 
     /* char */
-    template<> int dbustlPreferedType<char>() 
+    template<> inline int dbustlPreferedType<char>() 
     {
         return __dbustlPreferedUnsignedIntegralType<char>();
     }
 
     /* signed char */
-    template<> int dbustlPreferedType<signed char>() 
+    template<> inline int dbustlPreferedType<signed char>() 
     {
         return __dbustlPreferedSignedIntegralType<signed char>();
     }
 
     /* unsigned char */
-    template<> int dbustlPreferedType<unsigned char>() 
+    template<> inline int dbustlPreferedType<unsigned char>() 
     {
         return __dbustlPreferedUnsignedIntegralType<unsigned char>();
     }
-    template<> dbus_bool_t deserialize<unsigned char>(DBusMessageIter* it, unsigned char *arg)
+    template<> inline dbus_bool_t deserialize<unsigned char>(DBusMessageIter* it, unsigned char *arg)
     {
         if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_BYTE) {
             return FALSE;
@@ -229,106 +229,106 @@ namespace dbustl {
     }
 
     /* short */
-    template<> int dbustlPreferedType<short>() 
+    template<> inline int dbustlPreferedType<short>() 
     {
         return __dbustlPreferedSignedIntegralType<short>();
     }
-    template<> dbus_bool_t deserialize<short>(DBusMessageIter* it, short* arg)
+    template<> inline dbus_bool_t deserialize<short>(DBusMessageIter* it, short* arg)
     {
         return __deserializeSignedIntegral<short>(it, arg);
     }
 
     /* unsigned short */
-    template<> int dbustlPreferedType<unsigned short>() 
+    template<> inline int dbustlPreferedType<unsigned short>() 
     {
         return __dbustlPreferedUnsignedIntegralType<unsigned short>();
     }
-    template<> dbus_bool_t deserialize<unsigned short>(DBusMessageIter* it, unsigned short* arg)
+    template<> inline dbus_bool_t deserialize<unsigned short>(DBusMessageIter* it, unsigned short* arg)
     {
         return __deserializeUnsignedIntegral<unsigned short>(it, arg);
     }
 
     /* int */
-    template<> int dbustlPreferedType<int>() 
+    template<> inline int dbustlPreferedType<int>() 
     {
         return __dbustlPreferedSignedIntegralType<int>();
     }
-    template<> dbus_bool_t serialize(DBusMessageIter* it, const int& arg)
+    template<> inline dbus_bool_t serialize(DBusMessageIter* it, const int& arg)
     {
         return dbus_message_iter_append_basic(it, dbustlPreferedType<int>(), &arg);
     }
-    template<> dbus_bool_t deserialize<int>(DBusMessageIter* it, int* arg)
+    template<> inline dbus_bool_t deserialize<int>(DBusMessageIter* it, int* arg)
     {
         return __deserializeSignedIntegral<int>(it, arg);
     }
 
     /* unsigned int */
-    template<> int dbustlPreferedType<unsigned int>() 
+    template<> inline int dbustlPreferedType<unsigned int>() 
     {
         return __dbustlPreferedUnsignedIntegralType<unsigned int>();
     }
-    template<> dbus_bool_t deserialize<unsigned int>(DBusMessageIter* it, unsigned int* arg)
+    template<> inline dbus_bool_t deserialize<unsigned int>(DBusMessageIter* it, unsigned int* arg)
     {
         return __deserializeUnsignedIntegral<unsigned int>(it, arg);
     }
 
     /* long */
-    template<> int dbustlPreferedType<long>() 
+    template<> inline int dbustlPreferedType<long>() 
     {
         return __dbustlPreferedSignedIntegralType<long>();
     }
-    template<> dbus_bool_t deserialize<long>(DBusMessageIter* it, long* arg)
+    template<> inline dbus_bool_t deserialize<long>(DBusMessageIter* it, long* arg)
     {
         return __deserializeSignedIntegral<long>(it, arg);
     }
 
     /* unsigned long */
-    template<> int dbustlPreferedType<unsigned long>() 
+    template<> inline int dbustlPreferedType<unsigned long>() 
     {
         return __dbustlPreferedUnsignedIntegralType<unsigned long>();
     }
-    template<> dbus_bool_t deserialize<unsigned long>(DBusMessageIter* it, unsigned long* arg)
+    template<> inline dbus_bool_t deserialize<unsigned long>(DBusMessageIter* it, unsigned long* arg)
     {
         return __deserializeUnsignedIntegral<unsigned long>(it, arg);
     }
 
     /* long long */
-    template<> int dbustlPreferedType<long long>() 
+    template<> inline int dbustlPreferedType<long long>() 
     {
         return __dbustlPreferedSignedIntegralType<long long>();
     }
-    template<> dbus_bool_t deserialize<long long>(DBusMessageIter* it, long long* arg)
+    template<> inline dbus_bool_t deserialize<long long>(DBusMessageIter* it, long long* arg)
     {
         return __deserializeSignedIntegral<long long>(it, arg);
     }
 
     /* unsigned long long */
-    template<> int dbustlPreferedType<unsigned long long>() 
+    template<> inline int dbustlPreferedType<unsigned long long>() 
     {
         return __dbustlPreferedUnsignedIntegralType<unsigned long long>();
     }
-    template<> dbus_bool_t deserialize<unsigned long long>(DBusMessageIter* it, unsigned long long* arg)
+    template<> inline dbus_bool_t deserialize<unsigned long long>(DBusMessageIter* it, unsigned long long* arg)
     {
         return __deserializeUnsignedIntegral<unsigned long long>(it, arg);
     }
 
     /* float - on way only */
-    template<> int dbustlPreferedType<float>() 
+    template<> inline int dbustlPreferedType<float>() 
     {
         return DBUS_TYPE_DOUBLE;
     }
-    template<> dbus_bool_t serialize<float>(DBusMessageIter* it, const float& arg)
+    template<> inline dbus_bool_t serialize<float>(DBusMessageIter* it, const float& arg)
     {
         double val = arg;
         return dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &val);
     }
 
     /* double */
-    template<> int dbustlPreferedType<double>() 
+    template<> inline int dbustlPreferedType<double>() 
     {
         return DBUS_TYPE_DOUBLE;
     }
-    template<> dbus_bool_t deserialize<double>(DBusMessageIter* it, double *arg)
+    template<> inline dbus_bool_t deserialize<double>(DBusMessageIter* it, double *arg)
     {
         if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_DOUBLE) {
             return FALSE;
@@ -338,22 +338,22 @@ namespace dbustl {
     }
 
     /* const char* - one way only */
-    template<> int dbustlPreferedType<const char*>() 
+    template<> inline int dbustlPreferedType<const char*>() 
     {
         return DBUS_TYPE_STRING;
     }
     
     /* std::string */
-    template<> int dbustlPreferedType<std::string>() 
+    template<> inline int dbustlPreferedType<std::string>() 
     {
         return DBUS_TYPE_STRING;
     }
-    template<> dbus_bool_t serialize<std::string>(DBusMessageIter* it, const std::string& arg)
+    template<> inline dbus_bool_t serialize<std::string>(DBusMessageIter* it, const std::string& arg)
     {
         const char *cstring = arg.c_str();
         return dbus_message_iter_append_basic(it, dbustlPreferedType<std::string>(), &cstring);
     }
-    template<> dbus_bool_t deserialize<std::string>(DBusMessageIter* it, std::string* arg)
+    template<> inline dbus_bool_t deserialize<std::string>(DBusMessageIter* it, std::string* arg)
     {
         const char *str;
         if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_STRING) {
