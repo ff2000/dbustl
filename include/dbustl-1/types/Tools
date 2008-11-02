@@ -35,136 +35,133 @@ namespace types {
 	//For all basic types : the DBUS type into which the C++ type maps
 	//This is non trivial as for instance an int will map on DBUS_TYPE_INT32 on
 	//32 bit plaftorm but DBUS_TYPE_INT64 on 64 bits platforms
+	
 	template<typename T>
-	inline int dbusPreferedType();
-
+	struct dbusPreferedType;
+	
 	/* Implementation */
 	
-	template<int N>
-	inline int __dbusPreferedSignedIntegralType();
-	
-	template<> 
-	inline int __dbusPreferedSignedIntegralType<1>() {return DBUS_TYPE_INT16;};
-	template<>
-	inline int __dbusPreferedSignedIntegralType<2>() {return DBUS_TYPE_INT16;};
-	template<>
-	inline int __dbusPreferedSignedIntegralType<4>() {return DBUS_TYPE_INT32;};
-	template<>
-	inline int __dbusPreferedSignedIntegralType<8>() {return DBUS_TYPE_INT64;};
-	
-	template<int N> 
-	inline int __dbusPreferedUnsignedIntegralType();
-
-	template<> 
-	inline int __dbusPreferedUnsignedIntegralType<1>() {return DBUS_TYPE_BYTE;};
-	template<> 
-	inline int __dbusPreferedUnsignedIntegralType<2>() {return DBUS_TYPE_UINT16;};
-	template<> 
-	inline int __dbusPreferedUnsignedIntegralType<4>() {return DBUS_TYPE_UINT32;};
-	template<> 
-	inline int __dbusPreferedUnsignedIntegralType<8>() {return DBUS_TYPE_UINT64;};
-	
-	template<>
-	inline int dbusPreferedType<bool>() 
-	{
-    	return DBUS_TYPE_BOOLEAN;
-	}
-
-	template<> 
-	inline int dbusPreferedType<char>() 
-	{
-    	return __dbusPreferedUnsignedIntegralType<sizeof(char)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<signed char>() 
-	{
-    	return __dbusPreferedSignedIntegralType<sizeof(signed char)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<unsigned char>() 
-	{
-    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned char)>();
-	}
+	template<int size, bool sign>
+	struct __dbusPreferedIntegralType;
 
 	template<>
-	inline int dbusPreferedType<short>() 
-	{
-    	return __dbusPreferedSignedIntegralType<sizeof(short)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<unsigned short>() 
-	{
-    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned short)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<int>() 
-	{
-    	return __dbusPreferedSignedIntegralType<sizeof(int)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<unsigned int>() 
-	{
-    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned int)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<long>() 
-	{
-    	return __dbusPreferedSignedIntegralType<sizeof(long)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<unsigned long>() 
-	{
-    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned long)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<long long>() 
-	{	
-    	return __dbusPreferedSignedIntegralType<sizeof(long long)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<unsigned long long>() 
-	{
-    	return __dbusPreferedUnsignedIntegralType<sizeof(unsigned long long)>();
-	}
-
-	template<> 
-	inline int dbusPreferedType<float>() 
-	{
-    	return DBUS_TYPE_DOUBLE;
-	}
-
-	template<> 
-	inline int dbusPreferedType<double>() 
-	{
-    	return DBUS_TYPE_DOUBLE;
-	}
+	struct __dbusPreferedIntegralType<1, true> {
+		static const int value = DBUS_TYPE_INT16;
+	};
+	template<>
+	struct __dbusPreferedIntegralType<2, true> {
+		static const int value = DBUS_TYPE_INT16;
+	};
+	template<>
+	struct __dbusPreferedIntegralType<4, true> {
+		static const int value = DBUS_TYPE_INT32;
+	};
+	template<>
+	struct __dbusPreferedIntegralType<8, true> {
+		static const int value = DBUS_TYPE_INT64;
+	};
 	
-	template<> 
-	inline int dbusPreferedType<const char*>() 
-	{
-    	return DBUS_TYPE_STRING;
-	}
-	
-	template<> 
-	inline int dbusPreferedType<char*>() 
-	{
-    	return DBUS_TYPE_STRING;
-	}
+	template<>
+	struct __dbusPreferedIntegralType<1, false> {
+		static const int value = DBUS_TYPE_BYTE;
+	};
+	template<>
+	struct __dbusPreferedIntegralType<2, false> {
+		static const int value = DBUS_TYPE_UINT16;
+	};
+	template<>
+	struct __dbusPreferedIntegralType<4, false> {
+		static const int value = DBUS_TYPE_UINT32;
+	};
+	template<>
+	struct __dbusPreferedIntegralType<8, false> {
+		static const int value = DBUS_TYPE_UINT64;
+	};
 
-	template<> 
-	inline int dbusPreferedType<std::string>() 
-	{
-    	return DBUS_TYPE_STRING;
-	}
+	template<>
+	struct dbusPreferedType<bool> {
+		static const int value = DBUS_TYPE_BOOLEAN;
+	};
+
+	template<>
+	struct dbusPreferedType<char> {
+		static const int value = __dbusPreferedIntegralType<sizeof(char), false>::value;
+	};
+	
+	template<>
+	struct dbusPreferedType<signed char> {
+		static const int value = __dbusPreferedIntegralType<sizeof(signed char), true>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<unsigned char> {
+		static const int value = __dbusPreferedIntegralType<sizeof(unsigned char), false>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<short> {
+		static const int value = __dbusPreferedIntegralType<sizeof(short), true>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<unsigned short> {
+		static const int value = __dbusPreferedIntegralType<sizeof(unsigned short), false>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<int> {
+		static const int value = __dbusPreferedIntegralType<sizeof(int), true>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<unsigned int> {
+		static const int value = __dbusPreferedIntegralType<sizeof(unsigned int), false>::value;
+	};
+	
+	template<>
+	struct dbusPreferedType<long> {
+		static const int value = __dbusPreferedIntegralType<sizeof(long), true>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<unsigned long> {
+		static const int value = __dbusPreferedIntegralType<sizeof(unsigned long), false>::value;
+	};
+	
+	template<>
+	struct dbusPreferedType<long long> {
+		static const int value = __dbusPreferedIntegralType<sizeof(long long), true>::value;
+	};
+
+	template<>
+	struct dbusPreferedType<unsigned long long> {
+		static const int value = __dbusPreferedIntegralType<sizeof(unsigned long long), false>::value;
+	};
+	
+	template<>
+	struct dbusPreferedType<float> {
+		static const int value = DBUS_TYPE_DOUBLE;
+	};
+
+	template<>
+	struct dbusPreferedType<double> {
+		static const int value = DBUS_TYPE_DOUBLE;
+	};
+	
+	template<>
+	struct dbusPreferedType<const char *> {
+		static const int value = DBUS_TYPE_STRING;
+	};
+	
+	template<>
+	struct dbusPreferedType<char *> {
+		static const int value = DBUS_TYPE_STRING;
+	};
+
+	template<>
+	struct dbusPreferedType<std::string> {
+		static const int value = DBUS_TYPE_STRING;
+	};
 
 }
 }

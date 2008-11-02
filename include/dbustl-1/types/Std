@@ -45,7 +45,7 @@ template <typename T>
 std::string __dbusGenerateSignature(T&)
 {
     char content_type[2] = {0, 0};
-    content_type[0] = (char)dbusPreferedType<T>();
+    content_type[0] = (char)dbusPreferedType<T>::value;
     return content_type;
 }
 
