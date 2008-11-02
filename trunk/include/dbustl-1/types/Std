@@ -42,7 +42,7 @@ namespace types {
 
 // Generate a DBUS signature for a given C++ type
 template <typename T>
-std::string __dbusGenerateSignature(T&)
+std::string __dbusGenerateSignature(const T*)
 {
     char content_type[2] = {0, 0};
     content_type[0] = (char)dbusPreferedType<T>::value;
@@ -51,10 +51,10 @@ std::string __dbusGenerateSignature(T&)
 
 /* std::list */
 template <typename T>
-std::string __dbusGenerateSignature(std::list<T>&)
+std::string __dbusGenerateSignature(const std::list<T>*)
 {
-    T element;
-    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbusGenerateSignature(element);
+    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
+        __dbusGenerateSignature(static_cast<T*>(0));
 }
     
 template<typename T>
@@ -62,9 +62,9 @@ dbus_bool_t serialize(DBusMessageIter* it, const std::list<T>& arg)
 {
     typename std::list<T>::const_iterator containerIter;
     DBusMessageIter subIterator;
-    T element;
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-      __dbusGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+      __dbusGenerateSignature(static_cast<T*>(0)).c_str(), 
+            &subIterator) == FALSE) {
         return FALSE;
     }
     
@@ -97,10 +97,10 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
 
 /* std::vector */
 template <typename T>
-std::string __dbusGenerateSignature(std::vector<T>&)
+std::string __dbusGenerateSignature(const std::vector<T>*)
 {
-    T element;
-    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + __dbusGenerateSignature(element);
+    return std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
+        __dbusGenerateSignature(static_cast<T*>(0));
 }
     
 template<typename T>
@@ -108,9 +108,9 @@ dbus_bool_t serialize(DBusMessageIter* it, const std::vector<T>& arg)
 {
     typename std::vector<T>::const_iterator containerIter;
     DBusMessageIter subIterator;
-    T element;
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-      __dbusGenerateSignature(element).c_str(), &subIterator) == FALSE) {
+      __dbusGenerateSignature(static_cast<T*>(0)).c_str(), 
+      &subIterator) == FALSE) {
         return FALSE;
     }
     
@@ -143,13 +143,11 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
 
 /* std::map */
 template <typename K, typename V>
-std::string __dbusGenerateSignature(std::pair<const K, V>&)
+std::string __dbusGenerateSignature(const std::pair<const K, V>*)
 {
-    K key;
-    V value;
     return std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
-        __dbusGenerateSignature(key) +
-        __dbusGenerateSignature(value) +
+        __dbusGenerateSignature(static_cast<K*>(0)) +
+        __dbusGenerateSignature(static_cast<V*>(0)) +
         DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
 }
     
@@ -157,11 +155,11 @@ template<typename K, typename V>
 dbus_bool_t serialize(DBusMessageIter* it, const std::map<K, V>& arg)
 {
     typename std::map<K, V>::const_iterator containerIter;
-    typename std::map<K, V>::value_type v;
     DBusMessageIter arrayIterator;
 
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-        __dbusGenerateSignature(v).c_str(), &arrayIterator) == FALSE) {
+        __dbusGenerateSignature(static_cast<typename std::map<K, V>::value_type *>(0)).c_str(), 
+        &arrayIterator) == FALSE) {
         return FALSE;
     }
     
