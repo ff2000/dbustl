@@ -138,7 +138,7 @@ dbus_bool_t __deserializeUnsignedIntegral(DBusMessageIter* it, T* arg)
 template<typename T>
 dbus_bool_t serialize(DBusMessageIter* it, const T& arg)
 {
-    return dbus_message_iter_append_basic(it, dbusPreferedType<T>(), &arg);
+    return dbus_message_iter_append_basic(it, dbusPreferedType<T>::value, &arg);
 }
 
 /* bool */
