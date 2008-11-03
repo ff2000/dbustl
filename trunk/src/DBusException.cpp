@@ -26,26 +26,26 @@
 
 namespace dbustl {
 
-DBusException::DBusException() throw()
+DBusException::DBusException()
 {
     dbus_error_init(&_dbusError);
 }
 
-DBusException::DBusException(const std::string& name, const std::string& message) throw()
+DBusException::DBusException(const std::string& name, const std::string& message)
 {
     dbus_error_init(&_dbusError);
     dbus_set_error(&_dbusError, name.c_str(), "%s", message.c_str());
 }
 
 //Copy constructor: special care must be taken
-DBusException::DBusException(const DBusException& e) throw()
+DBusException::DBusException(const DBusException& e)
 {
     dbus_error_init(&_dbusError);
     dbus_set_error(&_dbusError, e._dbusError.name, "%s", e._dbusError.message);
 }
 
 //assignmen operator: special care must be taken
-DBusException& DBusException::operator=(const DBusException& e) throw()
+DBusException& DBusException::operator=(const DBusException& e)
 {
     dbus_error_free(&_dbusError);
     if(dbus_error_is_set(&e._dbusError)) {
@@ -79,7 +79,7 @@ std::string DBusException::message() const
     return _dbusError.message;
 }
   
-bool DBusException::isSet() const throw()
+bool DBusException::isSet() const
 {
     return dbus_error_is_set(&_dbusError) == TRUE;
 }

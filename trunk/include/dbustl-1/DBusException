@@ -33,15 +33,15 @@ namespace dbustl {
 class DBusException : public std::exception {
     public:
         //Creates an empty Exception object
-        DBusException() throw();
+        DBusException();
 
         //Creates Exception object from a DBUS exception name -- THOSE MUST BE STATICALLY ALLOCATED STRINGS
-        DBusException(const std::string& name, const std::string& description) throw();
+        DBusException(const std::string& name, const std::string& description);
 
         //Copy constructor: special care must be taken
-        DBusException(const DBusException& e) throw();
+        DBusException(const DBusException& e);
         //assignmen operator: special care must be taken
-        DBusException& operator=(const DBusException&) throw();
+        DBusException& operator=(const DBusException&);
 
         virtual ~DBusException() throw();
 
@@ -54,7 +54,7 @@ class DBusException : public std::exception {
         std::string message() const;
         
         //Returns true if the object contains a valid exception
-        bool isSet() const throw();
+        bool isSet() const;
         
         //Should not be used : reserved for internal use
         DBusError* dbus() {return &_dbusError; };
