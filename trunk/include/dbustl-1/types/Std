@@ -50,15 +50,19 @@ struct dbusGenerateSignature {
     }
 };
 
-/* std::list */
+// Generate a DBUS signature for a DBUS array of T
 template <typename T>
-struct dbusGenerateSignature<std::list<T> > {
+struct dbusGenerateArraySignature {
     static inline const char* value() {
         static const std::string signature = std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
             dbusGenerateSignature<T>::value();
         return signature.c_str();
     }
 };
+
+/* std::list */
+template <typename T>
+struct dbusGenerateSignature<std::list<T> > : public dbusGenerateArraySignature<T> {};
 
 template<typename T>
 dbus_bool_t serialize(DBusMessageIter* it, const std::list<T>& arg)
@@ -100,13 +104,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
 
 /* std::vector */
 template <typename T>
-struct dbusGenerateSignature<std::vector<T> > {
-    static inline const char* value() {
-        static const std::string signature = std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
-            dbusGenerateSignature<T>::value();
-        return signature.c_str();
-    }
-};
+struct dbusGenerateSignature<std::vector<T> > : public dbusGenerateArraySignature<T> {};
     
 template<typename T>
 dbus_bool_t serialize(DBusMessageIter* it, const std::vector<T>& arg)
