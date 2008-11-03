@@ -43,7 +43,7 @@ namespace types {
 // Generate a DBUS signature for a given C++ type
 template <typename T>
 struct dbusGenerateSignature {
-    static const char* value() {
+    static inline const char* value() {
         static const char signature[] = 
             {(char)dbusPreferedType<T>::value, 0};
         return signature;
@@ -53,7 +53,7 @@ struct dbusGenerateSignature {
 /* std::list */
 template <typename T>
 struct dbusGenerateSignature<std::list<T> > {
-    static const char* value() {
+    static inline const char* value() {
         static const std::string signature = std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
             dbusGenerateSignature<T>::value();
         return signature.c_str();
@@ -101,7 +101,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
 /* std::vector */
 template <typename T>
 struct dbusGenerateSignature<std::vector<T> > {
-    static const char* value() {
+    static inline const char* value() {
         static const std::string signature = std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
             dbusGenerateSignature<T>::value();
         return signature.c_str();
@@ -149,7 +149,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
 /* std::map */
 template <typename K, typename V>
 struct dbusGenerateSignature<std::pair<const K, V> > {
-    static const char* value() {
+    static inline const char* value() {
         static const std::string signature = std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
             dbusGenerateSignature<K>::value() +
             dbusGenerateSignature<V>::value() +
