@@ -60,7 +60,7 @@ ServerProxy::~ServerProxy()
         try {
             removeSignalHandler(sigName);
         }
-        catch(const DBusException& e) {
+        catch(const DBusException&) {
             //Skip exception
         }
     }
