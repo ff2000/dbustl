@@ -41,14 +41,14 @@ Message::Message(const Message& other)
     _valid = other._valid;
     _iteratorInitialized = other._iteratorInitialized;
     _parsedArguments = other._parsedArguments;
-};
+}
 
 Message::~Message()
 {
     if(_msg) {
         dbus_message_unref(_msg);
     }
-};
+}
 
 Message& Message::operator=(Message& other) {
     if(other._msg) {
@@ -64,7 +64,7 @@ Message& Message::operator=(Message& other) {
     _parsedArguments = other._parsedArguments;
     _msg = other._msg;
     return *this;
-};
+}
 
 Message& Message::operator=(DBusMessage *msg) {
     if(_msg) {
@@ -76,7 +76,7 @@ Message& Message::operator=(DBusMessage *msg) {
     _parsedArguments = 0;
     _msg = msg;
     return *this;
-};
+}
 
 std::string Message::member() const
 {
