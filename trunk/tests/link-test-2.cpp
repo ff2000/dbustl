@@ -1,5 +1,9 @@
-#include <dbustl-1/types/Std>
 #include <dbustl-1/dbustl>
+#include <dbustl-1/types/Std>
+
+#include <list>
+#include <vector>
+#include <map>
 
 void testMessage2(dbustl::Message& m)
 {
