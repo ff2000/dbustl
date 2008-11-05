@@ -42,7 +42,7 @@ namespace types {
 
 // Generate a DBUS signature for a given C++ type
 template <typename T>
-struct dbusGenerateSignature {
+struct generateSignature {
     static inline const char* value() {
         static const char signature[] = 
             {(char)dbusPreferedType<T>::value, 0};
@@ -55,35 +55,43 @@ template <typename T>
 struct dbusGenerateArraySignature {
     static inline const char* value() {
         static const std::string signature = std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
-            dbusGenerateSignature<T>::value();
+            generateSignature<T>::value();
         return signature.c_str();
     }
 };
 
 /* std::list */
 template <typename T>
-struct dbusGenerateSignature<std::list<T> > : public dbusGenerateArraySignature<T> {};
+struct generateSignature<std::list<T> > : public dbusGenerateArraySignature<T> {};
 
 template<typename T>
-dbus_bool_t serialize(DBusMessageIter* it, const std::list<T>& arg)
+struct Serializer<std::list<T> > {
+    static dbus_bool_t run(DBusMessageIter* it, const std::list<T>& arg);
+};
+template<typename T>
+dbus_bool_t Serializer<std::list<T> >::run(DBusMessageIter* it, const std::list<T>& arg)
 {
     typename std::list<T>::const_iterator containerIter;
     DBusMessageIter subIterator;
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-      dbusGenerateSignature<T>::value(), 
+      generateSignature<T>::value(), 
             &subIterator) == FALSE) {
         return FALSE;
     }
     
     for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
-        if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+        if(Serializer<T>::run(&subIterator, *containerIter) == FALSE) return FALSE;
     }
     
     return dbus_message_iter_close_container(it, &subIterator);
 }
 
 template<typename T>
-dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
+struct Deserializer<std::list<T> > {
+    static dbus_bool_t run(DBusMessageIter* it, std::list<T>* arg);
+};
+template<typename T>
+dbus_bool_t Deserializer<std::list<T> >::run(DBusMessageIter* it, std::list<T>* arg)
 {
     DBusMessageIter subIterator;
     if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
@@ -93,7 +101,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
     dbus_message_iter_recurse(it, &subIterator);
     while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
         arg->push_back(T());
-        if(deserialize(&subIterator, &arg->back()) == FALSE) {
+        if(Deserializer<T>::run(&subIterator, &arg->back()) == FALSE) {
             return FALSE;
         }
         dbus_message_iter_next(&subIterator);
@@ -104,28 +112,36 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::list<T>* arg)
 
 /* std::vector */
 template <typename T>
-struct dbusGenerateSignature<std::vector<T> > : public dbusGenerateArraySignature<T> {};
-    
+struct generateSignature<std::vector<T> > : public dbusGenerateArraySignature<T> {};
+
 template<typename T>
-dbus_bool_t serialize(DBusMessageIter* it, const std::vector<T>& arg)
+struct Serializer<std::vector<T> > {
+    static dbus_bool_t run(DBusMessageIter* it, const std::vector<T>& arg);
+};
+template<typename T>
+dbus_bool_t Serializer<std::vector<T> >::run(DBusMessageIter* it, const std::vector<T>& arg)
 {
     typename std::vector<T>::const_iterator containerIter;
     DBusMessageIter subIterator;
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-      dbusGenerateSignature<T>::value(), 
-      &subIterator) == FALSE) {
+      generateSignature<T>::value(), 
+            &subIterator) == FALSE) {
         return FALSE;
     }
     
     for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
-        if(serialize(&subIterator, *containerIter) == FALSE) return FALSE;
+        if(Serializer<T>::run(&subIterator, *containerIter) == FALSE) return FALSE;
     }
     
     return dbus_message_iter_close_container(it, &subIterator);
 }
 
 template<typename T>
-dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
+struct Deserializer<std::vector<T> > {
+    static dbus_bool_t run(DBusMessageIter* it, std::vector<T>* arg);
+};
+template<typename T>
+dbus_bool_t Deserializer<std::vector<T> >::run(DBusMessageIter* it, std::vector<T>* arg)
 {
     DBusMessageIter subIterator;
     if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
@@ -135,7 +151,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
     dbus_message_iter_recurse(it, &subIterator);
     while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
         arg->push_back(T());
-        if(deserialize(&subIterator, &arg->back()) == FALSE) {
+        if(Deserializer<T>::run(&subIterator, &arg->back()) == FALSE) {
             return FALSE;
         }
         dbus_message_iter_next(&subIterator);
@@ -146,24 +162,28 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::vector<T>* arg)
 
 /* std::map */
 template <typename K, typename V>
-struct dbusGenerateSignature<std::pair<const K, V> > {
+struct generateSignature<std::pair<const K, V> > {
     static inline const char* value() {
         static const std::string signature = std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
-            dbusGenerateSignature<K>::value() +
-            dbusGenerateSignature<V>::value() +
+            generateSignature<K>::value() +
+            generateSignature<V>::value() +
             DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
         return signature.c_str();
     }
 };
 
 template<typename K, typename V>
-dbus_bool_t serialize(DBusMessageIter* it, const std::map<K, V>& arg)
+struct Serializer<std::map<K, V> > {
+    static dbus_bool_t run(DBusMessageIter* it, const std::map<K, V>& arg);
+};
+template<typename K, typename V>
+dbus_bool_t Serializer<std::map<K, V> >::run(DBusMessageIter* it, const std::map<K, V>& arg)
 {
     typename std::map<K, V>::const_iterator containerIter;
     DBusMessageIter arrayIterator;
 
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-        dbusGenerateSignature<typename std::map<K, V>::value_type>::value(), 
+        generateSignature<typename std::map<K, V>::value_type>::value(), 
         &arrayIterator) == FALSE) {
         return FALSE;
     }
@@ -173,17 +193,20 @@ dbus_bool_t serialize(DBusMessageIter* it, const std::map<K, V>& arg)
         if(dbus_message_iter_open_container(&arrayIterator, DBUS_TYPE_DICT_ENTRY, NULL, &dictEntryIterator) == FALSE) {
             return FALSE;
         }
-        if(serialize(&dictEntryIterator, containerIter->first) == FALSE) return FALSE;
-        if(serialize(&dictEntryIterator, containerIter->second) == FALSE) return FALSE;
+        if(Serializer<K>::run(&dictEntryIterator, containerIter->first) == FALSE) return FALSE;
+        if(Serializer<V>::run(&dictEntryIterator, containerIter->second) == FALSE) return FALSE;
         if(dbus_message_iter_close_container(&arrayIterator, &dictEntryIterator) == FALSE) return FALSE;
     }
     
     return dbus_message_iter_close_container(it, &arrayIterator);
 }
 
-
 template<typename K, typename V>
-dbus_bool_t deserialize(DBusMessageIter* it, std::map<K, V>* arg)
+struct Deserializer<std::map<K, V> > {
+    static dbus_bool_t run(DBusMessageIter* it, std::map<K, V>* arg);
+};
+template<typename K, typename V>
+dbus_bool_t Deserializer<std::map<K, V> >::run(DBusMessageIter* it, std::map<K, V>* arg)
 {
     DBusMessageIter arrayIterator;
     DBusMessageIter dictEntryIterator;
@@ -196,7 +219,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::map<K, V>* arg)
         dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
         std::pair<K, V> v;
         
-        if(deserialize(&dictEntryIterator, &v.first) == FALSE) {
+        if(Deserializer<K>::run(&dictEntryIterator, &v.first) == FALSE) {
             return FALSE;
         }
         
@@ -206,7 +229,7 @@ dbus_bool_t deserialize(DBusMessageIter* it, std::map<K, V>* arg)
         if(!ins.second) return FALSE;
         
         dbus_message_iter_next(&dictEntryIterator);
-        if(deserialize(&dictEntryIterator, &(ins.first->second)) == FALSE) {
+        if(Deserializer<V>::run(&dictEntryIterator, &(ins.first->second)) == FALSE) {
             return FALSE;
         }
 

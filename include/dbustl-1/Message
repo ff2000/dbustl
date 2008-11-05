@@ -174,7 +174,7 @@ namespace dbustl {
         using namespace types;
 
         if(serializationInit()) {
-            _valid = (serialize(&_it, inarg) == TRUE);
+            _valid = (Serializer<T>::run(&_it, inarg) == TRUE);
         }
 
         return *this;
@@ -193,7 +193,7 @@ namespace dbustl {
         int arg_type;
 
         if(deSerializationInit(&arg_type)) {
-            _valid = (deserialize(&_it, outarg) == TRUE);
+            _valid = (Deserializer<T>::run(&_it, outarg) == TRUE);
         }
         _parsedArguments++;
         return *this;
