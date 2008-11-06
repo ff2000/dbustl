@@ -21,7 +21,7 @@
  *
  */
 
-// STL set support
+// STL set & multiset support
 
 #ifndef DBUSTL_TYPES_SET
 #define DBUSTL_TYPES_SET

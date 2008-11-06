@@ -158,6 +158,10 @@ void testMessage1(dbustl::Message& m)
 		m >> v;
 		m << v;
 	}
+	{
+		std::multimap<double, std::string> v;
+		m >> v;
+	}
 }
 
 void testMessage2(dbustl::Message& m);

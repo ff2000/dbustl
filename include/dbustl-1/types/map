@@ -21,7 +21,7 @@
  *
  */
 
-// STL map support
+// STL map & multimap support
 
 #ifndef DBUSTL_TYPES_MAP
 #define DBUSTL_TYPES_MAP
@@ -33,6 +33,7 @@
 namespace dbustl {
 namespace types {
 
+/* map & multimap shared support */
 template <typename K, typename V>
 struct generateSignature<std::pair<const K, V> > {
     static inline const char* value() {
@@ -43,6 +44,8 @@ struct generateSignature<std::pair<const K, V> > {
         return signature.c_str();
     }
 };
+
+/* map support */
 
 template<typename K, typename V>
 struct Serializer<std::map<K, V> > {
@@ -111,6 +114,43 @@ dbus_bool_t Deserializer<std::map<K, V> >::run(DBusMessageIter* it, std::map<K, 
     return TRUE;
 }
     
+/* multimap support */
+
+template<typename K, typename V>
+struct Deserializer<std::multimap<K, V> > {
+    static dbus_bool_t run(DBusMessageIter* it, std::multimap<K, V>* arg);
+};
+template<typename K, typename V>
+dbus_bool_t Deserializer<std::multimap<K, V> >::run(DBusMessageIter* it, std::multimap<K, V>* arg)
+{
+    DBusMessageIter arrayIterator;
+    DBusMessageIter dictEntryIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &arrayIterator);
+    while (dbus_message_iter_get_arg_type(&arrayIterator) == DBUS_TYPE_DICT_ENTRY) {
+        dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
+        std::pair<K, V> v;
+        
+        if(Deserializer<K>::run(&dictEntryIterator, &v.first) == FALSE) {
+            return FALSE;
+        }
+        
+        typename std::multimap<K, V>::iterator it = arg->insert(v);
+        
+        dbus_message_iter_next(&dictEntryIterator);
+        if(Deserializer<V>::run(&dictEntryIterator, &(it->second)) == FALSE) {
+            return FALSE;
+        }
+
+        dbus_message_iter_next(&arrayIterator);
+    }
+    
+    return TRUE;
+}
+
 }
 }
 
