@@ -273,6 +273,39 @@ int run_vt_tests()
     }
 
     try {
+        std::cout << ">multiset of string " << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::multiset<std::string> in, out;
+        in.insert("String 1");
+        in.insert("String 1");
+        in.insert("String 2");
+        pythonServerProxy.call("test_array_of_string", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">set collision " << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::list<std::string> in;
+        std::set<std::string> out;
+        in.push_back("String 1");
+        in.push_back("String 1");
+        in.push_back("String 2");
+        pythonServerProxy.call("test_array_of_string", in, &out); 
+        assert(out.size() == 2);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
         std::cout << ">list of int " << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
