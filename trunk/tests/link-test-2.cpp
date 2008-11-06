@@ -2,6 +2,7 @@
 
 #include <dbustl-1/types/list>
 #include <dbustl-1/types/vector>
+#include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
 
 void testMessage2(dbustl::Message& m)
@@ -142,6 +143,11 @@ void testMessage2(dbustl::Message& m)
 	}
 	{
 		std::list<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::set<std::string> v;
 		m >> v;
 		m << v;
 	}

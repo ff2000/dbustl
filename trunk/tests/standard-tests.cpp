@@ -241,7 +241,7 @@ int run_vt_tests()
     }
     
     try {
-        std::cout << ">Array of string " << std::endl;
+        std::cout << ">list of string " << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<std::string> in, out;
@@ -257,7 +257,23 @@ int run_vt_tests()
     }
     
     try {
-        std::cout << ">Array of int " << std::endl;
+        std::cout << ">set of string " << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::set<std::string> in, out;
+        in.insert("String 1");
+        in.insert("String 2");
+        in.insert("String 3");
+        pythonServerProxy.call("test_array_of_string", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">list of int " << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<int32_t> in, out;
@@ -289,7 +305,7 @@ int run_vt_tests()
     }
     
     try {
-        std::cout << ">Array of array of integers " << std::endl;
+        std::cout << ">list of list of integers" << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::list<std::list<int32_t> > in, out;
@@ -313,7 +329,7 @@ int run_vt_tests()
     }
     
     try {
-        std::cout << ">Array as vector" << std::endl;
+        std::cout << ">vector of vector of integers" << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::vector<std::vector<int32_t> > in, out;
