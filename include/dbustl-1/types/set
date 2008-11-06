@@ -32,12 +32,12 @@
 namespace dbustl {
 namespace types {
 
+/* set support */
 template <typename T>
 struct generateSignature<std::set<T> > : public generateArraySignature<T> {};
 
 template<typename T>
 struct Serializer<std::set<T> >: public ArraySerializer<std::set<T> > {};
-
 
 template<typename Container>
 struct SetDeserializer {
@@ -65,6 +65,16 @@ dbus_bool_t SetDeserializer<Container>::run(DBusMessageIter* it, Container* arg)
 }
 template<typename T>
 struct Deserializer<std::set<T> >: public SetDeserializer<std::set<T> > {};
+
+/* multiset support */
+template <typename T>
+struct generateSignature<std::multiset<T> > : public generateArraySignature<T> {};
+
+template<typename T>
+struct Serializer<std::multiset<T> >: public ArraySerializer<std::multiset<T> > {};
+
+template<typename T>
+struct Deserializer<std::multiset<T> >: public SetDeserializer<std::multiset<T> > {};
 
 }
 }
