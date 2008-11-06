@@ -21,23 +21,26 @@
  *
  */
 
-/** @mainpage
- *
- * @section intro_sec Introduction
- *
- * This is the introduction.
- *
- * @section install_sec Installation
- *
- * @subsection step1 Step 1: Opening the box
- *  
- * etc...
- */
+// STL list support
 
-#include <dbustl-1/Message>
-#include <dbustl-1/Connection>
-#include <dbustl-1/ServerProxy>
-#include <dbustl-1/types/vector>
-#include <dbustl-1/types/list>
-#include <dbustl-1/types/map>
+#ifndef DBUSTL_TYPES_LIST
+#define DBUSTL_TYPES_LIST
 
+#include <list>
+#include <dbustl-1/types/StdTools>
+
+namespace dbustl {
+namespace types {
+
+template <typename T>
+struct generateSignature<std::list<T> > : public generateArraySignature<T> {};
+
+template<typename T>
+struct Serializer<std::list<T> >: public ArraySerializer<std::list<T> > {};
+template<typename T>
+struct Deserializer<std::list<T> >: public ArrayDeserializer<std::list<T> > {};
+
+}
+}
+
+#endif /* DBUSTL_TYPES_LIST */

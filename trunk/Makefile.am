@@ -17,9 +17,13 @@ libdbustl_1_la_HEADERS = include/dbustl-1/Config \
                    include/dbustl-1/DBusException \
                    include/dbustl-1/MainLoopIntegration \
                    include/dbustl-1/Message \
-                   include/dbustl-1/types/Tools \
                    include/dbustl-1/types/Serialization \
-                   include/dbustl-1/types/Std
+                   include/dbustl-1/types/Tools \
+                   include/dbustl-1/types/StdTools \
+                   include/dbustl-1/types/list \
+                   include/dbustl-1/types/vector \
+                   include/dbustl-1/types/map
+                   
 libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
