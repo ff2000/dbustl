@@ -39,5 +39,6 @@
 #include <dbustl-1/ServerProxy>
 #include <dbustl-1/types/vector>
 #include <dbustl-1/types/list>
+#include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
 

@@ -144,6 +144,11 @@ void testMessage1(dbustl::Message& m)
 		m << v;
 	}
 	{
+		std::set<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
 		std::map<double, std::string> v;
 		m >> v;
 		m << v;

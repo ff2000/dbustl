@@ -22,6 +22,7 @@ libdbustl_1_la_HEADERS = include/dbustl-1/Config \
                    include/dbustl-1/types/StdTools \
                    include/dbustl-1/types/list \
                    include/dbustl-1/types/vector \
+                   include/dbustl-1/types/set \
                    include/dbustl-1/types/map
                    
 libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
