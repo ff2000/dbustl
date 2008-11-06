@@ -322,7 +322,7 @@ int run_vt_tests()
     }
     
     try {
-        std::cout << ">Dict of int->string " << std::endl;
+        std::cout << ">map of int->string " << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::map<int32_t, std::string> in, out;
@@ -331,6 +331,23 @@ int run_vt_tests()
         in[2] = "Entry 2";
         pythonServerProxy.call("test_dict_of_integer_string", in, &out); 
         assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">multimap of int->string " << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<int32_t, std::string> in;
+        std::multimap<int32_t, std::string> out;
+        in[0] = "Entry 0";
+        in[1] = "Entry 1";
+        in[2] = "Entry 2";
+        pythonServerProxy.call("test_dict_of_integer_string", in, &out); 
+        assert(out.size() == 3);            
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
