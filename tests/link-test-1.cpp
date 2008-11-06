@@ -1,11 +1,7 @@
-#include <dbustl-1/Message>
-#include <dbustl-1/types/Std>
+#include <dbustl-1/dbustl>
 
 #include <cstdlib>
 #include <string>
-#include <list>
-#include <vector>
-#include <map>
 
 void testMessage1(dbustl::Message& m)
 {	
