@@ -134,7 +134,16 @@ dbus_bool_t __deserializeUnsignedIntegral(DBusMessageIter* it, T* arg)
     };
 }
 
-/* common serialize implementation */
+inline dbus_bool_t __deserializeBasic(DBusMessageIter* it, void* arg, int dbus_type)
+{
+    if(dbus_message_iter_get_arg_type(it) != dbus_type) {
+        return FALSE;
+    }
+    dbus_message_iter_get_basic(it, arg);
+    return TRUE;
+}
+
+/* common implementations */
 template<typename T>
 dbus_bool_t Serializer<T>::run(DBusMessageIter* it, const T& arg)
 {
@@ -149,11 +158,7 @@ struct Deserializer<bool> {
 
 dbus_bool_t Deserializer<bool>::run(DBusMessageIter* it, bool* arg)
 {
-    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_BOOLEAN) {
-        return FALSE;
-    }
-    dbus_message_iter_get_basic(it, arg);
-    return TRUE;
+    return __deserializeBasic(it, arg, DBUS_TYPE_BOOLEAN);
 }
 
 template dbus_bool_t Serializer<bool>::run(DBusMessageIter* it, const bool& arg);
@@ -287,11 +292,7 @@ struct Deserializer<double> {
 };
 dbus_bool_t Deserializer<double>::run(DBusMessageIter* it, double* arg)
 {
-    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_DOUBLE) {
-        return FALSE;
-    }
-    dbus_message_iter_get_basic(it, arg);
-    return TRUE;
+    return __deserializeBasic(it, arg, DBUS_TYPE_DOUBLE);
 }
 
 /* const char* - one way only */
