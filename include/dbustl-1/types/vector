@@ -33,7 +33,7 @@ namespace dbustl {
 namespace types {
 
 template <typename T>
-struct generateSignature<std::vector<T> > : public generateArraySignature<T> {};
+struct Signature<std::vector<T> > : public ArraySignature<T> {};
 
 template<typename T>
 struct Serializer<std::vector<T> >: public ArraySerializer<std::vector<T> > {};
