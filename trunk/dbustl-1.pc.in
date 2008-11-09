@@ -6,6 +6,7 @@ includedir=@includedir@
 Name: dbustl
 Description: Dbus template library, a helper C++ library for the Free desktop message bus
 Version: @VERSION@
-Libs: -L${libdir} -ldbustl-1 @DBUS_LIBS@ 
-Cflags: -I${includedir} @DBUS_CFLAGS@
+Requires: dbus-1 >= 1.2
+Libs: -L${libdir} -ldbustl-1
+Cflags: -I${includedir}
 
