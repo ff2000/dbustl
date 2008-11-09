@@ -37,129 +37,129 @@ namespace types {
 	//32 bit plaftorm but DBUS_TYPE_INT64 on 64 bits platforms
 	
 	template<typename T>
-	struct dbusPreferedType;
+	struct basicType;
 	
 	/* Implementation */
 	
 	template<int size, bool sign>
-	struct __dbusPreferedIntegralType;
+	struct __basicIntegralType;
 
 	template<>
-	struct __dbusPreferedIntegralType<1, true> {
+	struct __basicIntegralType<1, true> {
 		static const int value = DBUS_TYPE_INT16;
 	};
 	template<>
-	struct __dbusPreferedIntegralType<2, true> {
+	struct __basicIntegralType<2, true> {
 		static const int value = DBUS_TYPE_INT16;
 	};
 	template<>
-	struct __dbusPreferedIntegralType<4, true> {
+	struct __basicIntegralType<4, true> {
 		static const int value = DBUS_TYPE_INT32;
 	};
 	template<>
-	struct __dbusPreferedIntegralType<8, true> {
+	struct __basicIntegralType<8, true> {
 		static const int value = DBUS_TYPE_INT64;
 	};
 	
 	template<>
-	struct __dbusPreferedIntegralType<1, false> {
+	struct __basicIntegralType<1, false> {
 		static const int value = DBUS_TYPE_BYTE;
 	};
 	template<>
-	struct __dbusPreferedIntegralType<2, false> {
+	struct __basicIntegralType<2, false> {
 		static const int value = DBUS_TYPE_UINT16;
 	};
 	template<>
-	struct __dbusPreferedIntegralType<4, false> {
+	struct __basicIntegralType<4, false> {
 		static const int value = DBUS_TYPE_UINT32;
 	};
 	template<>
-	struct __dbusPreferedIntegralType<8, false> {
+	struct __basicIntegralType<8, false> {
 		static const int value = DBUS_TYPE_UINT64;
 	};
 
 	template<>
-	struct dbusPreferedType<bool> {
+	struct basicType<bool> {
 		static const int value = DBUS_TYPE_BOOLEAN;
 	};
 
 	template<>
-	struct dbusPreferedType<char> {
-		static const int value = __dbusPreferedIntegralType<sizeof(char), false>::value;
+	struct basicType<char> {
+		static const int value = __basicIntegralType<sizeof(char), false>::value;
 	};
 	
 	template<>
-	struct dbusPreferedType<signed char> {
-		static const int value = __dbusPreferedIntegralType<sizeof(signed char), true>::value;
+	struct basicType<signed char> {
+		static const int value = __basicIntegralType<sizeof(signed char), true>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<unsigned char> {
-		static const int value = __dbusPreferedIntegralType<sizeof(unsigned char), false>::value;
+	struct basicType<unsigned char> {
+		static const int value = __basicIntegralType<sizeof(unsigned char), false>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<short> {
-		static const int value = __dbusPreferedIntegralType<sizeof(short), true>::value;
+	struct basicType<short> {
+		static const int value = __basicIntegralType<sizeof(short), true>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<unsigned short> {
-		static const int value = __dbusPreferedIntegralType<sizeof(unsigned short), false>::value;
+	struct basicType<unsigned short> {
+		static const int value = __basicIntegralType<sizeof(unsigned short), false>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<int> {
-		static const int value = __dbusPreferedIntegralType<sizeof(int), true>::value;
+	struct basicType<int> {
+		static const int value = __basicIntegralType<sizeof(int), true>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<unsigned int> {
-		static const int value = __dbusPreferedIntegralType<sizeof(unsigned int), false>::value;
+	struct basicType<unsigned int> {
+		static const int value = __basicIntegralType<sizeof(unsigned int), false>::value;
 	};
 	
 	template<>
-	struct dbusPreferedType<long> {
-		static const int value = __dbusPreferedIntegralType<sizeof(long), true>::value;
+	struct basicType<long> {
+		static const int value = __basicIntegralType<sizeof(long), true>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<unsigned long> {
-		static const int value = __dbusPreferedIntegralType<sizeof(unsigned long), false>::value;
+	struct basicType<unsigned long> {
+		static const int value = __basicIntegralType<sizeof(unsigned long), false>::value;
 	};
 	
 	template<>
-	struct dbusPreferedType<long long> {
-		static const int value = __dbusPreferedIntegralType<sizeof(long long), true>::value;
+	struct basicType<long long> {
+		static const int value = __basicIntegralType<sizeof(long long), true>::value;
 	};
 
 	template<>
-	struct dbusPreferedType<unsigned long long> {
-		static const int value = __dbusPreferedIntegralType<sizeof(unsigned long long), false>::value;
+	struct basicType<unsigned long long> {
+		static const int value = __basicIntegralType<sizeof(unsigned long long), false>::value;
 	};
 	
 	template<>
-	struct dbusPreferedType<float> {
+	struct basicType<float> {
 		static const int value = DBUS_TYPE_DOUBLE;
 	};
 
 	template<>
-	struct dbusPreferedType<double> {
+	struct basicType<double> {
 		static const int value = DBUS_TYPE_DOUBLE;
 	};
 	
 	template<>
-	struct dbusPreferedType<const char *> {
+	struct basicType<const char *> {
 		static const int value = DBUS_TYPE_STRING;
 	};
 	
 	template<>
-	struct dbusPreferedType<char *> {
+	struct basicType<char *> {
 		static const int value = DBUS_TYPE_STRING;
 	};
 
 	template<>
-	struct dbusPreferedType<std::string> {
+	struct basicType<std::string> {
 		static const int value = DBUS_TYPE_STRING;
 	};
 
