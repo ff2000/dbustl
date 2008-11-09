@@ -33,6 +33,7 @@
  * 
  *  - @ref intro
  *  - @ref advanced_features
+ *  - @ref compat_syntax
  *  - @ref design
  *  - @ref extending
  *  - @ref todo
@@ -53,6 +54,9 @@
  *   - glib: tested on 2.16, olders versions might work too
  *   - dbus-glib: tested on 0.76, olders versions might work too
  *   - python-dbus: tested with 0.82.4
+ * 
+ * It is still possible to use DBUSTL with an older compiler: refer to
+ * @ref compat_syntax for more information.
  * 
  * glib and dbus-glib are only required if you intend to receive DBUS signals
  * from remote objects.
@@ -80,8 +84,13 @@
  * I couldn't resist the temptation to introduce you with a so-called
  * 'Hello, World' dbus example.
  * 
- * So let's try to compile the following program:
+ * So let's try to compile the simplest.cpp program:
  * @include simplest.cpp
+ * 
+ * Here is the line required to build it by hand with gcc.
+ *  @code
+ *$g++ -std=c++0x -Wall simplest.cpp `pkg-config --cflags --libs dbustl-1` -o simplest
+ * @endcode
  * 
  */
 
@@ -91,6 +100,12 @@
  * @section datatypes More complex datatypes
  * @section async Asynchronous method calls
  * @section signals Working with signals.
+ * 
+ */
+
+/** 
+ * @page compat_syntax Compatibility syntax
+ * 
  * 
  */
 
