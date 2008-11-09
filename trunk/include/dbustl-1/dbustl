@@ -23,7 +23,87 @@
 
 /** @mainpage
  *
- * @section intro_sec Introduction
+ * DBUSTL is an easy do to use, extensible C++ wrapper for DBus that 
+ * makes the use of DBuswith plain C++ possible.<br/>
+ * 
+ * <strong>Important note:</strong> To be used with the most elegant
+ * syntax, DBUSTL requires cutting edge C++ features, that are currently
+ *  only available with gcc 4.3 and upper. Use of older versions of gcc
+ *  is possible, but will make the syntax a little more convoluted.<br/>
+ * 
+ *  - @ref intro
+ *  - @ref advanced_features
+ *  - @ref design
+ *  - @ref extending
+ *  - @ref todo
+ */
+
+/** 
+ * @page intro The 5 minutes introduction
+ * 
+ * This pages gets you up and running with a DBUSTL installation
+ * and shows you how to build a simple program.
+ * 
+ * @section requirements Build requirements
+ * 
+ * To build DBUSTL the following dependancies are requires:
+ *   - gcc: >= 4.3
+ *   - DBus development libraries (>= 1.2): older versions may work
+ * but haven't been tested
+ *   - glib: tested on 2.16, olders versions might work too
+ *   - dbus-glib: tested on 0.76, olders versions might work too
+ *   - python-dbus: tested with 0.82.4
+ * 
+ * glib and dbus-glib are only required if you intend to receive DBUS signals
+ * from remote objects.
+ * 
+ * python-dbus is only required if you intend to run the examples provided with
+ * this introduction.
+ * 
+ * @section build Building
+ * 
+ * That is as simple as running
+ * @code
+ * $tar -zxvf dbustl-x.y.tar.bz2
+ * $cd dbustl-x.y
+ * $./configure
+ * $make
+ * $su
+ * #make install
+ * #exit
+ * @endcode
+ * 
+ * Now DBUSTL should be installed in /usr/local
+ * 
+ * @section hello_world Hello world, revisited
+ * 
+ * I couldn't resist the temptation to introduce you with a so-called
+ * 'Hello, World' dbus example.
+ * 
+ * So let's try to compile the following program:
+ * @include simplest.cpp
+ * 
+ */
+
+/** 
+ * @page advanced_features Advanced features
+ * 
+ * @section datatypes More complex datatypes
+ * @section async Asynchronous method calls
+ * @section signals Working with signals.
+ * 
+ */
+
+/** 
+ * @page design Design paradigms
+ * @page extending Extending DBUSTL to support custom data types
+ * @page todo Future improvements
+ */
+
+/*
+ * Though it has been built with standard C++ compatibility in mind, its design
+ * allows it to be extended to support any C++ toolkit
+ *
  *
  * This is the introduction.
  *
@@ -32,6 +112,7 @@
  * @subsection step1 Step 1: Opening the box
  *  
  * etc...
+ * @include simplest.cpp
  */
 
 #include <dbustl-1/Message>

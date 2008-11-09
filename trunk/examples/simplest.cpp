@@ -1,4 +1,5 @@
-/*
+/** @cond
+ * 
  *  DBUSTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
@@ -19,6 +20,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * @endcond
  */
  
 #include <dbustl-1/dbustl>
@@ -30,17 +32,16 @@ using namespace dbustl;
  
 int main()
 {
-    cout << "Saying hello to /PythonServerObject" << endl;
+    ServerProxy remoteObject(Connection::sessionBus(), "/PythonServerObject", "com.example.SampleService");
     try {
-        ServerProxy remoteObject(Connection::sessionBus(), "/PythonServerObject", "com.example.SampleService");
         string reply;
-        remoteObject.call("SimpleHello", "Hi", &reply); 
-        cout << "Reply: " << reply << endl;
-	}
-	catch(const dbustl::DBusException& e) {
-		cerr << "Method call error " << e.what();
-		return 1;
-	}
- 	
- 	return 0;
+        remoteObject.call("SimpleHello", "Hello world", &reply); 
+        /* reply now contains a valid string */
+        cout << reply << endl;
+    }
+    catch(const DBusException& e) {
+        /* Dbus call failed: e.name() constains error cause */
+        cerr << e.what() << endl;
+    } 
+    return 0;
 }
