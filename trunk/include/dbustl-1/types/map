@@ -35,11 +35,11 @@ namespace types {
 
 /* map & multimap shared support */
 template <typename K, typename V>
-struct generateSignature<std::pair<const K, V> > {
+struct Signature<std::pair<const K, V> > {
     static inline const char* value() {
         static const std::string signature = std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
-            generateSignature<K>::value() +
-            generateSignature<V>::value() +
+            Signature<K>::value() +
+            Signature<V>::value() +
             DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
         return signature.c_str();
     }
@@ -58,7 +58,7 @@ dbus_bool_t Serializer<std::map<K, V> >::run(DBusMessageIter* it, const std::map
     DBusMessageIter arrayIterator;
 
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-        generateSignature<typename std::map<K, V>::value_type>::value(), 
+        Signature<typename std::map<K, V>::value_type>::value(), 
         &arrayIterator) == FALSE) {
         return FALSE;
     }

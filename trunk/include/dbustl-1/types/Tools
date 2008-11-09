@@ -32,136 +32,146 @@
 namespace dbustl {
 namespace types {
 
-	//For all basic types : the DBUS type into which the C++ type maps
-	//This is non trivial as for instance an int will map on DBUS_TYPE_INT32 on
-	//32 bit plaftorm but DBUS_TYPE_INT64 on 64 bits platforms
+//For all basic types : the DBUS type into which the C++ type maps
+//This is non trivial as for instance an int will map on DBUS_TYPE_INT32 on
+//32 bit plaftorm but DBUS_TYPE_INT64 on 64 bits platforms
 	
-	template<typename T>
-	struct basicType;
+template<typename T>
+struct basicType;
+
+// Generate a DBUS signature for a given C++ type
+template <typename T>
+struct Signature {
+    static inline const char* value() {
+        static const char signature[] = 
+            {(char)basicType<T>::value, 0};
+        return signature;
+    }
+};
 	
-	/* Implementation */
+/* Implementation */
 	
-	template<int size, bool sign>
-	struct __basicIntegralType;
+template<int size, bool sign>
+struct __basicIntegralType;
 
-	template<>
-	struct __basicIntegralType<1, true> {
-		static const int value = DBUS_TYPE_INT16;
-	};
-	template<>
-	struct __basicIntegralType<2, true> {
-		static const int value = DBUS_TYPE_INT16;
-	};
-	template<>
-	struct __basicIntegralType<4, true> {
-		static const int value = DBUS_TYPE_INT32;
-	};
-	template<>
-	struct __basicIntegralType<8, true> {
-		static const int value = DBUS_TYPE_INT64;
-	};
+template<>
+struct __basicIntegralType<1, true> {
+	static const int value = DBUS_TYPE_INT16;
+};
+template<>
+struct __basicIntegralType<2, true> {
+	static const int value = DBUS_TYPE_INT16;
+};
+template<>
+struct __basicIntegralType<4, true> {
+	static const int value = DBUS_TYPE_INT32;
+};
+template<>
+struct __basicIntegralType<8, true> {
+	static const int value = DBUS_TYPE_INT64;
+};
+
+template<>
+struct __basicIntegralType<1, false> {
+	static const int value = DBUS_TYPE_BYTE;
+};
+template<>
+struct __basicIntegralType<2, false> {
+	static const int value = DBUS_TYPE_UINT16;
+};
+template<>
+struct __basicIntegralType<4, false> {
+	static const int value = DBUS_TYPE_UINT32;
+};
+template<>
+struct __basicIntegralType<8, false> {
+	static const int value = DBUS_TYPE_UINT64;
+};
+
+template<>
+struct basicType<bool> {
+	static const int value = DBUS_TYPE_BOOLEAN;
+};
+
+template<>
+struct basicType<char> {
+	static const int value = __basicIntegralType<sizeof(char), false>::value;
+};
 	
-	template<>
-	struct __basicIntegralType<1, false> {
-		static const int value = DBUS_TYPE_BYTE;
-	};
-	template<>
-	struct __basicIntegralType<2, false> {
-		static const int value = DBUS_TYPE_UINT16;
-	};
-	template<>
-	struct __basicIntegralType<4, false> {
-		static const int value = DBUS_TYPE_UINT32;
-	};
-	template<>
-	struct __basicIntegralType<8, false> {
-		static const int value = DBUS_TYPE_UINT64;
-	};
+template<>
+struct basicType<signed char> {
+	static const int value = __basicIntegralType<sizeof(signed char), true>::value;
+};
 
-	template<>
-	struct basicType<bool> {
-		static const int value = DBUS_TYPE_BOOLEAN;
-	};
+template<>
+struct basicType<unsigned char> {
+	static const int value = __basicIntegralType<sizeof(unsigned char), false>::value;
+};
 
-	template<>
-	struct basicType<char> {
-		static const int value = __basicIntegralType<sizeof(char), false>::value;
-	};
+template<>
+struct basicType<short> {
+	static const int value = __basicIntegralType<sizeof(short), true>::value;
+};
+
+template<>
+struct basicType<unsigned short> {
+	static const int value = __basicIntegralType<sizeof(unsigned short), false>::value;
+};
+
+template<>
+struct basicType<int> {
+	static const int value = __basicIntegralType<sizeof(int), true>::value;
+};
+
+template<>
+struct basicType<unsigned int> {
+	static const int value = __basicIntegralType<sizeof(unsigned int), false>::value;
+};
 	
-	template<>
-	struct basicType<signed char> {
-		static const int value = __basicIntegralType<sizeof(signed char), true>::value;
-	};
+template<>
+struct basicType<long> {
+	static const int value = __basicIntegralType<sizeof(long), true>::value;
+};
 
-	template<>
-	struct basicType<unsigned char> {
-		static const int value = __basicIntegralType<sizeof(unsigned char), false>::value;
-	};
-
-	template<>
-	struct basicType<short> {
-		static const int value = __basicIntegralType<sizeof(short), true>::value;
-	};
-
-	template<>
-	struct basicType<unsigned short> {
-		static const int value = __basicIntegralType<sizeof(unsigned short), false>::value;
-	};
-
-	template<>
-	struct basicType<int> {
-		static const int value = __basicIntegralType<sizeof(int), true>::value;
-	};
-
-	template<>
-	struct basicType<unsigned int> {
-		static const int value = __basicIntegralType<sizeof(unsigned int), false>::value;
-	};
+template<>
+struct basicType<unsigned long> {
+	static const int value = __basicIntegralType<sizeof(unsigned long), false>::value;
+};
 	
-	template<>
-	struct basicType<long> {
-		static const int value = __basicIntegralType<sizeof(long), true>::value;
-	};
+template<>
+struct basicType<long long> {
+	static const int value = __basicIntegralType<sizeof(long long), true>::value;
+};
 
-	template<>
-	struct basicType<unsigned long> {
-		static const int value = __basicIntegralType<sizeof(unsigned long), false>::value;
-	};
+template<>
+struct basicType<unsigned long long> {
+	static const int value = __basicIntegralType<sizeof(unsigned long long), false>::value;
+};
 	
-	template<>
-	struct basicType<long long> {
-		static const int value = __basicIntegralType<sizeof(long long), true>::value;
-	};
+template<>
+struct basicType<float> {
+	static const int value = DBUS_TYPE_DOUBLE;
+};
 
-	template<>
-	struct basicType<unsigned long long> {
-		static const int value = __basicIntegralType<sizeof(unsigned long long), false>::value;
-	};
+template<>
+struct basicType<double> {
+	static const int value = DBUS_TYPE_DOUBLE;
+};
 	
-	template<>
-	struct basicType<float> {
-		static const int value = DBUS_TYPE_DOUBLE;
-	};
+template<>
+struct basicType<const char *> {
+	static const int value = DBUS_TYPE_STRING;
+};
+	
+template<>
+struct basicType<char *> {
+	static const int value = DBUS_TYPE_STRING;
+};
 
-	template<>
-	struct basicType<double> {
-		static const int value = DBUS_TYPE_DOUBLE;
-	};
-	
-	template<>
-	struct basicType<const char *> {
-		static const int value = DBUS_TYPE_STRING;
-	};
-	
-	template<>
-	struct basicType<char *> {
-		static const int value = DBUS_TYPE_STRING;
-	};
-
-	template<>
-	struct basicType<std::string> {
-		static const int value = DBUS_TYPE_STRING;
-	};
+template<>
+struct basicType<std::string> {
+	static const int value = DBUS_TYPE_STRING;
+};
 
 }
 }
