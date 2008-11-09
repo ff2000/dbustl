@@ -37,7 +37,7 @@ template <typename T>
 struct generateSignature {
     static inline const char* value() {
         static const char signature[] = 
-            {(char)dbusPreferedType<T>::value, 0};
+            {(char)basicType<T>::value, 0};
         return signature;
     }
 };

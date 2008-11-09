@@ -147,7 +147,7 @@ inline dbus_bool_t __deserializeBasic(DBusMessageIter* it, void* arg, int dbus_t
 template<typename T>
 dbus_bool_t Serializer<T>::run(DBusMessageIter* it, const T& arg)
 {
-    return dbus_message_iter_append_basic(it, dbusPreferedType<T>::value, &arg);
+    return dbus_message_iter_append_basic(it, basicType<T>::value, &arg);
 }
 
 /* bool */
