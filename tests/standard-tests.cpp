@@ -29,6 +29,13 @@
 
 #include <cassert>
 
+struct Struct2 {
+    uint32_t field1;
+    std::string field2;
+};
+
+DBUSTL_REGISTER_STRUCT_2(Struct2, field1, field2);
+
 #ifdef DBUSTL_VARIADIC_TEMPLATES
 int run_vt_tests()
 {
@@ -402,6 +409,21 @@ int run_vt_tests()
         return 1;
     }
     
+    try {
+        std::cout << ">Complex struct" << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<uint32_t, Struct2> in, out;
+        Struct2 s = {1, "String"};
+        in[0] = s;
+        pythonServerProxy.call("test_complex_struct", in, &out); 
+        assert(out[0].field1 == 1 && out[0].field2 == "String");            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
     try {
         std::cout << ">Interface modifier" << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");

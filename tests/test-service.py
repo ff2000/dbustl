@@ -120,6 +120,11 @@ class SomeObject(dbus.service.Object):
         return data
 
     @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{u(us)}', out_signature='a{u(us)}')
+    def test_complex_struct(self, data):
+        return data
+
+    @dbus.service.method("com.example.SampleInterface",
                          in_signature='', out_signature='')
     def test_sleep_2s(self):
         system("sleep 2")
