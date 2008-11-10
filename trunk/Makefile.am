@@ -37,3 +37,6 @@ endif
 DISTCLEANFILES += dbustl-glib-1.pc
 EXTRA_DIST     += dbustl-glib-1.pc.in           
 
+#default to bzip2 tarball generation
+dist: dist-bzip2
+	@echo ""    
