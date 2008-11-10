@@ -23,6 +23,7 @@
  
 #include <dbustl-1/dbustl>
 
+#include "struct1.h"
 #include <string>
 
 using namespace std;
@@ -30,12 +31,14 @@ using namespace dbustl;
  
 int main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), "/PythonServerObject", "com.example.SampleService");
+    ServerProxy remoteObject(Connection::sessionBus(), 
+    "/PythonServerObject", "com.example.SampleService");
     try {
-        string reply;
-        remoteObject.call("SimpleHello", "Hello world", &reply); 
-        /* reply now contains a valid string */
-        cout << reply << endl;
+        ExampleStruct s1, s2;
+        s1.field1 = "String";
+        s1.field2 = 1.1;
+        remoteObject.call("test_ExampleStruct", s1, &s2); 
+        cout << s1.field1 << ", " << s1.field2 << endl;
     }
     catch(const DBusException& e) {
         /* Dbus call failed: e.name() constains error cause */
