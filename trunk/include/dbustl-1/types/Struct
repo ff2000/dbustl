@@ -26,6 +26,22 @@
 
 #include <dbustl-1/types/Serialization>
 
+#define DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+namespace dbustl { \
+namespace types { \
+template <> \
+struct Signature<structname> { \
+    static inline const char* value() { \
+        static const std::string signature = std::string(DBUS_STRUCT_BEGIN_CHAR_AS_STRING) \
+
+#define DBUSTL_STRUCT_SIGNATURE_END(structname) \
+            + DBUS_STRUCT_END_CHAR_AS_STRING; \
+        return signature.c_str(); \
+    } \
+}; \
+} \
+}
+
 #define DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
 namespace dbustl { \
 namespace types { \
@@ -56,7 +72,7 @@ template<> \
 struct Deserializer<structname> { \
     static dbus_bool_t run(DBusMessageIter* it, structname* arg); \
 }; \
-dbus_bool_t Deserializer<ExampleStruct>::run(DBusMessageIter* it, structname* arg) \
+dbus_bool_t Deserializer<structname>::run(DBusMessageIter* it, structname* arg) \
 { \
     if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_STRUCT) { \
         return FALSE; \
@@ -72,125 +88,176 @@ dbus_bool_t Deserializer<ExampleStruct>::run(DBusMessageIter* it, structname* ar
 } \
 }
 
-#define DBUSTL_DECLARE_STRUCT_1(structname, \
-type1, name1 \
+#define DBUSTL_REGISTER_STRUCT_1(structname, \
+name1 \
 ) \
+DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+            + StructFieldSignature(&((structname*)(1))->name1) \
+DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
-    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name1); \
 DBUSTL_STRUCT_SERIALIZE_END(structname) \
 DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
-    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name1); \
     dbus_message_iter_next(&subIterator); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
-#define DBUSTL_DECLARE_STRUCT_2(structname, \
-type1, name1, \
-type2, name2 \
+#define DBUSTL_REGISTER_STRUCT_2(structname, \
+name1, \
+name2 \
 ) \
+DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+            + StructFieldSignature(&((structname*)(1))->name1) \
+            + StructFieldSignature(&((structname*)(1))->name2) \
+DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
-    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
-    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name1); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name2); \
 DBUSTL_STRUCT_SERIALIZE_END(structname) \
 DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
-    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name1); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name2); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
-#define DBUSTL_DECLARE_STRUCT_3(structname, \
-type1, name1, \
-type2, name2, \
-type3, name3 \
+#define DBUSTL_REGISTER_STRUCT_3(structname, \
+name1, \
+name2, \
+name3 \
 ) \
+DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+            + StructFieldSignature(&((structname*)(1))->name1) \
+            + StructFieldSignature(&((structname*)(1))->name2) \
+            + StructFieldSignature(&((structname*)(1))->name3) \
+DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
-    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
-    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
-    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name1); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name2); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name3); \
 DBUSTL_STRUCT_SERIALIZE_END(structname) \
 DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
-    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name1); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name2); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name3); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
-#define DBUSTL_DECLARE_STRUCT_4(structname, \
-type1, name1, \
-type2, name2, \
-type3, name3, \
-type4, name4 \
+#define DBUSTL_REGISTER_STRUCT_4(structname, \
+name1, \
+name2, \
+name3, \
+name4 \
 ) \
+DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+            + StructFieldSignature(&((structname*)(1))->name1) \
+            + StructFieldSignature(&((structname*)(1))->name2) \
+            + StructFieldSignature(&((structname*)(1))->name3) \
+            + StructFieldSignature(&((structname*)(1))->name4) \
+DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
-    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
-    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
-    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
-    ret = ret && Serializer<type4>::run(&subIterator, arg.name4); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name1); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name2); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name3); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name4); \
 DBUSTL_STRUCT_SERIALIZE_END(structname) \
 DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
-    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name1); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name2); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name3); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type4>::run(&subIterator, &arg->name4); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name4); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
-#define DBUSTL_DECLARE_STRUCT_5(structname, \
-type1, name1, \
-type2, name2, \
-type3, name3, \
-type4, name4, \
-type5, name5 \
+#define DBUSTL_REGISTER_STRUCT_5(structname, \
+name1, \
+name2, \
+name3, \
+name4, \
+name5 \
 ) \
+DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+            + StructFieldSignature(&((structname*)(1))->name1) \
+            + StructFieldSignature(&((structname*)(1))->name2) \
+            + StructFieldSignature(&((structname*)(1))->name3) \
+            + StructFieldSignature(&((structname*)(1))->name4) \
+            + StructFieldSignature(&((structname*)(1))->name5) \
+DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
-    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
-    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
-    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
-    ret = ret && Serializer<type4>::run(&subIterator, arg.name4); \
-    ret = ret && Serializer<type5>::run(&subIterator, arg.name5); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name1); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name2); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name3); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name4); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name5); \
 DBUSTL_STRUCT_SERIALIZE_END(structname) \
 DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
-    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name1); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name2); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name3); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type4>::run(&subIterator, &arg->name4); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name4); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type5>::run(&subIterator, &arg->name5); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name5); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
-#define DBUSTL_DECLARE_STRUCT_6(structname, \
-type1, name1, \
-type2, name2, \
-type3, name3, \
-type4, name4, \
-type5, name5, \
-type6, name6 \
+#define DBUSTL_REGISTER_STRUCT_6(structname, \
+name1, \
+name2, \
+name3, \
+name4, \
+name5, \
+name6 \
 ) \
+DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
+            + StructFieldSignature(&((structname*)(1))->name1) \
+            + StructFieldSignature(&((structname*)(1))->name2) \
+            + StructFieldSignature(&((structname*)(1))->name3) \
+            + StructFieldSignature(&((structname*)(1))->name4) \
+            + StructFieldSignature(&((structname*)(1))->name5) \
+            + StructFieldSignature(&((structname*)(1))->name6) \
+DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
-    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
-    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
-    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
-    ret = ret && Serializer<type4>::run(&subIterator, arg.name4); \
-    ret = ret && Serializer<type5>::run(&subIterator, arg.name5); \
-    ret = ret && Serializer<type6>::run(&subIterator, arg.name6); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name1); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name2); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name3); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name4); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name5); \
+    ret = ret && StructRunSerializer(&subIterator, arg.name6); \
 DBUSTL_STRUCT_SERIALIZE_END(structname) \
 DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
-    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name1); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name2); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name3); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type4>::run(&subIterator, &arg->name4); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name4); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type5>::run(&subIterator, &arg->name5); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name5); \
     dbus_message_iter_next(&subIterator); \
-    ret = ret && Deserializer<type6>::run(&subIterator, &arg->name6); \
+    ret = ret && StructRunDeserializer(&subIterator, &arg->name6); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
+namespace dbustl {
+namespace types {
+
+template<typename T>
+inline dbus_bool_t StructRunSerializer(DBusMessageIter* it, const T& arg) {
+	return Serializer<T>::run(it, arg);
+}
+template<typename T>
+inline dbus_bool_t StructRunDeserializer(DBusMessageIter* it, T* arg) {
+	return Deserializer<T>::run(it, arg);
+}
+template<typename T>
+inline const char* StructFieldSignature(const T*) {
+	return Signature<T>::value();
+}
+
+}
+}
 #endif /* DBUSTL_TYPES_STRUCT */

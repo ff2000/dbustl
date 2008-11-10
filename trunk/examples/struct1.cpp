@@ -24,9 +24,9 @@
 #include "struct1.h"
 #include <dbustl-1/dbustl>
 
-DBUSTL_DECLARE_STRUCT_3(
+DBUSTL_REGISTER_STRUCT_3(
     ExampleStruct, 
-    std::string, field1, 
-    double, field2, 
-    std::vector<int>, field3
+    field1, 
+    field2, 
+    field3
 )
