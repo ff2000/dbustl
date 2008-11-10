@@ -30,7 +30,7 @@ namespace dbustl {
 
     class ConnectionInitializer;
    
-    class MainLoopIntegration;
+    class EventLoopIntegration;
 
     /**
      * Provides an abstraction of a DBus Connection. 
@@ -47,13 +47,13 @@ namespace dbustl {
      * to Connection::systemBus or Connection::sessionBus
      * 
      * To be able to process signals, the connection must be associated 
-     * with a main loop. A main loop must be provided either:
+     * with an event loop. An event loop must be provided either:
      *   - before any call to Connection::Connection, Connection::systemBus or Connection::sessionBus, using
-     *     Connection::useMainLoop static member.
+     *     Connection::useEventLoop static member.
      *   - during object construction, through the use of 
-     *     the alternate Connection(DBusBusType bustype, const MainLoopIntegration& mainLoop) constructor
+     *     the alternate Connection(DBusBusType bustype, const EventLoopIntegration& eventLoop) constructor
      * 
-     * If no signals are to be received, then main loop association 
+     * If no signals are to be received, then event loop association 
      * remains optionnal.
      */
     class Connection {
@@ -87,7 +87,7 @@ namespace dbustl {
              * the newly created connections.
              * It is safe to call it more than once.
              */
-            static void useMainLoop(const MainLoopIntegration& mainloop);
+            static void useEventLoop(const EventLoopIntegration& eventloop);
 
             /** Creates a new dedicated connection on the given bus.
              * 
@@ -104,7 +104,7 @@ namespace dbustl {
              * to process received messages
              */
             Connection(DBusBusType bustype, 
-              const MainLoopIntegration& mainLoop);
+              const EventLoopIntegration& eventLoop);
             
             /**
              * Destructor
@@ -135,8 +135,8 @@ namespace dbustl {
         
             //Low level connection
             DBusConnection *_llconn;
-            //Mainloop used for this connection
-            MainLoopIntegration* _mainLoop;
+            //Event loop used for this connection
+            EventLoopIntegration* _eventLoop;
             bool _isPrivate;
             
             //globally shared System bus connection
@@ -144,7 +144,7 @@ namespace dbustl {
             //globally shared Session bus connection
             static Connection *_session;
             //default main loop
-            static MainLoopIntegration* _defaultMainLoop;
+            static EventLoopIntegration* _defaultEventLoop;
                         
             /** @cond */
             friend class ConnectionInitializer;

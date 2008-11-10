@@ -21,40 +21,36 @@
  *
  */
 
-#ifndef DBUSTL_MAINLOOPINTEGRATION
-#define DBUSTL_MAINLOOPINTEGRATION
+#ifndef DBUSTL_EVENTMAINLOOPINTEGRATION
+#define DBUSTL_EVENTMAINLOOPINTEGRATION
+
+#include <dbustl-1/EventLoopIntegration>
+
+#include <glib.h>
 
 namespace dbustl {
 
     class Connection;
 
-    //This is an abstract base call for integration of dbustl into native toolkits (Glib, Qt, ...)
-    class MainLoopIntegration {
+    class GlibEventLoopIntegration : public EventLoopIntegration {
         public:
-            virtual ~MainLoopIntegration();
+            GlibEventLoopIntegration(GMainContext *ctxt = 0);
+            virtual ~GlibEventLoopIntegration();
             //Virtual constructor : builds an MainLoopIntegration object with the same
             //characteristics as this one (same integration method, same thread, same everything ...)
-            virtual MainLoopIntegration* clone() const = 0;
-            //Associates this MainLoopIntegration object with the given DBus connection
-            //A MainLoopIntegration object can only be associated with one Connection at a time : 
-            //this method must be called exactly once
-            void connect(Connection* conn);
-
-        protected:
-            //Constructor for children
-            MainLoopIntegration();
-            
-            //This method is guaranteed to be called no more than once.
-            virtual bool internalConnect(Connection* conn) = 0;
+            virtual EventLoopIntegration* clone() const;
 
         private:
             //forbidden methods
-            MainLoopIntegration(const MainLoopIntegration&);
-            MainLoopIntegration& operator=(MainLoopIntegration&);
+            GlibEventLoopIntegration(const GlibEventLoopIntegration&);
+            GlibEventLoopIntegration& operator=(GlibEventLoopIntegration&);
             
-            Connection* _conn;
+            //This method is guaranteed to be called no more than once.
+            virtual bool internalConnect(Connection* conn);
+
+            GMainContext *_ctxt;
     };
 
 }
 
-#endif /* DBUSTL_MAINLOOPINTEGRATION */
+#endif /* DBUSTL_EVENTMAINLOOPINTEGRATION */

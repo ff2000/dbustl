@@ -24,7 +24,7 @@
 #include <dbus/dbus.h>
 
 #include <dbustl-1/Connection>
-#include <dbustl-1/MainLoopIntegration>
+#include <dbustl-1/EventLoopIntegration>
 #include <cassert>
 
 namespace dbustl {
@@ -40,11 +40,11 @@ ConnectionInitializer ConnectionInitializer::_static;
 
 Connection* Connection::_system;
 Connection* Connection::_session;
-MainLoopIntegration* Connection::_defaultMainLoop;
+EventLoopIntegration* Connection::_defaultEventLoop;
 
-void Connection::useMainLoop(const MainLoopIntegration& mainloop)
+void Connection::useEventLoop(const EventLoopIntegration& eventLoop)
 {
-    _defaultMainLoop = mainloop.clone();
+    _defaultEventLoop = eventLoop.clone();
 }
 
 Connection* Connection::systemBus()
@@ -68,40 +68,40 @@ DBusConnection* Connection::dbus()
     return _llconn;
 }
 
-Connection::Connection(DBusBusType bustype) : _mainLoop(0), _isPrivate(false)
+Connection::Connection(DBusBusType bustype) : _eventLoop(0), _isPrivate(false)
 {
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
     dbus_threads_init_default();
     _llconn = dbus_bus_get_private(bustype, 0);
 
-    if(_defaultMainLoop != 0) {
-        _mainLoop = _defaultMainLoop->clone();
-        _mainLoop->connect(this);
+    if(_defaultEventLoop != 0) {
+        _eventLoop = _defaultEventLoop->clone();
+        _eventLoop->connect(this);
     }
 }
 
-Connection::Connection(DBusBusType bustype, const MainLoopIntegration& mainLoop) : 
-  _mainLoop(mainLoop.clone()), _isPrivate(false)
+Connection::Connection(DBusBusType bustype, const EventLoopIntegration& eventLoop) : 
+  _eventLoop(eventLoop.clone()), _isPrivate(false)
 {
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
     dbus_threads_init_default();
     _llconn = dbus_bus_get_private(bustype, 0);
     
-    _mainLoop->connect(this);
+    _eventLoop->connect(this);
 }
 
 Connection::~Connection()
 {
-    delete _mainLoop;
+    delete _eventLoop;
     dbus_connection_close(_llconn);
     dbus_connection_unref(_llconn);
 }
 
 void Connection::cleanup() {
-    delete _defaultMainLoop;
-    _defaultMainLoop = 0;
+    delete _defaultEventLoop;
+    _defaultEventLoop = 0;
     delete _system;
     _system = 0;
     delete _session;

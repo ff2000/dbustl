@@ -13,7 +13,7 @@ libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp \
-                   src/MainLoopIntegration.cpp \
+                   src/EventLoopIntegration.cpp \
                    src/types/Basic.cpp
 
 #dbustl pkg-config support
@@ -28,7 +28,7 @@ endif
 
 libdbustl_glib_1_la_CPPFLAGS = @GLIB_CFLAGS@
 libdbustl_glib_1_la_LIBADD = @GLIB_LIBS@
-libdbustl_glib_1_la_SOURCES = src/GlibMainLoopIntegration.cpp
+libdbustl_glib_1_la_SOURCES = src/GlibEventLoopIntegration.cpp
 
 #dbustl-glib pkg-config support
 if HAVE_GLIB

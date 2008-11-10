@@ -21,21 +21,21 @@
  *
  */
 
-#include <dbustl-1/MainLoopIntegration>
+#include <dbustl-1/EventLoopIntegration>
 
 #include <cassert>
 
 namespace dbustl {
 
-MainLoopIntegration::MainLoopIntegration() : _conn(0) 
+EventLoopIntegration::EventLoopIntegration() : _conn(0) 
 {
 }
 
-MainLoopIntegration::~MainLoopIntegration()
+EventLoopIntegration::~EventLoopIntegration()
 {
 }
 
-void MainLoopIntegration::connect(Connection* conn)
+void EventLoopIntegration::connect(Connection* conn)
 {
     assert(conn);
     assert(!_conn);

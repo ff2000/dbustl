@@ -138,8 +138,8 @@ public:
 
 int main()
 {    
-    dbustl::GlibMainLoopIntegration mli;
-    dbustl::Connection::useMainLoop(mli);    
+    dbustl::GlibEventLoopIntegration mli;
+    dbustl::Connection::useEventLoop(mli);    
     dbustl::Connection *session = dbustl::Connection::sessionBus();
     ExampleSignal2MethodCallback object2;
     unsigned int expected_cbs = 0;
