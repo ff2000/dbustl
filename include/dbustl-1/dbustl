@@ -150,7 +150,11 @@
  * 
  * @include compat.cpp
  * 
- * 
+ * As you can see this is a bit more complicated that the equivalent
+ * code for our @ref hello_world "variadic templates enabled hello world" example.
+ * The main issue is the serialization and deserialization of the parameters
+ * that are handled should behind the scene, but that have to be exposed
+ * here.
  * 
  */
 

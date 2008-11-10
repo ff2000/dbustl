@@ -1,5 +1,4 @@
-/** @cond
- * 
+/**
  *  DBUSTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
@@ -20,16 +19,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
  *
- * @endcond
  */
  
-/** @cond 
- * Hackish way to force disable variadic templates support
- * */
-#include <dbustl-1/Config>
-#undef DBUSTL_VARIADIC_TEMPLATES
-/** @endcond */
-
 #include <dbustl-1/dbustl>
 
 #include <string>
@@ -39,13 +30,15 @@ using namespace dbustl;
  
 int main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), "/PythonServerObject", "com.example.SampleService");
+    ServerProxy remoteObject(Connection::sessionBus(), 
+        "/PythonServerObject", "com.example.SampleService");
     try {
         Message methodMsg(NULL), replyMsg(NULL);
         string reply;
         
-        /* Here we create the method call message, and adds all the parameters
-         * using the << operator */
+        /* Here we create the method call message, and adds all the 
+         * parametersusing the << operator 
+         */
         methodMsg = remoteObject.createMethodCall("SimpleHello");
         methodMsg << "Hello world";
         /* We then send the method call message and wait for the reply */
