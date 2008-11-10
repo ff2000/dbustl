@@ -3,11 +3,12 @@ AM_CXXFLAGS = @CXX0X_CFLAGS@  -I../include -W -Wall @DBUS_CFLAGS@
 #Common libraries
 LDADD = @DBUS_LIBS@ ../libdbustl-1.la
 
-noinst_PROGRAMS = compat containers
+noinst_PROGRAMS = compat
 compat_SOURCES = compat.cpp
-containers_SOURCES = containers.cpp
 
 if HAVE_STDCXX_0X
-noinst_PROGRAMS += simplest
+noinst_PROGRAMS += simplest containers struct
 endif
 simplest_SOURCES = simplest.cpp
+containers_SOURCES = containers.cpp
+struct_SOURCES = struct1.cpp struct2.cpp struct.h

@@ -272,16 +272,26 @@ dbus_bool_t Deserializer<unsigned long long>::run(DBusMessageIter* it, unsigned 
     return __deserializeUnsignedIntegral<unsigned long long>(it, arg);
 }
 
-/* float - one way only */
+/* float - deserialization downcasts DBUS_TYPE_DOUBLE to float */
 template<>
 struct Serializer<float> {
     static dbus_bool_t run(DBusMessageIter* it, const float& arg);
 };
-
 dbus_bool_t Serializer<float>::run(DBusMessageIter* it, const float& arg)
 {
     double val = arg;
     return dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &val);
+}
+template<>
+struct Deserializer<float> {
+    static dbus_bool_t run(DBusMessageIter* it, float* arg);
+};
+dbus_bool_t Deserializer<float>::run(DBusMessageIter* it, float* arg)
+{
+    double d;
+    dbus_bool_t ret = __deserializeBasic(it, &d, DBUS_TYPE_DOUBLE);
+    *arg = d;
+    return ret;
 }
 
 /* double */
@@ -293,6 +303,28 @@ struct Deserializer<double> {
 dbus_bool_t Deserializer<double>::run(DBusMessageIter* it, double* arg)
 {
     return __deserializeBasic(it, arg, DBUS_TYPE_DOUBLE);
+}
+
+/* long double */
+template<>
+struct Serializer<long double> {
+    static dbus_bool_t run(DBusMessageIter* it, const long double& arg);
+};
+dbus_bool_t Serializer<long double>::run(DBusMessageIter* it, const long double& arg)
+{
+    double val = arg;
+    return dbus_message_iter_append_basic(it, DBUS_TYPE_DOUBLE, &val);
+}
+template<>
+struct Deserializer<long double> {
+    static dbus_bool_t run(DBusMessageIter* it, long double* arg);
+};
+dbus_bool_t Deserializer<long double>::run(DBusMessageIter* it, long double* arg)
+{
+    double d;
+    dbus_bool_t ret = __deserializeBasic(it, &d, DBUS_TYPE_DOUBLE);
+    *arg = d;
+    return ret;
 }
 
 /* const char* - one way only */

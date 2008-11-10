@@ -307,4 +307,5 @@
 #include <dbustl-1/types/list>
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
+#include <dbustl-1/types/Struct>
 

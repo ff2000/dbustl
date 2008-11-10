@@ -1,0 +1,196 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_TYPES_STRUCT
+#define DBUSTL_TYPES_STRUCT
+
+#include <dbustl-1/types/Serialization>
+
+#define DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+namespace dbustl { \
+namespace types { \
+template<> \
+struct Serializer<structname> { \
+    static dbus_bool_t run(DBusMessageIter* it, const structname& arg); \
+}; \
+dbus_bool_t Serializer<structname>::run(DBusMessageIter* it, const structname& arg) \
+{ \
+    DBusMessageIter subIterator; \
+    if(dbus_message_iter_open_container(it, DBUS_TYPE_STRUCT, \
+      NULL, &subIterator) == FALSE) { \
+        return FALSE; \
+    } \
+    \
+    dbus_bool_t ret = TRUE;
+        
+#define DBUSTL_STRUCT_SERIALIZE_END(structname) \
+    return dbus_message_iter_close_container(it, &subIterator) && ret; \
+} \
+} \
+}
+
+#define DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+namespace dbustl { \
+namespace types { \
+template<> \
+struct Deserializer<structname> { \
+    static dbus_bool_t run(DBusMessageIter* it, structname* arg); \
+}; \
+dbus_bool_t Deserializer<ExampleStruct>::run(DBusMessageIter* it, structname* arg) \
+{ \
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_STRUCT) { \
+        return FALSE; \
+    } \
+    \
+    dbus_bool_t ret = TRUE; \
+    DBusMessageIter subIterator; \
+    dbus_message_iter_recurse(it, &subIterator);
+    
+#define DBUSTL_STRUCT_DESERIALIZE_END(structname) \
+    return ret; \
+} \
+} \
+}
+
+#define DBUSTL_DECLARE_STRUCT_1(structname, \
+type1, name1 \
+) \
+DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+DBUSTL_STRUCT_SERIALIZE_END(structname) \
+DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    dbus_message_iter_next(&subIterator); \
+DBUSTL_STRUCT_DESERIALIZE_END(structname)
+
+#define DBUSTL_DECLARE_STRUCT_2(structname, \
+type1, name1, \
+type2, name2 \
+) \
+DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
+DBUSTL_STRUCT_SERIALIZE_END(structname) \
+DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+DBUSTL_STRUCT_DESERIALIZE_END(structname)
+
+#define DBUSTL_DECLARE_STRUCT_3(structname, \
+type1, name1, \
+type2, name2, \
+type3, name3 \
+) \
+DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
+    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
+DBUSTL_STRUCT_SERIALIZE_END(structname) \
+DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+DBUSTL_STRUCT_DESERIALIZE_END(structname)
+
+#define DBUSTL_DECLARE_STRUCT_4(structname, \
+type1, name1, \
+type2, name2, \
+type3, name3, \
+type4, name4 \
+) \
+DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
+    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
+    ret = ret && Serializer<type4>::run(&subIterator, arg.name4); \
+DBUSTL_STRUCT_SERIALIZE_END(structname) \
+DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type4>::run(&subIterator, &arg->name4); \
+DBUSTL_STRUCT_DESERIALIZE_END(structname)
+
+#define DBUSTL_DECLARE_STRUCT_5(structname, \
+type1, name1, \
+type2, name2, \
+type3, name3, \
+type4, name4, \
+type5, name5 \
+) \
+DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
+    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
+    ret = ret && Serializer<type4>::run(&subIterator, arg.name4); \
+    ret = ret && Serializer<type5>::run(&subIterator, arg.name5); \
+DBUSTL_STRUCT_SERIALIZE_END(structname) \
+DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type4>::run(&subIterator, &arg->name4); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type5>::run(&subIterator, &arg->name5); \
+DBUSTL_STRUCT_DESERIALIZE_END(structname)
+
+#define DBUSTL_DECLARE_STRUCT_6(structname, \
+type1, name1, \
+type2, name2, \
+type3, name3, \
+type4, name4, \
+type5, name5, \
+type6, name6 \
+) \
+DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
+    ret = ret && Serializer<type1>::run(&subIterator, arg.name1); \
+    ret = ret && Serializer<type2>::run(&subIterator, arg.name2); \
+    ret = ret && Serializer<type3>::run(&subIterator, arg.name3); \
+    ret = ret && Serializer<type4>::run(&subIterator, arg.name4); \
+    ret = ret && Serializer<type5>::run(&subIterator, arg.name5); \
+    ret = ret && Serializer<type6>::run(&subIterator, arg.name6); \
+DBUSTL_STRUCT_SERIALIZE_END(structname) \
+DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
+    ret = ret && Deserializer<type1>::run(&subIterator, &arg->name1); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type2>::run(&subIterator, &arg->name2); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type3>::run(&subIterator, &arg->name3); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type4>::run(&subIterator, &arg->name4); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type5>::run(&subIterator, &arg->name5); \
+    dbus_message_iter_next(&subIterator); \
+    ret = ret && Deserializer<type6>::run(&subIterator, &arg->name6); \
+DBUSTL_STRUCT_DESERIALIZE_END(structname)
+
+#endif /* DBUSTL_TYPES_STRUCT */
