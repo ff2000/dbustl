@@ -21,15 +21,16 @@
  *
  */
 
-/** @mainpage
+/** 
+ * @mainpage
  *
  * DBUSTL is an easy do to use, extensible C++ wrapper for DBus that 
- * makes the use of DBuswith plain C++ possible.<br/>
+ * makes the use of DBus with plain C++ possible.<br></br>
  * 
  * <strong>Important note:</strong> To be used with the most elegant
- * syntax, DBUSTL requires cutting edge C++ features, that are currently
- *  only available with gcc 4.3 and upper. Use of older versions of gcc
- *  is possible, but will make the syntax a little more convoluted.<br/>
+ * syntax, DBUSTL requires a cutting edge C++ feature, that is currently
+ * only available with gcc 4.3 and upper. Use of older versions of gcc
+ * is possible, but will make the syntax a little more convoluted.
  * 
  *  - @ref intro
  *  - @ref advanced_features
@@ -128,15 +129,133 @@
  * org.freedesktop.DBus.Error.ServiceUnknown: The name com.example.SampleService was not provided by any .service files
  * $
  * @endcode
+ * 
+ * @section explanations Some explanations
+ *
+ * @subsection parameters Parameters passing
+ * 
+ * By now you may be wondering: how the hell does DBUSTL make the difference
+ * between input and output parameters ?
+ * The answer is quite simple: input parameters start after the first one, which
+ * is always the DBus method name, until a pointer is found. Attempts to mix
+ * pointers with non pointers will result in failure at compile time.
+ * This means all the method calls having a similar looks and feel:
+ * @code 
+ * proxy.call("MyMethod", inparam1, inparam2, ..., inparamN, &outparam1, &outparam2, ..., &outparamY)
+ * @endcode
+ * 
+ * @note There is no hard limit on the number of input/output parameters
+ * that can be passed.
+ * @note As an exception to the rule above, special support is provided for C strings, which means
+ * that the following code will work too:
+ * @code 
+ * proxy.call("MyMethod", inparam1,... , "a C string as input parameter",..., inparam2, ..., inparamN, &outparam1, ...)
+ * @endcode
+ * 
+ * @subsection interface_choosing Choosing the right interface
+ * The DBus specification allows to target messages calls to a specific object's interface. Specifying
+ * the interface is optionnal from the DBus protocol perspective, so it is for DBUSTL.
+ * 
+ * Here is how we can do that with DBUSTL:
+ * @subsubsection interface_setinterface ServerProxy::setInterface() method.
+ * This is the easiest way to target a given interface.
+ * Calling this method sets the interface to use for all the subsequent method calls
+ * of the given proxy object.
+ * 
+ * @subsubsection interface_modifiers Interface modifiers
+ * A ServerProxy::Interface "special class" is provided with ServerProxy. Here is how to use it:
+ * @code
+ * proxy.call("SimpleHello", ServerProxy::Interface("com.example.SampleInterface"), "Hi", &reply); 
+ * @endcode
+ * This has for effect to place the call on a given interface. This does not change the interface
+ * that will be use for subsequent calls.
+ * 
  */
 
 /** 
  * @page advanced_features Advanced features
  * 
  * @section datatypes More complex datatypes
- * @section async Asynchronous method calls
- * @section signals Working with signals.
  * 
+ * DBUSTL does its best not to enforce the used of any data type
+ * onto the user of: this makes it easier for DBUSTL to fit with existing
+ * C++ toolkits that already have their own containers. This means
+ * DBUSTL does not define new objects for the ARRAY, STRUCT, DICT, 
+ * and VARIANT DBus data types.
+ * 
+ * Currently DBUSTL comes with builting support for the following 
+ * STL containers.
+ * 
+ *  <table>
+ *  <tr>
+ *     <th>Container</th>
+ *     <th>Mapped dbus type</th>
+ *     <th>Can serialize ?</th>
+ *     <th>Can deserialize ?</th>
+ *  </tr>
+ *  <tr>
+ *     <td>std::vector</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::list</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::set</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::multiset</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::map</td>
+ *     <td>DICT</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  <tr>
+ *     <td>std::multimap</td>
+ *     <td>DICT</td>
+ *     <td>no</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  </table> 
+ *  
+ * @note std::set: Duplicate array elements are merged during deserialization
+ * @note std::multimap: Serialization is not supported as there is no
+ * DBUS container able to store the content of a multimap.
+ *
+ * So let's see how simple this is:
+ * 
+ * @include containers.cpp
+ * 
+ * Support for those containers is generated "on the fly" using templates.
+ * This means that if Cont is a supported DBUSTL container and T is a supported
+ * DBUSTL type, then Cont<T> becomes a DBUSTL supported type.
+ * This means that when recursivity comes into play Cont<Cont<T> > becomes
+ * a supported type too.
+ * Even more than that, you can mix supported containers of different kind, 
+ * such as std::map<std::string, std::list<double> > for instance, which
+ * works perfectly fine. All is computed behind the scene for you.
+ * 
+ * As you probably already have understood, DBUSTL is designed to be 
+ * extended to support data types other than STL ones. You can even
+ * extended to support your own custom program internal data structures
+ * as explained in the @ref extending page.
+ * 
+ * @section async Asynchronous method calls
+ * To be written.
+ * @section signals Working with signals.
+ * To be written.
  */
 
 /** 
@@ -168,9 +287,9 @@
 /** 
  * @page extending Extending DBUSTL to support custom data types
  * 
- * @section Custom structs
+ * @section custom_struct structs
  * 
- * @section Custom containers
+ * @section custom_containers containers
  */
 
 /** 
@@ -178,6 +297,7 @@
  * 
  * - Implement exceptions less support
  * - Get rid of dbus-glib dependancy, by really implementing GlibEventLoop
+ * - Support variants: don't know if that's really used.
  */
 
 #include <dbustl-1/Message>
