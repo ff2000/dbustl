@@ -117,15 +117,14 @@ void testMessage1(dbustl::Message& m)
 	}	
 	
 	{
-		const char * t;
+		const char * t = "";
 		//Note : deserialization does not exist;
 		m << t;
 	}
 	
 	{
-		char * t;
 		//Note : deserialization does not exist;
-		m << t;
+		m << "test";
 	}
 	
 	{

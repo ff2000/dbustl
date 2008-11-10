@@ -50,7 +50,7 @@ Message::~Message()
     }
 }
 
-Message& Message::operator=(Message& other) {
+Message& Message::operator=(const Message& other) {
     if(other._msg) {
         dbus_message_ref(other._msg);
     }
@@ -131,6 +131,17 @@ bool Message::deSerializationInit(int *arg_type)
     }
 
     return _valid;
+}
+
+Message& Message::operator<<(const char* inarg)
+{
+    using namespace types;
+
+    if(serializationInit()) {
+        _valid = (Serializer<const char*>::run(&_it, inarg) == TRUE);
+    }
+
+    return *this;
 }
 
 }

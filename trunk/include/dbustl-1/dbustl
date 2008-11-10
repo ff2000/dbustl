@@ -87,11 +87,47 @@
  * So let's try to compile the simplest.cpp program:
  * @include simplest.cpp
  * 
- * Here is the line required to build it by hand with gcc.
- *  @code
- *$g++ -std=c++0x -Wall simplest.cpp `pkg-config --cflags --libs dbustl-1` -o simplest
+ * This program is the simplest program that can be imagined.
+ * First is the creation of a proxy, that will (as its name sugggests)
+ * proxy the calls on the underlying exposed DBUS object.
+ * Here we create a proxy on the /PythonServerObject exposed by the
+ * com.example.SampleService on the session bus.
+ * But the most important line of the program is the call to:
+ * @code
+ * remoteObject.call("SimpleHello", "Hello world", &reply); 
  * @endcode
  * 
+ * This single line tells DBUSTL to:
+ *   -# Create a method call message for "SimpleHello" method
+ *   -# Converts the "Hello World" to a DBUS string
+ *   -# Send the message on the connection and receive the reply
+ *   -# Convert the DBUS string in the reply back to a std::string object.
+ * 
+ * But enough talking, let's try it out: here is the line required to build it by hand with gcc.
+ * @code
+ * $g++ -std=c++0x -Wall simplest.cpp `pkg-config --cflags --libs dbustl-1` -o simplest
+ * @endcode
+ * 
+ * <strong>Note:</strong> the curious reader will have noticed the apparition of a somewhat
+ * unusual compiler option. The -std=c++0x option tells gcc to turn on the support for the
+ * still to be finalized C++ standard called C++0x, that is required for optimal
+ * DBUSTL operation.
+ * 
+ * To run the test, launch the test-service.py that is found in the tests/ directory.
+ * Then we can start our simplest hello world:
+ * @code
+ * $./simplest
+ * Hello world
+ * $
+ * @endcode
+ *
+ * If something bad happens (such as if you forgot to launch test-service.py), then an exception
+ * is thrown:
+ * @code
+ * $./simplest 
+ * org.freedesktop.DBus.Error.ServiceUnknown: The name com.example.SampleService was not provided by any .service files
+ * $
+ * @endcode
  */
 
 /** 
@@ -106,28 +142,38 @@
 /** 
  * @page compat_syntax Compatibility syntax
  * 
+ * Compatibility syntax is there to allow you to use DBUSTL even
+ * if you don't have a C++ compiler that support variadic templates.
+ * 
+ * The main inconvenient of this alternative approach is that it makes
+ * the code a bit more verbose, and far less 'magical':
+ * 
+ * @include compat.cpp
+ * 
+ * 
  * 
  */
 
 /** 
  * @page design Design paradigms
- * @page extending Extending DBUSTL to support custom data types
- * @page todo Future improvements
+ * 
+ * TODO: explain here why DBUSTL is as it is today
+ * 
  */
 
-/*
- * Though it has been built with standard C++ compatibility in mind, its design
- * allows it to be extended to support any C++ toolkit
- *
- *
- * This is the introduction.
- *
- * @section install_sec Installation
- *
- * @subsection step1 Step 1: Opening the box
- *  
- * etc...
- * @include simplest.cpp
+/** 
+ * @page extending Extending DBUSTL to support custom data types
+ * 
+ * @section Custom structs
+ * 
+ * @section Custom containers
+ */
+
+/** 
+ * @page todo Future improvements
+ * 
+ * - Implement exceptions less support
+ * - Get rid of dbus-glib dependancy, by really implementing GlibEventLoop
  */
 
 #include <dbustl-1/Message>
