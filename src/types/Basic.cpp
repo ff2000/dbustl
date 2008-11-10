@@ -298,9 +298,6 @@ dbus_bool_t Deserializer<double>::run(DBusMessageIter* it, double* arg)
 /* const char* - one way only */
 template dbus_bool_t Serializer<char const*>::run(DBusMessageIter* it, char const* const & arg);
 
-/* char* - one way only */
-template dbus_bool_t Serializer<char *>::run(DBusMessageIter* it, char* const & arg);
-
 /* std::string */
 template<>
 struct Serializer<std::string> {
