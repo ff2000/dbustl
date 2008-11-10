@@ -30,6 +30,8 @@
 namespace dbustl {
 namespace types {
 
+//Tools for STL
+
 /* Containers helpers */
 
 // Generate a DBUS signature for a DBUS array of T
