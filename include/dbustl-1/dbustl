@@ -295,9 +295,10 @@
 /** 
  * @page todo Future improvements
  * 
- * - Implement exceptions less support
+ * - Test exceptions less support
  * - Get rid of dbus-glib dependancy, by really implementing GlibEventLoop
- * - Support variants: don't know if that's really used.
+ * - Support variants: don't know if that's really used
+ * - Long term: support server side DBUS operation
  */
 
 #include <dbustl-1/Message>
