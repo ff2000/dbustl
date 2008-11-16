@@ -120,8 +120,33 @@ class SomeObject(dbus.service.Object):
         return data
 
     @dbus.service.method("com.example.SampleInterface",
-                         in_signature='a{u(us)}', out_signature='a{u(us)}')
-    def test_complex_struct(self, data):
+                         in_signature='a{u(as)}', out_signature='a{u(as)}')
+    def test_struct1(self, data):
+        return data
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{u(asu)}', out_signature='a{u(asu)}')
+    def test_struct2(self, data):
+        return data
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{u(asuu)}', out_signature='a{u(asuu)}')
+    def test_struct3(self, data):
+        return data
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{u(asuuu)}', out_signature='a{u(asuuu)}')
+    def test_struct4(self, data):
+        return data
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{u(asuuuu)}', out_signature='a{u(asuuuu)}')
+    def test_struct5(self, data):
+        return data
+
+    @dbus.service.method("com.example.SampleInterface",
+                         in_signature='a{u(asuuuuu)}', out_signature='a{u(asuuuuu)}')
+    def test_struct6(self, data):
         return data
 
     @dbus.service.method("com.example.SampleInterface",
