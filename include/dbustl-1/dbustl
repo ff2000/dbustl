@@ -27,6 +27,9 @@
  * DBUSTL is an easy do to use, extensible C++ wrapper for DBus that 
  * makes the use of DBus with plain C++ possible.<br></br>
  * 
+ * Though already quite usefull, DBUSTL is still in its infancy, and
+ * therefore interface might change at any time before 1.0 release.
+ * 
  * <strong>Important note:</strong> To be used with the most elegant
  * syntax, DBUSTL requires a cutting edge C++ feature, that is currently
  * only available with gcc 4.3 and upper. Use of older versions of gcc
