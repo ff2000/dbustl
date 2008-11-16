@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 
-usage = """Usage:
-python example-service.py
-"""
-
 # Copyright (C) 2004-2006 Red Hat Inc. <http://www.redhat.com/>
 # Copyright (C) 2005-2007 Collabora Ltd. <http://www.collabora.co.uk/>
 #
@@ -212,6 +208,5 @@ if __name__ == '__main__':
     object = SomeObject(session_bus, '/PythonServerObject')
 
     mainloop = gobject.MainLoop()
-    print "Running example service."
-    print usage
+    print "DBUSTL test service is running."
     mainloop.run()
