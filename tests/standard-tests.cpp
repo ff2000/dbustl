@@ -29,12 +29,100 @@
 
 #include <cassert>
 
-struct Struct2 {
-    uint32_t field1;
-    std::string field2;
+struct Struct1 {
+    std::vector<std::string> field1;
 };
+bool operator==(const Struct1& f1, const Struct1& f2){
+    return
+        (f1.field1 == f2.field1) &&
+    true;
+};
+DBUSTL_REGISTER_STRUCT_1(Struct1, field1);
 
+struct Struct2 {
+    std::vector<std::string> field1;
+    uint32_t field2;
+    Struct2() {field2 = 0;};
+};
+bool operator==(const Struct2& f1, const Struct2& f2){
+    return
+        (f1.field1 == f2.field1) &&
+        (f1.field2 == f2.field2) &&
+    true;
+}
 DBUSTL_REGISTER_STRUCT_2(Struct2, field1, field2);
+
+struct Struct3 {
+    std::vector<std::string> field1;
+    uint32_t field2;
+    uint32_t field3;
+    Struct3() {field2 = 0; field3 = 0;};
+};
+bool operator==(const Struct3& f1, const Struct3& f2){
+    return
+        (f1.field1 == f2.field1) &&
+        (f1.field2 == f2.field2) &&
+        (f1.field3 == f2.field3) &&
+    true;
+}
+DBUSTL_REGISTER_STRUCT_3(Struct3, field1, field2, field3);
+
+struct Struct4 {
+    std::vector<std::string> field1;
+    uint32_t field2;
+    uint32_t field3;
+    uint32_t field4;
+    Struct4() {field2 = 0; field3 = 0; field4 = 0;};
+};
+bool operator==(const Struct4& f1, const Struct4& f2){
+    return
+        (f1.field1 == f2.field1) &&
+        (f1.field2 == f2.field2) &&
+        (f1.field3 == f2.field3) &&
+        (f1.field4 == f2.field4) &&
+    true;
+}
+DBUSTL_REGISTER_STRUCT_4(Struct4, field1, field2, field3, field4);
+
+struct Struct5 {
+    std::vector<std::string> field1;
+    uint32_t field2;
+    uint32_t field3;
+    uint32_t field4;
+    uint32_t field5;
+    Struct5() {field2 = 0; field3 = 0; field4 = 0; field5 = 0;};
+};
+bool operator==(const Struct5& f1, const Struct5& f2){
+    return
+        (f1.field1 == f2.field1) &&
+        (f1.field2 == f2.field2) &&
+        (f1.field3 == f2.field3) &&
+        (f1.field4 == f2.field4) &&
+        (f1.field5 == f2.field5) &&
+    true;
+}
+DBUSTL_REGISTER_STRUCT_5(Struct5, field1, field2, field3, field4, field5);
+
+struct Struct6 {
+    std::vector<std::string> field1;
+    uint32_t field2;
+    uint32_t field3;
+    uint32_t field4;
+    uint32_t field5;
+    uint32_t field6;
+    Struct6() {field2 = 0; field3 = 0; field4 = 0; field5 = 0; field6 = 0;};
+};
+bool operator==(const Struct6& f1, const Struct6& f2){
+    return
+        (f1.field1 == f2.field1) &&
+        (f1.field2 == f2.field2) &&
+        (f1.field3 == f2.field3) &&
+        (f1.field4 == f2.field4) &&
+        (f1.field5 == f2.field5) &&
+        (f1.field6 == f2.field6) &&
+    true;
+}
+DBUSTL_REGISTER_STRUCT_6(Struct6, field1, field2, field3, field4, field5, field6);
 
 #ifdef DBUSTL_VARIADIC_TEMPLATES
 int run_vt_tests()
@@ -410,14 +498,95 @@ int run_vt_tests()
     }
     
     try {
-        std::cout << ">Complex struct" << std::endl;
+        std::cout << ">Struct with 1 parameter" << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<uint32_t, Struct1> in, out;
+        Struct1 s;
+        s.field1.push_back("String");
+        in[0] = s;
+        pythonServerProxy.call("test_struct1", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">Struct with 2 parameters" << std::endl;
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         pythonServerProxy.setInterface("com.example.SampleInterface");
         std::map<uint32_t, Struct2> in, out;
-        Struct2 s = {1, "String"};
+        Struct2 s;
+        s.field1.push_back("String");
         in[0] = s;
-        pythonServerProxy.call("test_complex_struct", in, &out); 
-        assert(out[0].field1 == 1 && out[0].field2 == "String");            
+        pythonServerProxy.call("test_struct2", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">Struct with 3 parameters" << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<uint32_t, Struct3> in, out;
+        Struct3 s;
+        s.field1.push_back("String");
+        in[0] = s;
+        pythonServerProxy.call("test_struct3", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">Struct with 4 parameters" << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<uint32_t, Struct4> in, out;
+        Struct4 s;
+        s.field1.push_back("String");
+        in[0] = s;
+        pythonServerProxy.call("test_struct4", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">Struct with 5 parameters" << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<uint32_t, Struct5> in, out;
+        Struct5 s;
+        s.field1.push_back("String");
+        in[0] = s;
+        pythonServerProxy.call("test_struct5", in, &out); 
+        assert(in == out);            
+    }
+    catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
+
+    try {
+        std::cout << ">Struct with 6 parameters" << std::endl;
+        dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
+        pythonServerProxy.setInterface("com.example.SampleInterface");
+        std::map<uint32_t, Struct6> in, out;
+        Struct6 s;
+        s.field1.push_back("String");
+        in[0] = s;
+        pythonServerProxy.call("test_struct6", in, &out); 
+        assert(in == out);            
     }
     catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;
