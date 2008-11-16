@@ -30,33 +30,70 @@
 
 namespace dbustl {
 
+/**
+ * This class is used by DBUSTL to report all of it internal errors.
+ * 
+ * This class is designed as a lightweight wrapper around the DBusError
+ * C api structure
+ */
+
+
 class DBusException : public std::exception {
     public:
-        //Creates an empty Exception object
+        /** 
+         * Creates an empty Exception object
+         */
         DBusException();
 
-        //Creates Exception object from a DBUS exception name -- THOSE MUST BE STATICALLY ALLOCATED STRINGS
+        /**
+         * Creates Exception object from a DBusError
+         * @param name of the form XXX.YYY.ZZZ for the exception
+         * @param description descriptive information on the exception
+         */
         DBusException(const std::string& name, const std::string& description);
 
-        //Copy constructor: special care must be taken
+        /**
+         * Copy constructor
+         * 
+         * Nothing special under the hood.
+         */
         DBusException(const DBusException& e);
-        //assignmen operator: special care must be taken
+
+        /**
+         * Assignment operator
+         * 
+         * Nothing special under the hood.
+         */
         DBusException& operator=(const DBusException&);
 
         virtual ~DBusException() throw();
 
-        //Expanded description of the exception of the forme "name: description"
+        /**
+         * Expanded description of the exception of the forme "name: description"
+         */
         virtual const char* what() const throw();
 
-        //DBUS error name : of the for XXX.YYY.ZZZ.... such as "org.freedesktop.DBus.Error.AccessDenied"
+        /**
+         * DBUS error name : of the for XXX.YYY.ZZZ.... such as "org.freedesktop.DBus.Error.AccessDenied"
+         */
         std::string name() const;
-        //A more verbose description of the exception
+        
+        /**
+         * A more verbose description of the exception
+         */
         std::string message() const;
         
-        //Returns true if the object contains a valid exception
+        /**
+         * Returns true if the object contains a valid exception
+         */
         bool isSet() const;
         
-        //Should not be used : reserved for internal use
+        /** 
+         * The DBUS C api structure: don't use it!
+         * 
+         * You should only use it if you <strong>really</strong> know
+         * what you are doing.
+         */
         DBusError* dbus() {return &_dbusError; };
         
     private:
