@@ -1,4 +1,4 @@
-/*
+/**
  *  DBUSTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>

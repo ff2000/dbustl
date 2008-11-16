@@ -1,4 +1,4 @@
-/* 
+/** 
  *  DBUSTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
@@ -21,8 +21,8 @@
  *
  */
  
- #include <string>
- #include <vector>
+#include <string>
+#include <vector>
  
 struct ExampleStruct {
 	std::string field1;
