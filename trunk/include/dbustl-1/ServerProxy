@@ -97,13 +97,36 @@ namespace dbustl {
             /**@name Synchronous calls handling*/
             /*@{*/
         #ifdef DBUSTL_VARIADIC_TEMPLATES
-            //If fails returns false and error contains the detailed error value
+            /**
+             * Calls a DBUS method on a remote object
+             *
+             * This blocks until the reply is received or a timeout occurs.
+             * @param methodName the name of the DBUS method to call
+             * @param args A list of input parameters passed by references, followed by a list
+             * of output parameters passed as pointers.
+             * @throw DBusException if anything goes wrong
+             */
             template<typename... Args>
             bool call(const std::string& methodName, const Args&... args);
         #endif
-            //Synchronous call : legacy C++ syntax
+            /**
+             * Compatibility C++ syntax: Creates a method call message
+             * 
+             * see @ref compat_syntax for more details
+             * @param methodName the name of the DBUS method to call
+             * @throw DBusException if anything goes wrong
+             */
             Message createMethodCall(const std::string& methodName) const;
-            Message call(Message& method_call);
+            /**
+             * Compatibility C++ syntax: Executes a DBUS method call.
+             * 
+             * Sends the message over the wire and waits for the answer.
+             * 
+             * see @ref compat_syntax for more details
+             * @param methodCall a message created by createMethodCall
+             * @throw DBusException if anything goes wrong
+             */
+            Message call(Message& methodCall);
             /*@}*/
             
             /**@name Asynchronous calls handling*/
