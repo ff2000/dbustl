@@ -1,0 +1,82 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <fabchevalier@free.fr>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+// STL set & multiset support
+
+#ifndef DBUSTL_TYPES_SET
+#define DBUSTL_TYPES_SET
+
+#include <set>
+#include <dbustl-1/types/StdTools>
+
+namespace dbustl {
+namespace types {
+
+/* set support */
+template <typename T>
+struct Signature<std::set<T> > : public ArraySignature<T> {};
+
+template<typename T>
+struct Serializer<std::set<T> >: public ArraySerializer<std::set<T> > {};
+
+template<typename Container>
+struct SetDeserializer {
+    static dbus_bool_t run(DBusMessageIter* it, Container* arg);
+};
+template<typename Container>
+dbus_bool_t SetDeserializer<Container>::run(DBusMessageIter* it, Container* arg)
+{
+    DBusMessageIter subIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &subIterator);
+    while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+        typename Container::value_type element;
+        if(Deserializer<typename Container::value_type>::run(&subIterator, &element) == FALSE) {
+            return FALSE;
+        }
+        arg->insert(element);
+        dbus_message_iter_next(&subIterator);
+    }
+    
+    return TRUE;
+}
+template<typename T>
+struct Deserializer<std::set<T> >: public SetDeserializer<std::set<T> > {};
+
+/* multiset support */
+template <typename T>
+struct Signature<std::multiset<T> > : public ArraySignature<T> {};
+
+template<typename T>
+struct Serializer<std::multiset<T> >: public ArraySerializer<std::multiset<T> > {};
+
+template<typename T>
+struct Deserializer<std::multiset<T> >: public SetDeserializer<std::multiset<T> > {};
+
+}
+}
+
+#endif /* DBUSTL_TYPES_SET */
