@@ -1,0 +1,556 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_SERVERPROXY
+#define DBUSTL_SERVERPROXY
+
+#include <dbus/dbus.h>
+
+#include <string>
+#include <functional>
+#include <map>
+
+#include <dbustl-1/Config>
+#include <dbustl-1/DBusException>
+#include <dbustl-1/Message>
+
+namespace dbustl {
+
+    class Connection;
+
+    /** 
+     * Defines a proxy, used to call methods an receive signals on a remote DBus object.
+     * @nosubgrouping
+     */
+
+    class ServerProxy {
+        public:
+            /**@name Proxy settings*/
+            /*@{*/
+            /**
+             * Creates a proxy for the object uniquely identified by the (conn, path, destination) triplet.
+             * 
+             * Beware: It is a design error to create more that one proxy on the same object on the same connection.
+             * 
+             * @param conn The DBus Connection used on which the object to call on is found.
+             *  Usually one of Connection::systemBus or Connection::sessionBus. The conn object must remain valid
+             *  until the proxy object is destroyed.
+             * @param path The DBus object path of the target objet
+             * @param destination The DBus connection name on the given bus where the object we which
+             *  to call on is found. Destination is only required if this connection talks to a message bus.
+             *  In this case it must contain the name of the connection this message is intended for.
+             */
+            ServerProxy(Connection* conn, const std::string& path, const std::string& destination = "");
+
+            /**
+             * Destructor
+             * 
+             * The destructor is non virtual on purpose, this class is not
+             * designed for inheritance.
+             */
+            ~ServerProxy();
+
+            /** 
+             * For synchronous blocking calls, set the timeout in milliseconds.
+             *
+             *  -1 means default value (very long)
+             */
+
+            void setTimeout(int timeout) { _timeout = timeout; };
+
+            /**
+             * Sets the interface to use for all the calls on the remote object.
+             * 
+             * If empty (the default), the default interface is used.
+             * @param interface dbus interface name
+             */
+            void setInterface(const std::string& interface) { _interface = interface; };
+
+        #ifndef DBUSTL_NO_EXCEPTIONS
+            /**
+             * In case exception are not enabled, returns the last error that happened.
+             */
+            const DBusException& error();
+        #endif
+            /*@}*/
+
+            /**@name Synchronous calls handling*/
+            /*@{*/
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            /**
+             * Calls a DBUS method on a remote object
+             *
+             * This blocks until the reply is received or a timeout occurs.
+             * @param methodName the name of the DBUS method to call
+             * @param args A list of input parameters passed by references, followed by a list
+             * of output parameters passed as pointers.
+             * @throw DBusException if anything goes wrong
+             */
+            template<typename... Args>
+            bool call(const std::string& methodName, const Args&... args);
+        #endif
+            /**
+             * Compatibility C++ syntax: Creates a method call message
+             * 
+             * see @ref compat_syntax for more details
+             * @param methodName the name of the DBUS method to call
+             * @throw DBusException if anything goes wrong
+             */
+            Message createMethodCall(const std::string& methodName) const;
+            /**
+             * Compatibility C++ syntax: Executes a DBUS method call.
+             * 
+             * Sends the message over the wire and waits for the answer.
+             * 
+             * see @ref compat_syntax for more details
+             * @param methodCall a message created by createMethodCall
+             * @throw DBusException if anything goes wrong
+             */
+            Message call(Message& methodCall);
+            /*@}*/
+            
+            /**@name Asynchronous calls handling*/
+            /*@{*/
+            //Asynchronous call : functor version            
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename MethodCallback, typename... Args>
+            bool asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args);
+        #endif
+            
+            //Asynchronous call : pointer to function version
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename... Args>
+            inline bool asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args);
+        #endif
+            
+            //Asynchronous call : pointer to member version
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename _Class, typename... Args>
+            inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args);
+        #endif
+            
+            //Asynchronous call, legacy C++ syntax: functor version
+            template<typename MethodCallback>
+            void asyncCall(Message& method_call, const MethodCallback& callback);
+
+            //Asynchronous call, legacy C++ syntax: pointer to function version
+            inline void asyncCall(Message& method_call, void (*callback)(Message&, const DBusException&));
+            /*@}*/
+
+            /**@name Signals handling*/
+            /*@{*/
+            //Signals Handling : functor version
+            template<typename SignalHandlerFunctor>
+            bool setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler);
+
+            //Signals Handling : pointer to function version
+            inline bool setSignalHandler(const std::string& signalName, void (*handler)(Message& signal));
+
+            //Signals Handling : pointer to member version
+            template<typename _Class>
+            inline bool setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *c);
+
+            //Removes one of the handler set by one of the calls above
+            bool removeSignalHandler(const std::string& signalName);
+            /*@}*/
+
+            /**
+             * This class is used in call() member of ServerProxy class to use
+             * an alternative Interface name for that particular method call only.
+             */
+            class Interface {
+            public:    
+                /**
+                 * Public constructor.
+                 * @param name the interface to call method on.
+                 */
+                Interface(std::string name) : _name(name) {};
+                /**
+                 * Public accessor.
+                 * @returns the interface name.
+                 */
+                const std::string& name() const { return _name; };
+            private:
+                std::string _name;
+            };
+
+        private:
+            //Disallow the following constructs
+            ServerProxy(const ServerProxy& con);
+            ServerProxy& operator=(ServerProxy&);
+            
+        #ifdef DBUSTL_NO_EXCEPTIONS
+            inline void throw_or_set(const DBusException& error) {_error = error; };
+            inline void throw_or_set(const char *name, const char *message) {_error = DBusException(name, message); };
+        #else
+            static inline void throw_or_set(const DBusException& error) {throw error; };
+            static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
+        #endif
+            
+            /////////////////////////////////
+            // Synchronous calls templates //
+            /////////////////////////////////
+            
+            //This method processes input arguments of the form const T&
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename T, typename... Args>            
+            void processInArgs(Message& method_call, const T& invalue, const Args&... args);
+        #endif
+
+            //This method processes input arguments of the form const T*
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename T, typename... Args>            
+            void processInArgs(Message& method_call, const T* invalue, const Args&... args);
+        #endif
+
+            //This method processes Interface input argument
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename... Args>            
+            void processInArgs(Message& method_call, const Interface& intf, const Args&... args);
+        #endif
+
+            //This method gets called when all arguments are processed
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename T, typename... Args>            
+            void processInArgs(Message& msg, T* outvalue, const Args&... args);
+        #endif
+
+            void processInArgs(Message& msg);
+
+            //This method processes output arguments of the form T*
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename T, typename... Args>            
+            void processOutArgs(Message& method_call, T* outvalue, const Args&... args);
+        #endif
+
+            void processOutArgs(Message& method_call);
+            
+            void outArgsIssue(int argIndex);
+            
+            //////////////////////////////////
+            // Asynchronous calls templates //
+            //////////////////////////////////
+            
+            //This method processes input arguments of the form const T&
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename T, typename MethodCallback, typename... Args>            
+            void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args);
+        #endif
+
+            //This method processes input arguments of the form const T*
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename T, typename MethodCallback, typename... Args>            
+            void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args);
+        #endif
+
+            //This method processes Interface input argument
+        #ifdef DBUSTL_VARIADIC_TEMPLATES
+            template<typename MethodCallback, typename... Args>            
+            void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const Interface& intf, const Args&... args);
+        #endif
+
+            template<typename MethodCallback>            
+            void processAsyncInArgs(Message& msg, const MethodCallback& callback);
+
+            //static methods for asynchronous calls handling
+            template<typename MethodCallback>            
+            static void methodCallbackDelete(void *object);
+
+            template<typename MethodCallback>            
+            static void callCompleted(DBusPendingCall *pending, void *user_data);
+
+            //static methods for signals handling
+            static DBusHandlerResult signalsProcessingMethod(DBusConnection *connection, 
+                DBusMessage *dbusMessage, void *user_data);
+
+            template<typename SignalHandlerFunctor>            
+            static void signalHandlerCallback(void *functor, Message& signal);
+
+            template<typename SignalHandlerFunctor>            
+            static void signalHandlerDelete(void *functor);
+
+            //Helper methods for signals processing
+            bool setWatchSignal(const std::string& signalName, bool enable);
+
+            Connection *_conn;
+            std::string _path;
+            std::string _destination;
+            //Interface used by default for outgoing calls
+            std::string _interface;
+            //call timeout in milliseconds, -1 means default
+            int _timeout; 
+            DBusException _error;
+            
+            /** @cond */
+            //This does not show up in doxygen
+            struct FunctorWrapper {
+                typedef void (*call_functor_t)(void *functor, Message& signal);
+                typedef void (*delete_functor_t)(void *functor);
+                
+                FunctorWrapper() {};
+                
+                FunctorWrapper(void* lfunctor, call_functor_t lcall_functor, delete_functor_t ldelete_functor)
+                 : functor(lfunctor), call_functor(lcall_functor), delete_functor(ldelete_functor)
+                {
+                }
+                
+                void *functor;
+                call_functor_t call_functor;
+                delete_functor_t delete_functor;
+            };                
+            /** @endcond */
+            //Signals callbacks, per signal
+            std::map<std::string, FunctorWrapper> _signalsHandlers;    
+            
+            static DBusObjectPathVTable _vtable;
+    };
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename... Args>
+    bool ServerProxy::call(const std::string& methodName, const Args&... args)
+    {
+        Message method_call(createMethodCall(methodName));
+        
+        if(!method_call.dbus()) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+            return false;
+        }
+        
+        _error = DBusException();
+        processInArgs(method_call, args...);
+        return !_error.isSet();
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename T, typename... Args>            
+    void ServerProxy::processInArgs(Message& method_call, const T& invalue, const Args&... args)
+    {
+        method_call << invalue;
+        processInArgs(method_call, args...);
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename T, typename... Args>            
+    void ServerProxy::processInArgs(Message& method_call, const T* invalue, const Args&... args)
+    {
+        method_call << invalue;
+        processInArgs(method_call, args...);
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename T, typename... Args>            
+    void ServerProxy::processInArgs(Message& msg, T* outvalue, const Args&... args)
+    {
+        //All input arguments are consumed, process call now...
+        processInArgs(msg);
+        if(!_error.isSet()) {
+            processOutArgs(msg, outvalue, args...);
+        }
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename... Args>            
+    void ServerProxy::processInArgs(Message& method_call, const Interface& intf, const Args&... args)
+    {
+        dbus_message_set_interface(method_call.dbus(), intf.name().c_str());
+        processInArgs(method_call, args...);
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename T, typename... Args>            
+    void ServerProxy::processOutArgs(Message& method_reply, T* outvalue, const Args&... args)
+    {
+        method_reply >> outvalue;
+        if(method_reply.isValid()) {
+            processOutArgs(method_reply, args...);
+        }
+        else {
+            outArgsIssue(method_reply.parsedArguments() - 1);
+        }
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename MethodCallback, typename... Args>
+    bool ServerProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
+    {
+        Message method_call(createMethodCall(methodName));
+        
+        if(!method_call.dbus()) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+            return false;
+        }
+        
+        _error = DBusException();
+        processAsyncInArgs(method_call, callback, args...);
+        return !_error.isSet();
+    }
+#endif
+    
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename... Args>
+    bool ServerProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
+    {
+        return asyncCall(methodName, std::ptr_fun(callback), args...);
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename _Class, typename... Args>
+    bool ServerProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
+    {
+        return asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
+    }
+#endif
+
+    template<typename MethodCallback>            
+    void ServerProxy::asyncCall(Message& method_call, const MethodCallback& callback)
+    {
+        DBusPendingCall *pending_return;
+	
+        if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == FALSE) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send DBUS message");
+            return;
+        }
+    
+        if(pending_return) {
+            if(dbus_pending_call_set_notify(pending_return, callCompleted<MethodCallback>, 
+                  new MethodCallback(callback), methodCallbackDelete<MethodCallback>) == FALSE) {
+                throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for DBUS message");
+            }
+        }
+        else {
+            throw_or_set("org.dbustl", "The remote side of has closed the connection prematurely");
+        }
+    }
+
+    void ServerProxy::asyncCall(Message& method_call, void (*callback)(Message&, const DBusException&))
+    {
+        asyncCall(method_call, std::ptr_fun(callback));
+    }
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename T, typename MethodCallback, typename... Args>            
+    void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args)
+    {
+        method_call << invalue;
+        processAsyncInArgs(method_call, callback, args...);
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename T, typename MethodCallback, typename... Args>            
+    void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args)
+    {
+        method_call << invalue;
+        processAsyncInArgs(method_call, callback, args...);
+    }
+#endif
+
+#ifdef DBUSTL_VARIADIC_TEMPLATES
+    template<typename MethodCallback, typename... Args>            
+    void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const Interface& intf, const Args&... args)
+    {
+        dbus_message_set_interface(method_call.dbus(), intf.name().c_str());
+        processAsyncInArgs(method_call, callback, args...);
+    }
+#endif
+
+    template<typename MethodCallback>            
+    void ServerProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
+    {
+        if(msg.isValid()) {
+            asyncCall(msg, callback);
+        }
+    }
+
+    template<typename MethodCallback>            
+    void ServerProxy::methodCallbackDelete(void *object)
+    {
+        MethodCallback *cb = static_cast<MethodCallback*>(object);
+        delete cb;
+    }
+
+    template<typename MethodCallback>            
+    void ServerProxy::callCompleted(DBusPendingCall *pending, void *user_data)
+    {
+        DBusException e;
+        MethodCallback *callback = static_cast<MethodCallback*>(user_data);
+    
+        Message reply(dbus_pending_call_steal_reply(pending));
+     
+        dbus_set_error_from_message(e.dbus(), reply.dbus());
+
+        //call user function
+        (*callback)(reply, e);
+
+        dbus_pending_call_unref(pending);
+    }
+    
+    bool ServerProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
+    {
+        return setSignalHandler(signalName, std::ptr_fun(handler));
+    }
+
+    template<typename _Class>
+    bool ServerProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *c)
+    {
+        return setSignalHandler(signalName, std::bind1st(std::mem_fun(handler), c));
+    }
+
+    template<typename SignalHandlerFunctor>
+    bool ServerProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
+    {
+        if(!_signalsHandlers.count(signalName)) {
+            if(!setWatchSignal(signalName, true)) {
+                return false;
+            }
+        }
+        _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
+                                            signalHandlerCallback<SignalHandlerFunctor>,
+                                            signalHandlerDelete<SignalHandlerFunctor>);
+        return true;
+    }
+
+    template<typename SignalHandlerFunctor>            
+    void ServerProxy::signalHandlerCallback(void *functor, Message& signal)
+    {
+        SignalHandlerFunctor *sh = static_cast<SignalHandlerFunctor *>(functor);
+        (*sh)(signal);
+    }
+
+    template<typename SignalHandlerFunctor>            
+    void ServerProxy::signalHandlerDelete(void *functor)
+    {
+        SignalHandlerFunctor *sh = static_cast<SignalHandlerFunctor *>(functor);
+        delete sh;
+    }
+}
+
+#endif /* DBUSTL_SERVERPROXY */
+

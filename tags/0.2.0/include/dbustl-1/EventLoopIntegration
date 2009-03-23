@@ -1,0 +1,60 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_EVENTLOOPINTEGRATION
+#define DBUSTL_EVENTLOOPINTEGRATION
+
+namespace dbustl {
+
+    class Connection;
+
+    //This is an abstract base call for integration of dbustl into native toolkits (Glib, Qt, ...)
+    class EventLoopIntegration {
+        public:
+            virtual ~EventLoopIntegration();
+            //Virtual constructor : builds an EventLoopIntegration object with the same
+            //characteristics as this one (same integration method, same thread, same everything ...)
+            virtual EventLoopIntegration* clone() const = 0;
+            //Associates this EventLoopIntegration object with the given DBus connection
+            //A EventLoopIntegration object can only be associated with one Connection at a time : 
+            //this method must be called exactly once
+            void connect(Connection* conn);
+
+        protected:
+            //Constructor for children
+            EventLoopIntegration();
+            
+            //This method is guaranteed to be called no more than once.
+            virtual bool internalConnect(Connection* conn) = 0;
+
+        private:
+            //forbidden methods
+            EventLoopIntegration(const EventLoopIntegration&);
+            EventLoopIntegration& operator=(EventLoopIntegration&);
+            
+            Connection* _conn;
+    };
+
+}
+
+#endif /* DBUSTL_EVENTLOOPINTEGRATION */
