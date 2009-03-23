@@ -1,7 +1,7 @@
 SUBDIRS = . include tests examples
 
-#License files
-EXTRA_DIST = COPYING COPYING.LESSER ChangeLog
+#License files, documentation
+EXTRA_DIST = COPYING COPYING.LESSER ChangeLog doc
 
 #Common flags definitions
 AM_CXXFLAGS = @CXX0X_CFLAGS@ -W -Wall -Iinclude @DBUS_CFLAGS@
@@ -37,6 +37,11 @@ endif
 DISTCLEANFILES += dbustl-glib-1.pc
 EXTRA_DIST     += dbustl-glib-1.pc.in           
 
+#Auto generated documentation
+.PHONY: doc
+doc:
+	doxygen
+
 #default to bzip2 tarball generation
-dist: dist-bzip2
+dist: doc dist-bzip2
 	@echo ""    
