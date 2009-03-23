@@ -11,4 +11,4 @@ noinst_PROGRAMS += simplest containers struct
 endif
 simplest_SOURCES = simplest.cpp
 containers_SOURCES = containers.cpp
-struct_SOURCES = struct1.cpp struct2.cpp struct.h
+struct_SOURCES = struct1.cpp struct2.cpp struct1.h
