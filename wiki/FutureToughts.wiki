@@ -1,0 +1,7 @@
+=What to expect in the future from DBUSTL=
+
+This is some kind of a TODO list
+
+  * Don't depend on dbus-glib for main loop integration
+  * Support for server side DBUS (i.e. expose C++ objects as DBUS objects)
+  * Choice to use or not to use C++ exceptions for the end user
