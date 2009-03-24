@@ -25,7 +25,7 @@
  * @mainpage
  *
  * DBUSTL is an easy do to use, extensible C++ wrapper for DBus that 
- * makes the use of DBus with plain C++ possible.<br></br>
+ * makes the use of DBus with plain C++ easy.<br></br>
  * 
  * Though already quite usefull, DBUSTL is still in its infancy, and
  * therefore interface might change at any time before 1.0 release.
@@ -40,7 +40,6 @@
  *  - @ref compat_syntax
  *  - @ref design
  *  - @ref extending
- *  - @ref todo
  */
 
 /** 
@@ -287,8 +286,34 @@
 /** 
  * @page design Design paradigms
  * 
- * TODO: explain here why DBUSTL is as it is today
+ * DBus is a great tool for next generation Linux desktops or mobile devices,
+ * where it provides a robust mechanism for decoupling of applicative services
+ * (e.g. power management, networking, bluetooth, and so many other possible things) 
+ * for the user of those services, such as configuration applets and other 
+ * GUI oriented applications. 
+ *
+ * DBUSTL grew from the frustration that there was no easy way to use DBus with C++, apart from
+ * what ships with the famous Qt toolkit. There were some attempts such as dbus-cpp or dbus-c++, 
+ * dbusmm, or cbus, but none were "feeling right" to me. 
  * 
+ * From my point of view the ideal toolkit has the following properties:
+ *   - Be lightweight: don't pretend libdbus does not exist by creating one class per existing
+ *     DBus concept, but just use libdbus' C functions when they can do the job.
+ *   - Even if the internals are coded in C, provide a high-level, C++-ish interface to the end user.
+ *   - Don't provide new data types for DBus types mapping: the user probably already has his own data types (STL or others),
+ *     so just use them.
+ *   - Provide integration with popular toolkits such as Glib, Qt
+ *   - Use "modern" C++ techniques to make the user or developer's life easier when it makes sense.
+ *   - Apart from asynchronous callbacks and signals, does not depend on an any external toolkit
+ *   - When you need such an external toolkit for mainloop support, don't go in your way by implementing
+ *     a heavyweight porting layer - just keep it simple.
+ *   - Be feature complete enough not to go in your way when you just need to have your job done.
+ *
+ * DBUSTL is an attempt at fullfilling all those properties. 
+ * 
+ * DBUSTL borrows some design ideas from Sergei Kuchin's OTL (http://otl.sourceforge.net), 
+ * and i would not have had the courage to start this without this new C++ facility called Variadic templates 
+ * (http://en.wikipedia.org/wiki/C%2B%2B0x#Variadic_templates).
  */
 
 /** 
@@ -369,15 +394,6 @@
  * For more details on how to do it, having a look in the include/dbustl-1/types directory
  * will help you to understand how it is done for STL containers.
  * 
- */
-
-/** 
- * @page todo Future improvements
- * 
- * - Test exceptions less support
- * - Get rid of dbus-glib dependancy, by really implementing GlibEventLoop
- * - Support variants: don't know if that's really used
- * - Long term: support server side DBUS operation
  */
 
 #include <dbustl-1/Message>
