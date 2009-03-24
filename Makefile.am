@@ -1,7 +1,7 @@
 SUBDIRS = . include tests examples
 
 #License files, documentation
-EXTRA_DIST = COPYING COPYING.LESSER ChangeLog doc
+EXTRA_DIST = COPYING COPYING.LESSER ChangeLog doc DoxygenFooter.html
 
 #Common flags definitions
 AM_CXXFLAGS = @CXX0X_CFLAGS@ -W -Wall -Iinclude @DBUS_CFLAGS@
