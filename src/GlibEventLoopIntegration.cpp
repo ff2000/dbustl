@@ -222,7 +222,7 @@ dbus_bool_t GlibEventLoopIntegration::addTimeoutCallBack(DBusTimeout *timeout, v
       return TRUE;
     }
   
-    g_assert (dbus_timeout_get_data (timeout) == NULL);
+    assert(dbus_timeout_get_data (timeout) == NULL);
 
     source = g_timeout_source_new (dbus_timeout_get_interval (timeout));
     if(!source) {
