@@ -47,8 +47,33 @@ namespace dbustl {
             
             //This method is guaranteed to be called no more than once.
             virtual bool internalConnect(Connection* conn);
+            
+            static dbus_bool_t addWatchCallBack(DBusWatch *watch, void *data);
+            static void removeWatchCallBack(DBusWatch *watch, void *data);
+            static void toggleWatchCallBack(DBusWatch *watch, void *data);
+            static gboolean dispatchWatch(GIOChannel *source, GIOCondition condition, gpointer data);
+            
+            static dbus_bool_t addTimeoutCallBack(DBusTimeout *timeout, void *data);
+            static void removeTimeoutCallBack(DBusTimeout *timeout, void *data);
+            static void toggleTimeoutCallBack(DBusTimeout *timeout, void *data);
+            static gboolean dispatchTimeout(gpointer data);
+
+            struct DispatchGSource : public GSource {
+                Connection *_conn;
+            };
+            static GSourceFuncs _dispatchCallbacks;
+
+            static void wakeUpCallBack(void *data);
 
             GMainContext *_ctxt;
+            DispatchGSource *_dispatchGSource;
+
+        public:
+            // Those ones have to be public as they have to be accessible from GSourceFuncs C typedef
+            static gboolean prepareDispatch (GSource *source, gint *timeout);
+            static gboolean checkDispatch (GSource *source);
+            static gboolean doDispatch (GSource *source, GSourceFunc  callback, gpointer user_data);
+
     };
 
 }
