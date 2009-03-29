@@ -10,9 +10,7 @@
     <ul>
       <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
       <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
 </div>
@@ -39,7 +37,7 @@ struct1.h containts the structure definition: <div class="fragment"><pre class="
 };
 </pre></div> struct1.cpp containts the structure registration: <div class="fragment"><pre class="fragment">
 <span class="preprocessor">#include "struct1.h"</span>
-<span class="preprocessor">#include &lt;<a class="code" href="dbustl.html">dbustl-1/dbustl</a>&gt;</span>
+<span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>
 
 DBUSTL_REGISTER_STRUCT_3(
     ExampleStruct, 
@@ -48,7 +46,7 @@ DBUSTL_REGISTER_STRUCT_3(
     field3
 )
 </pre></div> struct2.cpp containts the calling sequence: <div class="fragment"><pre class="fragment">
-<span class="preprocessor">#include &lt;<a class="code" href="dbustl.html">dbustl-1/dbustl</a>&gt;</span>
+<span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>
 
 <span class="preprocessor">#include "struct1.h"</span>
 <span class="preprocessor">#include &lt;string&gt;</span>
