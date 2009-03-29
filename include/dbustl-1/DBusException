@@ -69,7 +69,7 @@ class DBusException : public std::exception {
         virtual ~DBusException() throw();
 
         /**
-         * Expanded description of the exception of the forme "name: description"
+         * Expanded description of the exception of the form "name: description"
          */
         virtual const char* what() const throw();
 
