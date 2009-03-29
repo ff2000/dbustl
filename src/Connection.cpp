@@ -29,6 +29,8 @@
 
 namespace dbustl {
 
+/** @cond */
+//This is internal stuff, don't show it in doxygen
 class ConnectionInitializer {
     ~ConnectionInitializer() {
         Connection::cleanup();  
