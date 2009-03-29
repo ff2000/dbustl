@@ -39,6 +39,7 @@ class ConnectionInitializer {
 };
 
 ConnectionInitializer ConnectionInitializer::_static;
+/** @endcond */
 
 Connection* Connection::_system;
 Connection* Connection::_session;

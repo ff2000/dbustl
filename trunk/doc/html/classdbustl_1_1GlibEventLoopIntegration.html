@@ -26,7 +26,10 @@
   </div>
 </div>
 <div class="contents">
-<h1>dbustl::GlibEventLoopIntegration Class Reference</h1><!-- doxytag: class="dbustl::GlibEventLoopIntegration" --><!-- doxytag: inherits="dbustl::EventLoopIntegration" --><div class="dynheader">
+<h1>dbustl::GlibEventLoopIntegration Class Reference</h1><!-- doxytag: class="dbustl::GlibEventLoopIntegration" --><!-- doxytag: inherits="dbustl::EventLoopIntegration" -->Class used for integration of <a class="el" href="namespacedbustl.html">dbustl</a> with Glib toolkit.  
+<a href="#_details">More...</a>
+<p>
+<div class="dynheader">
 Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 <div class="dynsection">
 
@@ -42,22 +45,21 @@ Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#bf387f7c3331561c859fee5cd36ba4ba">GlibEventLoopIntegration</a> (GMainContext *ctxt=0)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor that binds the created object with a given GMainContext.  <a href="#bf387f7c3331561c859fee5cd36ba4ba"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#db2e9872414ed82fa95f79ed03dee211">~GlibEventLoopIntegration</a> ()</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#db2e9872414ed82fa95f79ed03dee211"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classdbustl_1_1EventLoopIntegration.html">EventLoopIntegration</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#3d3125024c4b5083bdbf04bda9c19e16">clone</a> () const </td></tr>
 
-<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static gboolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#68ffe07f6e920b65f6ab52ad2bd59c19">prepareDispatch</a> (GSource *source, gint *timeout)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static gboolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#945fc9670a0617980474eb8d16670644">checkDispatch</a> (GSource *source)</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static gboolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#373891d4444c0fd57f51f1124d49979d">doDispatch</a> (GSource *source, GSourceFunc callback, gpointer user_data)</td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual copy constructor.  <a href="#3d3125024c4b5083bdbf04bda9c19e16"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><b>DispatchGSource</b></td></tr>
 
 </table>
-<hr><h2>Constructor &amp; Destructor Documentation</h2>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Class used for integration of <a class="el" href="namespacedbustl.html">dbustl</a> with Glib toolkit. 
+<p>
+Refer to <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a DBus Connection.">Connection</a> class documentation to see how this class is to be used in conjunction with DBUS connections. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="bf387f7c3331561c859fee5cd36ba4ba"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::GlibEventLoopIntegration" ref="bf387f7c3331561c859fee5cd36ba4ba" args="(GMainContext *ctxt=0)" -->
 <div class="memitem">
 <div class="memproto">
@@ -75,6 +77,14 @@ Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 <div class="memdoc">
 
 <p>
+Constructor that binds the created object with a given GMainContext. 
+<p>
+All signals and methods callbacks for the eventual DBUS connection that will be associated with this object will be processed in this GMainContext.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>ctxt</em>&nbsp;</td><td>the GMainContext to bind with. If null the default GMainContext is used </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -93,6 +103,8 @@ Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 </div>
 <div class="memdoc">
 
+<p>
+Virtual destructor. 
 <p>
 
 </div>
@@ -114,92 +126,11 @@ Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 <div class="memdoc">
 
 <p>
+Virtual copy constructor. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>a new instance of <a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html" title="Class used for integration of dbustl with Glib toolkit.">GlibEventLoopIntegration</a> </dd></dl>
 
 <p>Implements <a class="el" href="classdbustl_1_1EventLoopIntegration.html#5e9f2c1b3363d45bf2b99622fd8e92bd">dbustl::EventLoopIntegration</a>.</p>
-
-</div>
-</div><p>
-<a class="anchor" name="68ffe07f6e920b65f6ab52ad2bd59c19"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::prepareDispatch" ref="68ffe07f6e920b65f6ab52ad2bd59c19" args="(GSource *source, gint *timeout)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">gboolean dbustl::GlibEventLoopIntegration::prepareDispatch           </td>
-          <td>(</td>
-          <td class="paramtype">GSource *&nbsp;</td>
-          <td class="paramname"> <em>source</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">gint *&nbsp;</td>
-          <td class="paramname"> <em>timeout</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="945fc9670a0617980474eb8d16670644"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::checkDispatch" ref="945fc9670a0617980474eb8d16670644" args="(GSource *source)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">gboolean dbustl::GlibEventLoopIntegration::checkDispatch           </td>
-          <td>(</td>
-          <td class="paramtype">GSource *&nbsp;</td>
-          <td class="paramname"> <em>source</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="373891d4444c0fd57f51f1124d49979d"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::doDispatch" ref="373891d4444c0fd57f51f1124d49979d" args="(GSource *source, GSourceFunc callback, gpointer user_data)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">gboolean dbustl::GlibEventLoopIntegration::doDispatch           </td>
-          <td>(</td>
-          <td class="paramtype">GSource *&nbsp;</td>
-          <td class="paramname"> <em>source</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">GSourceFunc&nbsp;</td>
-          <td class="paramname"> <em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">gpointer&nbsp;</td>
-          <td class="paramname"> <em>user_data</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
 
 </div>
 </div><p>
