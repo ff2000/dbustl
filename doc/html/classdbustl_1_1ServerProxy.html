@@ -79,13 +79,17 @@
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename SignalHandlerFunctor&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#c332e372e364eb981189dfc1eb5d5d2d">setSignalHandler</a> (const std::string &amp;signalName, const SignalHandlerFunctor &amp;handler)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a DBUS signal : C++ functor version.  <a href="#c332e372e364eb981189dfc1eb5d5d2d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#42d95ef01b473ec279dd5abe14ce405d">setSignalHandler</a> (const std::string &amp;signalName, void(*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal))</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a DBUS signal : function pointer version.  <a href="#42d95ef01b473ec279dd5abe14ce405d"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#fabf40a8dda083184aeaae65962ec165">setSignalHandler</a> (const std::string &amp;signalName, void(_Class::*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> signal), _Class *c)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#8750de7fc9748a4db34b8cb339854281">setSignalHandler</a> (const std::string &amp;signalName, void(_Class::*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> signal), _Class *object)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a DBUS signal : member pointer version.  <a href="#8750de7fc9748a4db34b8cb339854281"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#353cd4b5e6178664439333b576754805">removeSignalHandler</a> (const std::string &amp;signalName)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#c332e372e364eb981189dfc1eb5d5d2d" title="Registers a handler to receive a DBUS signal : C++ functor version.">setSignalHandler()</a>.  <a href="#353cd4b5e6178664439333b576754805"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html">Interface</a></td></tr>
 
@@ -544,6 +548,19 @@ template&lt;typename SignalHandlerFunctor&gt; </div>
 <div class="memdoc">
 
 <p>
+Registers a handler to receive a DBUS signal : C++ functor version. 
+<p>
+If a handler is already registered, the previous handler is overwritten with the new one. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>signalName</em>&nbsp;</td><td>The name of the message to receive. If set to an empty string, all signals are received, unless another signal handler with and exact match on the signal name is registered at the time the signal is received. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>handler</em>&nbsp;</td><td>the handlers' operator() will be called each time a matching signal is received. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBUSTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if signalName is invalid. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -573,10 +590,23 @@ template&lt;typename SignalHandlerFunctor&gt; </div>
 <div class="memdoc">
 
 <p>
+Registers a handler to receive a DBUS signal : function pointer version. 
+<p>
+If a handler is already registered, the previous handler is overwritten with the new one. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>signalName</em>&nbsp;</td><td>The name of the message to receive. If set to an empty string, all signals are received, unless another signal handler with and exact match on the signal name is registered at the time the signal is received. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>handler</em>&nbsp;</td><td>the handler will be called back each time a matching signal is received. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBUSTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if signalName is invalid. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
-<a class="anchor" name="fabf40a8dda083184aeaae65962ec165"></a><!-- doxytag: member="dbustl::ServerProxy::setSignalHandler" ref="fabf40a8dda083184aeaae65962ec165" args="(const std::string &amp;signalName, void(_Class::*handler)(Message signal), _Class *c)" -->
+<a class="anchor" name="8750de7fc9748a4db34b8cb339854281"></a><!-- doxytag: member="dbustl::ServerProxy::setSignalHandler" ref="8750de7fc9748a4db34b8cb339854281" args="(const std::string &amp;signalName, void(_Class::*handler)(Message signal), _Class *object)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -598,7 +628,7 @@ template&lt;typename _Class&gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">_Class *&nbsp;</td>
-          <td class="paramname"> <em>c</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>object</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -610,6 +640,20 @@ template&lt;typename _Class&gt; </div>
 <div class="memdoc">
 
 <p>
+Registers a handler to receive a DBUS signal : member pointer version. 
+<p>
+If a handler is already registered, the previous handler is overwritten with the new one. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>signalName</em>&nbsp;</td><td>The name of the mesignalssage to receive. If set to an empty string, all signals are received, unless another signal handler with and exact match on the signal name is registered at the time the signal is received. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>handler</em>&nbsp;</td><td>this member function will be called back each time a matching signal is received. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>object</em>&nbsp;</td><td>the handler member function the object will be called with? </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBUSTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if signalName is invalid. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -630,6 +674,18 @@ template&lt;typename _Class&gt; </div>
 <div class="memdoc">
 
 <p>
+Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#c332e372e364eb981189dfc1eb5d5d2d" title="Registers a handler to receive a DBUS signal : C++ functor version.">setSignalHandler()</a>. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>signalName</em>&nbsp;</td><td>The name of the signal to remove handler to. If signal had no previously set handler, it succeeds anyway. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBUSTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if signalName is invalid. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
