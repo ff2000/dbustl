@@ -46,6 +46,16 @@ Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classdbustl_1_1EventLoopIntegration.html">EventLoopIntegration</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#3d3125024c4b5083bdbf04bda9c19e16">clone</a> () const </td></tr>
 
+<tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static gboolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#68ffe07f6e920b65f6ab52ad2bd59c19">prepareDispatch</a> (GSource *source, gint *timeout)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static gboolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#945fc9670a0617980474eb8d16670644">checkDispatch</a> (GSource *source)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static gboolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1GlibEventLoopIntegration.html#373891d4444c0fd57f51f1124d49979d">doDispatch</a> (GSource *source, GSourceFunc callback, gpointer user_data)</td></tr>
+
+<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><b>DispatchGSource</b></td></tr>
+
 </table>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="bf387f7c3331561c859fee5cd36ba4ba"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::GlibEventLoopIntegration" ref="bf387f7c3331561c859fee5cd36ba4ba" args="(GMainContext *ctxt=0)" -->
@@ -106,6 +116,90 @@ Inheritance diagram for dbustl::GlibEventLoopIntegration:</div>
 <p>
 
 <p>Implements <a class="el" href="classdbustl_1_1EventLoopIntegration.html#5e9f2c1b3363d45bf2b99622fd8e92bd">dbustl::EventLoopIntegration</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="68ffe07f6e920b65f6ab52ad2bd59c19"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::prepareDispatch" ref="68ffe07f6e920b65f6ab52ad2bd59c19" args="(GSource *source, gint *timeout)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gboolean dbustl::GlibEventLoopIntegration::prepareDispatch           </td>
+          <td>(</td>
+          <td class="paramtype">GSource *&nbsp;</td>
+          <td class="paramname"> <em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gint *&nbsp;</td>
+          <td class="paramname"> <em>timeout</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="945fc9670a0617980474eb8d16670644"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::checkDispatch" ref="945fc9670a0617980474eb8d16670644" args="(GSource *source)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gboolean dbustl::GlibEventLoopIntegration::checkDispatch           </td>
+          <td>(</td>
+          <td class="paramtype">GSource *&nbsp;</td>
+          <td class="paramname"> <em>source</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="373891d4444c0fd57f51f1124d49979d"></a><!-- doxytag: member="dbustl::GlibEventLoopIntegration::doDispatch" ref="373891d4444c0fd57f51f1124d49979d" args="(GSource *source, GSourceFunc callback, gpointer user_data)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">gboolean dbustl::GlibEventLoopIntegration::doDispatch           </td>
+          <td>(</td>
+          <td class="paramtype">GSource *&nbsp;</td>
+          <td class="paramname"> <em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GSourceFunc&nbsp;</td>
+          <td class="paramname"> <em>callback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">gpointer&nbsp;</td>
+          <td class="paramname"> <em>user_data</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
