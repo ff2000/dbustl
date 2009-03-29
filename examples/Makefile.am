@@ -12,3 +12,10 @@ endif
 simplest_SOURCES = simplest.cpp
 containers_SOURCES = containers.cpp
 struct_SOURCES = struct1.cpp struct2.cpp struct1.h
+
+if HAVE_GLIB
+noinst_PROGRAMS += signals
+endif
+signals_SOURCES = signals.cpp
+signals_CPPFLAGS = @GLIB_CFLAGS@
+signals_LDADD = $(LDADD) ../libdbustl-glib-1.la @GLIB_LIBS@
