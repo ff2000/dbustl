@@ -46,28 +46,28 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#d99ba5583f0ac4d46362966bfcf0e743">isPrivate</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">If True, means the connection is not on a system or session bus, but is private between two applications.  <a href="#d99ba5583f0ac4d46362966bfcf0e743"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">DBusConnection *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#b41b367a1adcb6e5acc300167f9521a6">dbus</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">DBusConnection *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#957fd7bb3c486aebfc7a32357c7518fd">dbus</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#b41b367a1adcb6e5acc300167f9521a6"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#957fd7bb3c486aebfc7a32357c7518fd"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classdbustl_1_1Connection.html">Connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#6d69849fdbe4f404cb59a0c1e2633ea2">systemBus</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classdbustl_1_1Connection.html">Connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5">systemBus</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a singleton to the system bus.  <a href="#6d69849fdbe4f404cb59a0c1e2633ea2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classdbustl_1_1Connection.html">Connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#3de1e85aa0f4041106bb0e885abfc348">sessionBus</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a singleton to the system bus.  <a href="#d596fa470f78e1152d234ee93dfd64e5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classdbustl_1_1Connection.html">Connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f">sessionBus</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a singleton to the session bus.  <a href="#3de1e85aa0f4041106bb0e885abfc348"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#71a409702ff6cacfc99b73095fcf3021">useEventLoop</a> (const <a class="el" href="classdbustl_1_1EventLoopIntegration.html">EventLoopIntegration</a> &amp;eventloop)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a singleton to the session bus.  <a href="#5dd064d01bb7100810e51660443a825f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#11ce4ad1f70b793b1351909b01b07334">useEventLoop</a> (const <a class="el" href="classdbustl_1_1EventLoopIntegration.html">EventLoopIntegration</a> &amp;eventloop)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies the Main Loop (Glib, Qt, any other) in which to integrate the newly created connections.  <a href="#71a409702ff6cacfc99b73095fcf3021"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specifies the Main Loop (Glib, Qt, any other) in which to integrate the newly created connections.  <a href="#11ce4ad1f70b793b1351909b01b07334"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Provides an abstraction of a DBus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a DBus Connection.">Connection</a>. 
 <p>
 A DBUS connection is a dedicated link between two applications that wish to exchange DBUS messages. DBus connections can be either private (which is not supported at the moment), or be connections to a bus, which is in charge of routing messages to the right process.<p>
 A DBus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a DBus Connection.">Connection</a> is needed to instantiate <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote DBus object...">ServerProxy</a> objects.<p>
-The simplest way to have a connection to a bus is through a call to <a class="el" href="classdbustl_1_1Connection.html#6d69849fdbe4f404cb59a0c1e2633ea2" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#3de1e85aa0f4041106bb0e885abfc348" title="Returns a singleton to the session bus.">Connection::sessionBus</a><p>
+The simplest way to have a connection to a bus is through a call to <a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f" title="Returns a singleton to the session bus.">Connection::sessionBus</a><p>
 To be able to process signals, the connection must be associated with an event loop. An event loop must be provided either:<ul>
-<li>before any call to <a class="el" href="classdbustl_1_1Connection.html#a5a994dad52a8afd5a662bcfd4b6aa6d" title="Creates a new dedicated connection on the given bus.">Connection::Connection</a>, <a class="el" href="classdbustl_1_1Connection.html#6d69849fdbe4f404cb59a0c1e2633ea2" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#3de1e85aa0f4041106bb0e885abfc348" title="Returns a singleton to the session bus.">Connection::sessionBus</a>, using <a class="el" href="classdbustl_1_1Connection.html#71a409702ff6cacfc99b73095fcf3021" title="Specifies the Main Loop (Glib, Qt, any other) in which to integrate the newly created...">Connection::useEventLoop</a> static member.</li><li>during object construction, through the use of the alternate <a class="el" href="classdbustl_1_1Connection.html#e3cd02ad881319d769fd5e6abc78cd67" title="Creates a new dedicated connection on the given bus, specifying in which main loop...">Connection(DBusBusType bustype, const EventLoopIntegration&amp; eventLoop)</a> constructor</li></ul>
+<li>before any call to <a class="el" href="classdbustl_1_1Connection.html#a5a994dad52a8afd5a662bcfd4b6aa6d" title="Creates a new dedicated connection on the given bus.">Connection::Connection</a>, <a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f" title="Returns a singleton to the session bus.">Connection::sessionBus</a>, using <a class="el" href="classdbustl_1_1Connection.html#11ce4ad1f70b793b1351909b01b07334" title="Specifies the Main Loop (Glib, Qt, any other) in which to integrate the newly created...">Connection::useEventLoop</a> static member.</li><li>during object construction, through the use of the alternate <a class="el" href="classdbustl_1_1Connection.html#e3cd02ad881319d769fd5e6abc78cd67" title="Creates a new dedicated connection on the given bus, specifying in which main loop...">Connection(DBusBusType bustype, const EventLoopIntegration&amp; eventLoop)</a> constructor</li></ul>
 <p>
 If no signals are to be received, then event loop association remains optionnal. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="a5a994dad52a8afd5a662bcfd4b6aa6d"></a><!-- doxytag: member="dbustl::Connection::Connection" ref="a5a994dad52a8afd5a662bcfd4b6aa6d" args="(DBusBusType bustype)" -->
@@ -151,12 +151,12 @@ The destructor is non virtual on purpose, this class is not designed for inherit
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="6d69849fdbe4f404cb59a0c1e2633ea2"></a><!-- doxytag: member="dbustl::Connection::systemBus" ref="6d69849fdbe4f404cb59a0c1e2633ea2" args="()" -->
+<a class="anchor" name="d596fa470f78e1152d234ee93dfd64e5"></a><!-- doxytag: member="dbustl::Connection::systemBus" ref="d596fa470f78e1152d234ee93dfd64e5" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="classdbustl_1_1Connection.html">Connection</a>* dbustl::Connection::systemBus           </td>
+          <td class="memname"><a class="el" href="classdbustl_1_1Connection.html">Connection</a> * dbustl::Connection::systemBus           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -173,12 +173,12 @@ If Connection::useMainLoop has been called beforehand, this connection is associ
 Do not destroy it, it will be automatically freed at program shutdown 
 </div>
 </div><p>
-<a class="anchor" name="3de1e85aa0f4041106bb0e885abfc348"></a><!-- doxytag: member="dbustl::Connection::sessionBus" ref="3de1e85aa0f4041106bb0e885abfc348" args="()" -->
+<a class="anchor" name="5dd064d01bb7100810e51660443a825f"></a><!-- doxytag: member="dbustl::Connection::sessionBus" ref="5dd064d01bb7100810e51660443a825f" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="classdbustl_1_1Connection.html">Connection</a>* dbustl::Connection::sessionBus           </td>
+          <td class="memname"><a class="el" href="classdbustl_1_1Connection.html">Connection</a> * dbustl::Connection::sessionBus           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -195,12 +195,12 @@ If Connection::useMainLoop has been called beforehand, this connection is associ
 Do not destroy it, it will be automatically freed at program shutdown 
 </div>
 </div><p>
-<a class="anchor" name="71a409702ff6cacfc99b73095fcf3021"></a><!-- doxytag: member="dbustl::Connection::useEventLoop" ref="71a409702ff6cacfc99b73095fcf3021" args="(const EventLoopIntegration &amp;eventloop)" -->
+<a class="anchor" name="11ce4ad1f70b793b1351909b01b07334"></a><!-- doxytag: member="dbustl::Connection::useEventLoop" ref="11ce4ad1f70b793b1351909b01b07334" args="(const EventLoopIntegration &amp;eventloop)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">static void dbustl::Connection::useEventLoop           </td>
+          <td class="memname">void dbustl::Connection::useEventLoop           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classdbustl_1_1EventLoopIntegration.html">EventLoopIntegration</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>eventloop</em>          </td>
@@ -238,12 +238,12 @@ If True, means the connection is not on a system or session bus, but is private 
 
 </div>
 </div><p>
-<a class="anchor" name="b41b367a1adcb6e5acc300167f9521a6"></a><!-- doxytag: member="dbustl::Connection::dbus" ref="b41b367a1adcb6e5acc300167f9521a6" args="()" -->
+<a class="anchor" name="957fd7bb3c486aebfc7a32357c7518fd"></a><!-- doxytag: member="dbustl::Connection::dbus" ref="957fd7bb3c486aebfc7a32357c7518fd" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">DBusConnection* dbustl::Connection::dbus           </td>
+          <td class="memname">DBusConnection * dbustl::Connection::dbus           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -259,8 +259,8 @@ The DBUS C api structure: don't use it!
 You should only use it if you <b>really</b> know what you are doing. 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li>dbustl-1/<a class="el" href="Connection.html">Connection</a></ul>
+<hr>The documentation for this class was generated from the following files:<ul>
+<li>dbustl-1/<a class="el" href="Connection.html">Connection</a><li><a class="el" href="Connection_8cpp.html">Connection.cpp</a></ul>
 </div>
 <hr size="1"><address style="text-align: right;"><small>DBus Template Library 0.2.0 documentation, generated by &nbsp;
 <a href="http://www.doxygen.org/index.html">

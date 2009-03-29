@@ -28,23 +28,53 @@ namespace dbustl {
 
     class Connection;
 
-    //This is an abstract base call for integration of dbustl into native toolkits (Glib, Qt, ...)
+    /**
+     * Abstract base class for integration of dbustl into native toolkits such as Glib or Qt.
+     * 
+     * Refer to Connection class documentation to see how this class is to be used in
+     * conjunction with DBUS connections.
+     */
+
     class EventLoopIntegration {
         public:
+            /**
+             * Virtual desctructor
+             */
             virtual ~EventLoopIntegration();
-            //Virtual constructor : builds an EventLoopIntegration object with the same
-            //characteristics as this one (same integration method, same thread, same everything ...)
+
+            /**
+             * Virtual copy constructor
+             * 
+             * Builds an EventLoopIntegration object with the same characteristics 
+             * as this one (same integration method, same thread, same everything ...)
+             * Any child class C must implement this by returning a newly instanciated
+             * object of class C.
+             */
             virtual EventLoopIntegration* clone() const = 0;
-            //Associates this EventLoopIntegration object with the given DBus connection
-            //A EventLoopIntegration object can only be associated with one Connection at a time : 
-            //this method must be called exactly once
+
+            /** 
+             * Associates this EventLoopIntegration object with the given DBus connection.
+             * 
+             * An EventLoopIntegration object can only be associated with one Connection at a time, 
+             * and moreover this method must be called exactly once.
+             * This methods does the sanity checks listed above and calls internalConnect() if
+             * checks succeed. If checks fail assert() is called.
+             */
             void connect(Connection* conn);
 
         protected:
-            //Constructor for children
+            /**
+             * Constructor for children classes
+             */
             EventLoopIntegration();
             
-            //This method is guaranteed to be called no more than once.
+            /**
+             * Does the toolkit specific world to bind the connection to toolkit event loop.
+             * 
+             * The way is is done is completely specific to each toolkit, however this usually
+             * means calling dbus_connection_set_watch_functions(), dbus_connection_set_timeout_functions()
+             * and dbus_connection_set_wakeup_main_function() as a bare minimum.
+             */
             virtual bool internalConnect(Connection* conn) = 0;
 
         private:

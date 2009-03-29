@@ -32,12 +32,34 @@ namespace dbustl {
 
     class Connection;
 
+    /**
+     * Class used for integration of dbustl with Glib toolkit.
+     * 
+     * Refer to Connection class documentation to see how this class is to be used in
+     * conjunction with DBUS connections.
+     */
+
     class GlibEventLoopIntegration : public EventLoopIntegration {
         public:
+            /**
+             * Constructor that binds the created object with a given GMainContext.
+             * 
+             * All signals and methods callbacks for the eventual DBUS connection that will be
+             * associated with this object will be processed in this GMainContext.
+             * 
+             * @param ctxt the GMainContext to bind with. If null the default GMainContext is used
+             */
             GlibEventLoopIntegration(GMainContext *ctxt = 0);
+
+            /**
+             * Virtual destructor
+             */
             virtual ~GlibEventLoopIntegration();
-            //Virtual constructor : builds an MainLoopIntegration object with the same
-            //characteristics as this one (same integration method, same thread, same everything ...)
+            /**
+             * Virtual copy constructor
+             * 
+             * @return a new instance of GlibEventLoopIntegration
+             */
             virtual EventLoopIntegration* clone() const;
 
         private:
@@ -69,10 +91,12 @@ namespace dbustl {
             DispatchGSource *_dispatchGSource;
 
         public:
+            /** @cond */
             // Those ones have to be public as they have to be accessible from GSourceFuncs C typedef
             static gboolean prepareDispatch (GSource *source, gint *timeout);
             static gboolean checkDispatch (GSource *source);
             static gboolean doDispatch (GSource *source, GSourceFunc  callback, gpointer user_data);
+            /** @endcond */
 
     };
 
