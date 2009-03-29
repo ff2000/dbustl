@@ -159,18 +159,54 @@ namespace dbustl {
 
             /**@name Signals handling*/
             /*@{*/
-            //Signals Handling : functor version
+            /**
+             * Registers a handler to receive a DBUS signal : C++ functor version.
+             *
+             * If a handler is already registered, the previous handler is overwritten with the new one.
+             * @param signalName The name of the message to receive. If set to an empty string, all
+             * signals are received, unless another signal handler with and exact match on the signal
+             * name is registered at the time the signal is received.
+             * @param handler the handlers' operator() will be called
+             * each time a matching signal is received.
+             * @throw DBusException if signalName is invalid.
+             */
             template<typename SignalHandlerFunctor>
             bool setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler);
 
-            //Signals Handling : pointer to function version
+            /**
+             * Registers a handler to receive a DBUS signal : function pointer version.
+             *
+             * If a handler is already registered, the previous handler is overwritten with the new one.
+             * @param signalName The name of the message to receive. If set to an empty string, all
+             * signals are received, unless another signal handler with and exact match on the signal
+             * name is registered at the time the signal is received.
+             * @param handler the handler will be called back
+             * each time a matching signal is received.
+             * @throw DBusException if signalName is invalid.
+             */
             inline bool setSignalHandler(const std::string& signalName, void (*handler)(Message& signal));
 
-            //Signals Handling : pointer to member version
+            /**
+             * Registers a handler to receive a DBUS signal : member pointer version.
+             *
+             * If a handler is already registered, the previous handler is overwritten with the new one.
+             * @param signalName The name of the mesignalssage to receive. If set to an empty string, all
+             * signals are received, unless another signal handler with and exact match on the signal
+             * name is registered at the time the signal is received.
+             * @param handler this member function will be called back
+             * each time a matching signal is received.
+             * @param object the handler member function the object will be called with?
+             * @throw DBusException if signalName is invalid.
+             */
             template<typename _Class>
-            inline bool setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *c);
+            inline bool setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object);
 
-            //Removes one of the handler set by one of the calls above
+            /**
+             * Removes a signal handler previously registered with setSignalHandler().
+             * @param signalName The name of the signal to remove handler to. If signal had no previously set handler, 
+             * it succeeds anyway.
+             * @throw DBusException if signalName is invalid.
+             */
             bool removeSignalHandler(const std::string& signalName);
             /*@}*/
 
@@ -518,7 +554,7 @@ namespace dbustl {
     }
 
     template<typename _Class>
-    bool ServerProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *c)
+    bool ServerProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object)
     {
         return setSignalHandler(signalName, std::bind1st(std::mem_fun(handler), c));
     }
