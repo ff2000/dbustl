@@ -1,7 +1,7 @@
 /*
  *  DBUSTL - DBus Template Library
  *
- *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
  *  
  *
  *  This file is part of the DBus Template Library.
