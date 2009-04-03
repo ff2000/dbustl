@@ -161,22 +161,24 @@ DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *,
     }
 }
 
-bool ServerProxy::removeSignalHandler(const std::string& signalName)
+void ServerProxy::removeSignalHandler(const std::string& signalName)
 {
     if(_signalsHandlers.count(signalName)) {
         _signalsHandlers[signalName].delete_functor(_signalsHandlers[signalName].functor);
         _signalsHandlers.erase(signalName);
-        return setWatchSignal(signalName, false);
+        setWatchSignal(signalName, false);
     }
-    return true;
 }
 
-bool ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
+void ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
 {
     if(!_conn->isPrivate()) {
         std::stringstream match;
         DBusException error;
         
+	//Reset global error status
+	errorReset();
+
         match << "type='signal',path='" << _path << "'";
         
         if(signalName.size()) {
@@ -192,10 +194,8 @@ bool ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
         
         if(error.isSet()) {
             throw_or_set(error);
-            return false;
         }
     }
-    return true;
 }
 
 }
