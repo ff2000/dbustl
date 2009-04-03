@@ -88,9 +88,13 @@ namespace dbustl {
 
         #ifndef DBUSTL_NO_EXCEPTIONS
             /**
-             * In case exception are not enabled, returns the last error that happened.
+             * In case exceptions are not enabled, returns the last error that happened.
              */
             const DBusException& error();
+            /**
+             * In case exceptions are not enabled, says if we are in an error status.
+             */
+            bool hasError() {return _error.isSet(); };
         #endif
             /*@}*/
 
@@ -107,7 +111,7 @@ namespace dbustl {
              * @throw DBusException if anything goes wrong
              */
             template<typename... Args>
-            bool call(const std::string& methodName, const Args&... args);
+            void call(const std::string& methodName, const Args&... args);
         #endif
             /**
              * Compatibility C++ syntax: Creates a method call message
@@ -134,19 +138,19 @@ namespace dbustl {
             //Asynchronous call : functor version            
         #ifdef DBUSTL_VARIADIC_TEMPLATES
             template<typename MethodCallback, typename... Args>
-            bool asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args);
+            void asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args);
         #endif
             
             //Asynchronous call : pointer to function version
         #ifdef DBUSTL_VARIADIC_TEMPLATES
             template<typename... Args>
-            inline bool asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args);
+            inline void asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args);
         #endif
             
             //Asynchronous call : pointer to member version
         #ifdef DBUSTL_VARIADIC_TEMPLATES
             template<typename _Class, typename... Args>
-            inline bool asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args);
+            inline void asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args);
         #endif
             
             //Asynchronous call, legacy C++ syntax: functor version
@@ -171,7 +175,7 @@ namespace dbustl {
              * @throw DBusException if signalName is invalid.
              */
             template<typename SignalHandlerFunctor>
-            bool setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler);
+            void setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler);
 
             /**
              * Registers a handler to receive a DBUS signal : function pointer version.
@@ -184,7 +188,7 @@ namespace dbustl {
              * each time a matching signal is received.
              * @throw DBusException if signalName is invalid.
              */
-            inline bool setSignalHandler(const std::string& signalName, void (*handler)(Message& signal));
+            inline void setSignalHandler(const std::string& signalName, void (*handler)(Message& signal));
 
             /**
              * Registers a handler to receive a DBUS signal : member pointer version.
@@ -199,7 +203,7 @@ namespace dbustl {
              * @throw DBusException if signalName is invalid.
              */
             template<typename _Class>
-            inline bool setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object);
+            inline void setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object);
 
             /**
              * Removes a signal handler previously registered with setSignalHandler().
@@ -207,7 +211,7 @@ namespace dbustl {
              * it succeeds anyway.
              * @throw DBusException if signalName is invalid.
              */
-            bool removeSignalHandler(const std::string& signalName);
+            void removeSignalHandler(const std::string& signalName);
             /*@}*/
 
             /**
@@ -236,11 +240,15 @@ namespace dbustl {
             ServerProxy& operator=(ServerProxy&);
             
         #ifdef DBUSTL_NO_EXCEPTIONS
-            inline void throw_or_set(const DBusException& error) {_error = error; };
-            inline void throw_or_set(const char *name, const char *message) {_error = DBusException(name, message); };
+            inline void throw_or_set(const DBusException& error) { _error = error; };
+            inline void throw_or_set(const char *name, const char *message) { _error = DBusException(name, message); };
+            inline void errorReset() { _error = DBusException; };
+	    #define DBUSTL_HAS_ERROR() (_error.isSet())
         #else
-            static inline void throw_or_set(const DBusException& error) {throw error; };
+            static inline void throw_or_set(const DBusException& error) { throw error; };
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
+            static inline void errorReset() {};
+            #define DBUSTL_HAS_ERROR() (0)
         #endif
             
             /////////////////////////////////
@@ -326,7 +334,7 @@ namespace dbustl {
             static void signalHandlerDelete(void *functor);
 
             //Helper methods for signals processing
-            bool setWatchSignal(const std::string& signalName, bool enable);
+            void setWatchSignal(const std::string& signalName, bool enable);
 
             Connection *_conn;
             std::string _path;
@@ -363,18 +371,18 @@ namespace dbustl {
 
 #ifdef DBUSTL_VARIADIC_TEMPLATES
     template<typename... Args>
-    bool ServerProxy::call(const std::string& methodName, const Args&... args)
+    void ServerProxy::call(const std::string& methodName, const Args&... args)
     {
         Message method_call(createMethodCall(methodName));
         
         if(!method_call.dbus()) {
             throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
-            return false;
+            return;
         }
         
-        _error = DBusException();
+	//If needed, reset error status
+        errorReset();
         processInArgs(method_call, args...);
-        return !_error.isSet();
     }
 #endif
 
@@ -402,7 +410,7 @@ namespace dbustl {
     {
         //All input arguments are consumed, process call now...
         processInArgs(msg);
-        if(!_error.isSet()) {
+        if(!DBUSTL_HAS_ERROR()) {
             processOutArgs(msg, outvalue, args...);
         }
     }
@@ -433,34 +441,34 @@ namespace dbustl {
 
 #ifdef DBUSTL_VARIADIC_TEMPLATES
     template<typename MethodCallback, typename... Args>
-    bool ServerProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
+    void ServerProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
     {
         Message method_call(createMethodCall(methodName));
         
         if(!method_call.dbus()) {
             throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
-            return false;
+            return;
         }
         
-        _error = DBusException();
+	//If needed, reset error status
+        errorReset();
         processAsyncInArgs(method_call, callback, args...);
-        return !_error.isSet();
     }
 #endif
     
 #ifdef DBUSTL_VARIADIC_TEMPLATES
     template<typename... Args>
-    bool ServerProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
+    void ServerProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
     {
-        return asyncCall(methodName, std::ptr_fun(callback), args...);
+        asyncCall(methodName, std::ptr_fun(callback), args...);
     }
 #endif
 
 #ifdef DBUSTL_VARIADIC_TEMPLATES
     template<typename _Class, typename... Args>
-    bool ServerProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
+    void ServerProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
     {
-        return asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
+        asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
     }
 #endif
 
@@ -548,29 +556,29 @@ namespace dbustl {
         dbus_pending_call_unref(pending);
     }
     
-    bool ServerProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
+    void ServerProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
     {
-        return setSignalHandler(signalName, std::ptr_fun(handler));
+        setSignalHandler(signalName, std::ptr_fun(handler));
     }
 
     template<typename _Class>
-    bool ServerProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object)
+    void ServerProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object)
     {
-        return setSignalHandler(signalName, std::bind1st(std::mem_fun(handler), c));
+        setSignalHandler(signalName, std::bind1st(std::mem_fun(handler), object));
     }
 
     template<typename SignalHandlerFunctor>
-    bool ServerProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
+    void ServerProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
     {
         if(!_signalsHandlers.count(signalName)) {
-            if(!setWatchSignal(signalName, true)) {
-                return false;
-            }
+            setWatchSignal(signalName, true);
         }
-        _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
+
+	if(!DBUSTL_HAS_ERROR()) {
+            _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
                                             signalHandlerCallback<SignalHandlerFunctor>,
                                             signalHandlerDelete<SignalHandlerFunctor>);
-        return true;
+        }
     }
 
     template<typename SignalHandlerFunctor>            
