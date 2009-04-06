@@ -31,7 +31,7 @@
 namespace dbustl {
 
 /**
- * This class is used by DBUSTL to report all of it internal errors.
+ * This class is used by DBusTL to report all of it internal errors.
  * 
  * This class is designed as a lightweight wrapper around the DBusError
  * C api structure
