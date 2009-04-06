@@ -1,5 +1,5 @@
 /** 
- *  DBUSTL - DBus Template Library
+ *  DBusTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
  *  
@@ -24,7 +24,7 @@
 #include "struct1.h"
 #include <dbustl-1/dbustl>
 
-DBUSTL_REGISTER_STRUCT_3(
+DBusTL_REGISTER_STRUCT_3(
     ExampleStruct, 
     field1, 
     field2, 

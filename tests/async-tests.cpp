@@ -1,5 +1,5 @@
 /*
- *  DBUSTL - DBus Template Library
+ *  DBusTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
  *  
@@ -150,7 +150,7 @@ int main()
     pythonServerProxy.setInterface("com.example.SampleInterface");
 
  
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBusTL_VARIADIC_TEMPLATES
     UserMethodCallback object;
     UserMethodCallbackNoReturn noreturnobject;
  
@@ -248,7 +248,7 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
-#endif /* DBUSTL_VARIADIC_TEMPLATES */
+#endif /* DBusTL_VARIADIC_TEMPLATES */
 
     try {
         std::cout << ">NOVT: 0 arg asynchronous call : Functor callback" << std::endl;

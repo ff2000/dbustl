@@ -1,5 +1,5 @@
 /*
- *  DBUSTL - DBus Template Library
+ *  DBusTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
  *  
@@ -37,7 +37,7 @@ bool operator==(const Struct1& f1, const Struct1& f2){
         (f1.field1 == f2.field1) &&
     true;
 };
-DBUSTL_REGISTER_STRUCT_1(Struct1, field1);
+DBusTL_REGISTER_STRUCT_1(Struct1, field1);
 
 struct Struct2 {
     std::vector<std::string> field1;
@@ -50,7 +50,7 @@ bool operator==(const Struct2& f1, const Struct2& f2){
         (f1.field2 == f2.field2) &&
     true;
 }
-DBUSTL_REGISTER_STRUCT_2(Struct2, field1, field2);
+DBusTL_REGISTER_STRUCT_2(Struct2, field1, field2);
 
 struct Struct3 {
     std::vector<std::string> field1;
@@ -65,7 +65,7 @@ bool operator==(const Struct3& f1, const Struct3& f2){
         (f1.field3 == f2.field3) &&
     true;
 }
-DBUSTL_REGISTER_STRUCT_3(Struct3, field1, field2, field3);
+DBusTL_REGISTER_STRUCT_3(Struct3, field1, field2, field3);
 
 struct Struct4 {
     std::vector<std::string> field1;
@@ -82,7 +82,7 @@ bool operator==(const Struct4& f1, const Struct4& f2){
         (f1.field4 == f2.field4) &&
     true;
 }
-DBUSTL_REGISTER_STRUCT_4(Struct4, field1, field2, field3, field4);
+DBusTL_REGISTER_STRUCT_4(Struct4, field1, field2, field3, field4);
 
 struct Struct5 {
     std::vector<std::string> field1;
@@ -101,7 +101,7 @@ bool operator==(const Struct5& f1, const Struct5& f2){
         (f1.field5 == f2.field5) &&
     true;
 }
-DBUSTL_REGISTER_STRUCT_5(Struct5, field1, field2, field3, field4, field5);
+DBusTL_REGISTER_STRUCT_5(Struct5, field1, field2, field3, field4, field5);
 
 struct Struct6 {
     std::vector<std::string> field1;
@@ -122,9 +122,9 @@ bool operator==(const Struct6& f1, const Struct6& f2){
         (f1.field6 == f2.field6) &&
     true;
 }
-DBUSTL_REGISTER_STRUCT_6(Struct6, field1, field2, field3, field4, field5, field6);
+DBusTL_REGISTER_STRUCT_6(Struct6, field1, field2, field3, field4, field5, field6);
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBusTL_VARIADIC_TEMPLATES
 int run_vt_tests()
 {
     dbustl::Connection *session = dbustl::Connection::sessionBus();
@@ -655,7 +655,7 @@ int run_vt_tests()
 {
     return 0;
 }
-#endif /* DBUSTL_VARIADIC_TEMPLATES */
+#endif /* DBusTL_VARIADIC_TEMPLATES */
 
 
 int main()

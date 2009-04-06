@@ -1,5 +1,5 @@
 /**
- *  DBUSTL - DBus Template Library
+ *  DBusTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
  *  
