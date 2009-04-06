@@ -341,7 +341,7 @@
  * to be usable. Registering requires providing a set of template specializations.
  * As the details can sometimes be tricky, they are hidden behind
  * a set of do-it-all-for-you macros called 
- * DBUDTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), 
+ * DBUSTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), 
  * where N is between 1 and 6.
  * 
  * All you have to do is call the macro once in a dedicated source file,
