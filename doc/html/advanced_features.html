@@ -17,8 +17,8 @@
 <div class="contents">
 <h1><a class="anchor" name="advanced_features">Advanced features </a></h1><h2><a class="anchor" name="datatypes">
 More complex datatypes</a></h2>
-DBUSTL does its best not to enforce the used of any data type onto the user of: this makes it easier for DBUSTL to fit with existing C++ toolkits that already have their own containers. This means DBUSTL does not define new objects for the ARRAY, STRUCT, DICT, and VARIANT DBus data types.<p>
-Currently DBUSTL comes with builting support for the following STL containers.<p>
+DBusTL does its best not to enforce the used of any data type onto the user of: this makes it easier for DBusTL to fit with existing C++ toolkits that already have their own containers. This means DBusTL does not define new objects for the ARRAY, STRUCT, DICT, and VARIANT DBus data types.<p>
+Currently DBusTL comes with builting support for the following STL containers.<p>
 <table border="1" cellspacing="3" cellpadding="3">
 <tr>
 <th>Container </th><th>Mapped dbus type </th><th>Can serialize ? </th><th>Can deserialize ?  </th></tr>
@@ -68,8 +68,8 @@ So let's see how simple this is:<p>
     <span class="keywordflow">return</span> 0;
 }
 </pre></div><p>
-Support for those containers is generated "on the fly" using templates. This means that if Cont is a supported DBUSTL container and T is a supported DBUSTL type, then Cont&lt;T&gt; becomes a DBUSTL supported type. This means that when recursivity comes into play Cont&lt;Cont&lt;T&gt; &gt; becomes a supported type too. Even more than that, you can mix supported containers of different kind, such as std::map&lt;std::string, std::list&lt;double&gt; &gt; for instance, which works perfectly fine. All is computed behind the scene for you.<p>
-As you probably already have understood, DBUSTL is designed to be extended to support data types other than STL ones. You can even extended to support your own custom program internal data structures as explained in the <a class="el" href="extending.html">Extending DBUSTL to support custom data types</a> page.<h2><a class="anchor" name="async">
+Support for those containers is generated "on the fly" using templates. This means that if Cont is a supported DBusTL container and T is a supported DBusTL type, then Cont&lt;T&gt; becomes a DBusTL supported type. This means that when recursivity comes into play Cont&lt;Cont&lt;T&gt; &gt; becomes a supported type too. Even more than that, you can mix supported containers of different kind, such as std::map&lt;std::string, std::list&lt;double&gt; &gt; for instance, which works perfectly fine. All is computed behind the scene for you.<p>
+As you probably already have understood, DBusTL is designed to be extended to support data types other than STL ones. You can even extended to support your own custom program internal data structures as explained in the <a class="el" href="extending.html">Extending DBusTL to support custom data types</a> page.<h2><a class="anchor" name="async">
 Asynchronous method calls</a></h2>
 To be written. <h2><a class="anchor" name="signals">
 Working with signals.</a></h2>
