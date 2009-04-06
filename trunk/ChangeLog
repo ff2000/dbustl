@@ -1,4 +1,5 @@
-v0.3.0: Feature relase
+v0.3.0: Feature release
+ * Made ServerProxy methods signature independant of the use of C++ exceptions
  * Dropped dependancy on dbus-glib
 
 v0.2.0: Feature release
