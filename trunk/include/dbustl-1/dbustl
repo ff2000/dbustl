@@ -55,13 +55,12 @@
  *   - DBus development libraries (>= 1.2): older versions may work
  * but haven't been tested
  *   - glib: tested on 2.16, olders versions might work too
- *   - dbus-glib: tested on 0.76, olders versions might work too
  *   - python-dbus: tested with 0.82.4
  * 
  * It is still possible to use DBusTL with an older compiler: refer to
  * @ref compat_syntax for more information.
  * 
- * glib and dbus-glib are only required if you intend to receive DBUS signals
+ * glib is only required if you intend to receive DBUS signals
  * from remote objects.
  * 
  * python-dbus is only required if you intend to run the examples provided with
