@@ -24,7 +24,7 @@
 #include "struct1.h"
 #include <dbustl-1/dbustl>
 
-DBusTL_REGISTER_STRUCT_3(
+DBUSTL_REGISTER_STRUCT_3(
     ExampleStruct, 
     field1, 
     field2, 
