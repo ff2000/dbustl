@@ -1,5 +1,5 @@
 /*
- *  DBUSTL - DBus Template Library
+ *  DBusTL - DBus Template Library
  *
  *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
  *  
@@ -24,14 +24,14 @@
 /** 
  * @mainpage
  *
- * DBUSTL is an easy do to use, extensible C++ wrapper for DBus that 
+ * DBusTL is an easy do to use, extensible C++ wrapper for DBus that 
  * makes the use of DBus with plain C++ easy.<br></br>
  * 
- * Though already quite usefull, DBUSTL is still in its infancy, and
+ * Though already quite usefull, DBusTL is still in its infancy, and
  * therefore interface might change at any time before 1.0 release.
  * 
  * <strong>Important note:</strong> To be used with the most elegant
- * syntax, DBUSTL requires a cutting edge C++ feature, that is currently
+ * syntax, DBusTL requires a cutting edge C++ feature, that is currently
  * only available with gcc 4.3 and upper. Use of older versions of gcc
  * is possible, but will make the syntax a little more convoluted.
  * 
@@ -45,12 +45,12 @@
 /** 
  * @page intro The 5 minutes introduction
  * 
- * This pages gets you up and running with a DBUSTL installation
+ * This pages gets you up and running with a DBusTL installation
  * and shows you how to build a simple program.
  * 
  * @section requirements Build requirements
  * 
- * To build DBUSTL the following dependancies are requires:
+ * To build DBusTL the following dependancies are requires:
  *   - gcc: >= 4.3
  *   - DBus development libraries (>= 1.2): older versions may work
  * but haven't been tested
@@ -58,7 +58,7 @@
  *   - dbus-glib: tested on 0.76, olders versions might work too
  *   - python-dbus: tested with 0.82.4
  * 
- * It is still possible to use DBUSTL with an older compiler: refer to
+ * It is still possible to use DBusTL with an older compiler: refer to
  * @ref compat_syntax for more information.
  * 
  * glib and dbus-glib are only required if you intend to receive DBUS signals
@@ -80,7 +80,7 @@
  * #exit
  * @endcode
  * 
- * Now DBUSTL should be installed in /usr/local
+ * Now DBusTL should be installed in /usr/local
  * 
  * @section hello_world Hello world, revisited
  * 
@@ -100,7 +100,7 @@
  * remoteObject.call("SimpleHello", "Hello world", &reply); 
  * @endcode
  * 
- * This single line tells DBUSTL to:
+ * This single line tells DBusTL to:
  *   -# Create a method call message for "SimpleHello" method
  *   -# Converts the "Hello World" to a DBUS string
  *   -# Send the message on the connection and receive the reply
@@ -114,12 +114,12 @@
  * <strong>Note:</strong> the curious reader will have noticed the apparition of a somewhat
  * unusual compiler option. The -std=c++0x option tells gcc to turn on the support for the
  * still to be finalized C++ standard called C++0x, that is required for optimal
- * DBUSTL operation.
+ * DBusTL operation.
  * 
  * To run the test, launch the test-service.py that is found in the tests/ directory:
  * @code
  * $./test-service.py
- * DBUSTL test service is running.
+ * DBusTL test service is running.
  * @endcode
  * Then we can start our simplest hello world in a new console:
  * @code
@@ -140,7 +140,7 @@
  *
  * @subsection parameters Parameters passing
  * 
- * By now you may be wondering: how the hell does DBUSTL make the difference
+ * By now you may be wondering: how the hell does DBusTL make the difference
  * between input and output parameters ?
  * The answer is quite simple: input parameters start after the first one, which
  * is always the DBus method name, until a pointer is found. Attempts to mix
@@ -160,9 +160,9 @@
  * 
  * @subsection interface_choosing Choosing the right interface
  * The DBus specification allows to target messages calls to a specific object's interface. Specifying
- * the interface is optionnal from the DBus protocol perspective, so it is for DBUSTL.
+ * the interface is optionnal from the DBus protocol perspective, so it is for DBusTL.
  * 
- * Here is how we can do that with DBUSTL:
+ * Here is how we can do that with DBusTL:
  * @subsubsection interface_setinterface ServerProxy::setInterface() method.
  * This is the easiest way to target a given interface.
  * Calling this method sets the interface to use for all the subsequent method calls
@@ -183,13 +183,13 @@
  * 
  * @section datatypes More complex datatypes
  * 
- * DBUSTL does its best not to enforce the used of any data type
- * onto the user of: this makes it easier for DBUSTL to fit with existing
+ * DBusTL does its best not to enforce the used of any data type
+ * onto the user of: this makes it easier for DBusTL to fit with existing
  * C++ toolkits that already have their own containers. This means
- * DBUSTL does not define new objects for the ARRAY, STRUCT, DICT, 
+ * DBusTL does not define new objects for the ARRAY, STRUCT, DICT, 
  * and VARIANT DBus data types.
  * 
- * Currently DBUSTL comes with builting support for the following 
+ * Currently DBusTL comes with builting support for the following 
  * STL containers.
  * 
  *  <table>
@@ -245,15 +245,15 @@
  * @include containers.cpp
  * 
  * Support for those containers is generated "on the fly" using templates.
- * This means that if Cont is a supported DBUSTL container and T is a supported
- * DBUSTL type, then Cont<T> becomes a DBUSTL supported type.
+ * This means that if Cont is a supported DBusTL container and T is a supported
+ * DBusTL type, then Cont<T> becomes a DBusTL supported type.
  * This means that when recursivity comes into play Cont<Cont<T> > becomes
  * a supported type too.
  * Even more than that, you can mix supported containers of different kind, 
  * such as std::map<std::string, std::list<double> > for instance, which
  * works perfectly fine. All is computed behind the scene for you.
  * 
- * As you probably already have understood, DBUSTL is designed to be 
+ * As you probably already have understood, DBusTL is designed to be 
  * extended to support data types other than STL ones. You can even
  * extended to support your own custom program internal data structures
  * as explained in the @ref extending page.
@@ -267,7 +267,7 @@
 /** 
  * @page compat_syntax Compatibility syntax
  * 
- * Compatibility syntax is there to allow you to use DBUSTL even
+ * Compatibility syntax is there to allow you to use DBusTL even
  * if you don't have a C++ compiler that support variadic templates.
  * 
  * The main inconvenient of this alternative approach is that it makes
@@ -292,7 +292,7 @@
  * for the user of those services, such as configuration applets and other 
  * GUI oriented applications. 
  *
- * DBUSTL grew from the frustration that there was no easy way to use DBus with C++, apart from
+ * DBusTL grew from the frustration that there was no easy way to use DBus with C++, apart from
  * what ships with the famous Qt toolkit. There were some attempts such as dbus-cpp or dbus-c++, 
  * dbusmm, or cbus, but none were "feeling right" to me. 
  * 
@@ -309,17 +309,17 @@
  *     a heavyweight porting layer - just keep it simple.
  *   - Be feature complete enough not to go in your way when you just need to have your job done.
  *
- * DBUSTL is an attempt at fullfilling all those properties. 
+ * DBusTL is an attempt at fullfilling all those properties. 
  * 
- * DBUSTL borrows some design ideas from Sergei Kuchin's OTL (http://otl.sourceforge.net), 
+ * DBusTL borrows some design ideas from Sergei Kuchin's OTL (http://otl.sourceforge.net), 
  * and i would not have had the courage to start this without this new C++ facility called Variadic templates 
  * (http://en.wikipedia.org/wiki/C%2B%2B0x#Variadic_templates).
  */
 
 /** 
- * @page extending Extending DBUSTL to support custom data types
+ * @page extending Extending DBusTL to support custom data types
  * 
- * DBUSTL can be extended to support program-specific data types in two
+ * DBusTL can be extended to support program-specific data types in two
  * different way.
  * 
  * First way(and easy way) is by allowing user to map
@@ -335,13 +335,13 @@
  * 
  * The C++ language does not allow for compile time discovery of 
  * a given structure's fields. What this means is that there is currently no
- * way DBUSTL can dynamically learn how to handle user defined structs.
+ * way DBusTL can dynamically learn how to handle user defined structs.
  * 
- * The consequence is that user defined structs must be registered to DBUSTL
+ * The consequence is that user defined structs must be registered to DBusTL
  * to be usable. Registering requires providing a set of template specializations.
  * As the details can sometimes be tricky, they are hidden behind
  * a set of do-it-all-for-you macros called 
- * DBUSTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), 
+ * DBusTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), 
  * where N is between 1 and 6.
  * 
  * All you have to do is call the macro once in a dedicated source file,
@@ -350,7 +350,7 @@
  * @subsection cumstom_structs_example An example
  * 
  * On our example, we register a Struct called ExampleStruct, and then
- * use it with DBUSTL.
+ * use it with DBusTL.
  * 
  * struct1.h containts the structure definition:
  * @include struct1.h
@@ -366,9 +366,9 @@
  * 
  * @section custom_containers Any other data type
  * 
- * DBUSTL can be extended to support any data type, as well as any container type.
+ * DBusTL can be extended to support any data type, as well as any container type.
  * 
- * The extension mechanism is similar to what is used natively by DBUSTL to support
+ * The extension mechanism is similar to what is used natively by DBusTL to support
  * the standard STL containers. It relies on template specializations.
  * The following class templates need to be specialized so as to support a new type:
  * @code
