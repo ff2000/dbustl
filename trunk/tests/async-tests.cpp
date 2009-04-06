@@ -150,7 +150,7 @@ int main()
     pythonServerProxy.setInterface("com.example.SampleInterface");
 
  
-#ifdef DBusTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_VARIADIC_TEMPLATES
     UserMethodCallback object;
     UserMethodCallbackNoReturn noreturnobject;
  
@@ -248,7 +248,7 @@ int main()
         std::cerr << e.what() << std::endl;
         return 1;
     }
-#endif /* DBusTL_VARIADIC_TEMPLATES */
+#endif /* DBUSTL_VARIADIC_TEMPLATES */
 
     try {
         std::cout << ">NOVT: 0 arg asynchronous call : Functor callback" << std::endl;
