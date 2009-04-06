@@ -29,7 +29,7 @@ namespace dbustl {
     class Connection;
 
     /**
-     * Abstract base class for integration of dbustl into native toolkits such as Glib or Qt.
+     * Abstract base class for integration of DBusTL into native toolkits such as Glib or Qt.
      * 
      * Refer to Connection class documentation to see how this class is to be used in
      * conjunction with DBUS connections.

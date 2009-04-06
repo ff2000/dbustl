@@ -33,7 +33,7 @@ namespace dbustl {
     class Connection;
 
     /**
-     * Class used for integration of dbustl with Glib toolkit.
+     * Class used for integration of DBusTL with Glib toolkit.
      * 
      * Refer to Connection class documentation to see how this class is to be used in
      * conjunction with DBUS connections.
