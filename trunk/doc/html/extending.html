@@ -22,7 +22,7 @@ Structs</a></h2>
 <h3><a class="anchor" name="cumstom_structs_theory">
 How it works</a></h3>
 The C++ language does not allow for compile time discovery of a given structure's fields. What this means is that there is currently no way DBusTL can dynamically learn how to handle user defined structs.<p>
-The consequence is that user defined structs must be registered to DBusTL to be usable. Registering requires providing a set of template specializations. As the details can sometimes be tricky, they are hidden behind a set of do-it-all-for-you macros called DBUDTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), where N is between 1 and 6.<p>
+The consequence is that user defined structs must be registered to DBusTL to be usable. Registering requires providing a set of template specializations. As the details can sometimes be tricky, they are hidden behind a set of do-it-all-for-you macros called DBUSTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), where N is between 1 and 6.<p>
 All you have to do is call the macro once in a dedicated source file, and add this source file to your project.<h3><a class="anchor" name="cumstom_structs_example">
 An example</a></h3>
 On our example, we register a Struct called ExampleStruct, and then use it with DBusTL.<p>
