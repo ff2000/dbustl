@@ -44,12 +44,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#df5a271c2cd99518f4977f8591cf8b8c">setInterface</a> (const std::string &amp;interface)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the interface to use for all the calls on the remote object.  <a href="#df5a271c2cd99518f4977f8591cf8b8c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#000cbff205ee549e3bff11e2af47c1d8">error</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">In case exceptions are not enabled, returns the last error that happened.  <a href="#000cbff205ee549e3bff11e2af47c1d8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#d18683923715e05cc602f30bd156888e">hasError</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">In case exceptions are not enabled, says if we are in an error status.  <a href="#d18683923715e05cc602f30bd156888e"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Synchronous calls handling</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df">call</a> (const std::string &amp;methodName, const Args &amp;...args)</td></tr>
@@ -211,48 +205,6 @@ If empty (the default), the default interface is used. <dl compact><dt><b>Parame
     <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>dbus interface name </td></tr>
   </table>
 </dl>
-
-</div>
-</div><p>
-<a class="anchor" name="000cbff205ee549e3bff11e2af47c1d8"></a><!-- doxytag: member="dbustl::ServerProxy::error" ref="000cbff205ee549e3bff11e2af47c1d8" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a>&amp; dbustl::ServerProxy::error           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-In case exceptions are not enabled, returns the last error that happened. 
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="d18683923715e05cc602f30bd156888e"></a><!-- doxytag: member="dbustl::ServerProxy::hasError" ref="d18683923715e05cc602f30bd156888e" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool dbustl::ServerProxy::hasError           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-In case exceptions are not enabled, says if we are in an error status. 
-<p>
 
 </div>
 </div><p>

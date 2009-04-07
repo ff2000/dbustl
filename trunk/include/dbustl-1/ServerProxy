@@ -86,11 +86,11 @@ namespace dbustl {
              */
             void setInterface(const std::string& interface) { _interface = interface; };
 
-        #ifndef DBUSTL_NO_EXCEPTIONS
+        #ifdef DBUSTL_NO_EXCEPTIONS
             /**
              * In case exceptions are not enabled, returns the last error that happened.
              */
-            const DBusException& error();
+            const DBusException& error() { return _error; };
             /**
              * In case exceptions are not enabled, says if we are in an error status.
              */
@@ -242,7 +242,7 @@ namespace dbustl {
         #ifdef DBUSTL_NO_EXCEPTIONS
             inline void throw_or_set(const DBusException& error) { _error = error; };
             inline void throw_or_set(const char *name, const char *message) { _error = DBusException(name, message); };
-            inline void errorReset() { _error = DBusException; };
+            inline void errorReset() { _error = DBusException(); };
 	    #define DBUSTL_HAS_ERROR() (_error.isSet())
         #else
             static inline void throw_or_set(const DBusException& error) { throw error; };
