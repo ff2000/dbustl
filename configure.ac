@@ -38,5 +38,7 @@ AC_CONFIG_FILES([Makefile
                  examples/Makefile
                  dbustl-1.pc
                  dbustl-glib-1.pc
+                 dbustl-noex-1.pc
+                 dbustl-noex-glib-1.pc
                  Doxyfile])
 AC_OUTPUT

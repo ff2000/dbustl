@@ -26,7 +26,14 @@
 #include <iostream>
 #include <string>
 #include <cassert>
-#include <glib.h>
+
+#ifdef DBUSTL_NO_EXCEPTIONS
+    #define TRY
+    #define CATCH(ex, handler) if(pythonServerProxy.hasError()) { ex = pythonServerProxy.error(); handler }
+#else
+    #define TRY try
+    #define CATCH(ex, handler) catch(ex) {handler}
+#endif
 
 GMainLoop *mainloop;
 
@@ -154,67 +161,67 @@ int main()
     UserMethodCallback object;
     UserMethodCallbackNoReturn noreturnobject;
  
-    try {
+    TRY {
         std::cout << ">0 arg asynchronous call : Functor callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleProc", UserFunctorCallbackNoReturn());
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
     
-    try {
+    TRY {
         std::cout << ">0 arg asynchronous call : Method callback on non const object" << std::endl;
         pythonServerProxy.asyncCall("SimpleProc", &UserMethodCallbackNoReturn::method, &noreturnobject);
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">0 arg asynchronous call : function callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleProc", &userFunctionCallbackNoReturn); 
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">1 arg asynchronous call : Functor callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleHello", UserFunctorCallback(), "Hi");
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
     
-    try {
+    TRY {
         std::cout << ">1 arg asynchronous call : Method callback on non const object" << std::endl;
         pythonServerProxy.asyncCall("SimpleHello", &UserMethodCallback::method, &object, "Hi");
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">1 arg asynchronous call : function callback" << std::endl;
         pythonServerProxy.asyncCall("SimpleHello", &userFunctionCallback, "Hi"); 
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">Interface modifier" << std::endl;
         pythonServerProxy.setInterface("BOGUS.INTERFACE");
         pythonServerProxy.asyncCall("SimpleHello", &userFunctionCallback,
@@ -222,57 +229,57 @@ int main()
         pythonServerProxy.setInterface("com.example.SampleInterface");
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">Wrong method test" << std::endl;
         pythonServerProxy.asyncCall("InexistingMethod", &inexistingMethodCallback, 0, 1.0); 
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">Timeout test" << std::endl;
         pythonServerProxy.setTimeout(500);
         pythonServerProxy.asyncCall("test_sleep_2s", &sleepMethodCallback); 
         pythonServerProxy.setTimeout(-1);
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 #endif /* DBUSTL_VARIADIC_TEMPLATES */
 
-    try {
+    TRY {
         std::cout << ">NOVT: 0 arg asynchronous call : Functor callback" << std::endl;
         dbustl::Message callMsg = pythonServerProxy.createMethodCall("SimpleProc");
         pythonServerProxy.asyncCall(callMsg, UserFunctorCallbackNoReturn());
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
     
-    try {
+    TRY {
         std::cout << ">NOVT: 0 arg asynchronous call : function callback" << std::endl;
         dbustl::Message callMsg = pythonServerProxy.createMethodCall("SimpleProc");
         pythonServerProxy.asyncCall(callMsg, &userFunctionCallbackNoReturn); 
         expected_cbs++; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
-    try {
+    TRY {
         std::cout << ">Signal tests" << std::endl;
         pythonServerProxy.setSignalHandler("exampleSignal", &exampleSignalCallback); 
         pythonServerProxy.setSignalHandler("exampleSignal2", &ExampleSignal2MethodCallback::method, &object2); 
@@ -283,20 +290,20 @@ int main()
         //We expect 4 signals to be received
         expected_cbs += 4; 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
     //This last call is just to make sure that the mainloop finishes at some time
-    try {
+    TRY {
         dbustl::Message callMsg = pythonServerProxy.createMethodCall("SimpleProc");
         pythonServerProxy.asyncCall(callMsg, &stopMethodCallback); 
     }
-    catch(const std::exception& e) {
+    CATCH(const std::exception& e,
         std::cerr << e.what() << std::endl;
         return 1;
-    }
+    )
 
     g_main_loop_run(mainloop);
     g_main_loop_unref(mainloop);
