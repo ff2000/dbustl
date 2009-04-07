@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: dbustl
-Description: Dbus template library, a helper C++ library for the Free desktop message bus
+Description: DBus Template Library, a helper C++ library for the Free desktop message bus
 Version: @VERSION@
 Requires: dbus-1 >= 1.2
 Libs: -L${libdir} -ldbustl-1

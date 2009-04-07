@@ -3,8 +3,8 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: dbustl glib binding
-Description: Dbus template library, a helper C++ library for the Free desktop message bus
+Name: DBusTL glib binding
+Description: DBus Template Library, a helper C++ library for the Free desktop message bus
 Version: @VERSION@
 Requires: dbus-1 >= 1.2, glib-2.0
 Libs: -L${libdir} -ldbustl-glib-1 -ldbustl-1
