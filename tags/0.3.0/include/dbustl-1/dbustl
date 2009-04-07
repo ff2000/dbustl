@@ -1,0 +1,425 @@
+/*
+ *  DBusTL - DBus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/** 
+ * @mainpage
+ *
+ * DBusTL is an easy do to use, extensible C++ wrapper for DBus that 
+ * makes the use of DBus with plain C++ easy.<br></br>
+ * 
+ * Though already quite usefull, DBusTL is still in its infancy, and
+ * therefore interface might change at any time before 1.0 release.
+ * 
+ * <strong>Important note:</strong> To be used with the most elegant
+ * syntax, DBusTL requires a cutting edge C++ feature, that is currently
+ * only available with gcc 4.3 and upper. Use of older versions of gcc
+ * is possible, but will make the syntax a little more convoluted.
+ * 
+ *  - @ref intro
+ *  - @ref advanced_features
+ *  - @ref compat_syntax
+ *  - @ref design
+ *  - @ref extending
+ */
+
+/** 
+ * @page intro The 5 minutes introduction
+ * 
+ * This pages gets you up and running with a DBusTL installation
+ * and shows you how to build a simple program.
+ * 
+ * @section requirements Build requirements
+ * 
+ * To build DBusTL the following dependancies are requires:
+ *   - gcc: >= 4.3
+ *   - DBus development libraries (>= 1.2): older versions may work
+ * but haven't been tested
+ *   - glib: tested on 2.16, olders versions might work too
+ *   - python-dbus: tested with 0.82.4
+ * 
+ * It is still possible to use DBusTL with an older compiler: refer to
+ * @ref compat_syntax for more information.
+ * 
+ * glib is only required if you intend to receive DBUS signals
+ * from remote objects.
+ * 
+ * python-dbus is only required if you intend to run the examples provided with
+ * this introduction.
+ * 
+ * @section build Building
+ * 
+ * That is as simple as running
+ * @code
+ * $tar -zxvf dbustl-x.y.tar.bz2
+ * $cd dbustl-x.y
+ * $./configure
+ * $make
+ * $su
+ * #make install
+ * #exit
+ * @endcode
+ * 
+ * Now DBusTL should be installed in /usr/local
+ * 
+ * @section hello_world Hello world, revisited
+ * 
+ * I couldn't resist the temptation to introduce you with a so-called
+ * 'Hello, World' dbus example.
+ * 
+ * So let's try to compile the simplest.cpp program:
+ * @include simplest.cpp
+ * 
+ * This program is the simplest program that can be imagined.
+ * First is the creation of a proxy, that will (as its name sugggests)
+ * proxy the calls on the underlying exposed DBUS object.
+ * Here we create a proxy on the /PythonServerObject exposed by the
+ * com.example.SampleService on the session bus.
+ * But the most important line of the program is the call to:
+ * @code
+ * remoteObject.call("SimpleHello", "Hello world", &reply); 
+ * @endcode
+ * 
+ * This single line tells DBusTL to:
+ *   -# Create a method call message for "SimpleHello" method
+ *   -# Converts the "Hello World" to a DBUS string
+ *   -# Send the message on the connection and receive the reply
+ *   -# Convert the DBUS string in the reply back to a std::string object.
+ * 
+ * But enough talking, let's try it out: here is the line required to build it by hand with gcc.
+ * @code
+ * $g++ -std=c++0x -Wall simplest.cpp `pkg-config --cflags --libs dbustl-1` -o simplest
+ * @endcode
+ * 
+ * <strong>Note:</strong> the curious reader will have noticed the apparition of a somewhat
+ * unusual compiler option. The -std=c++0x option tells gcc to turn on the support for the
+ * still to be finalized C++ standard called C++0x, that is required for optimal
+ * DBusTL operation.
+ * 
+ * To run the test, launch the test-service.py that is found in the tests/ directory:
+ * @code
+ * $./test-service.py
+ * DBusTL test service is running.
+ * @endcode
+ * Then we can start our simplest hello world in a new console:
+ * @code
+ * $./simplest
+ * Hello world
+ * $
+ * @endcode
+ *
+ * If something bad happens (such as if you forgot to launch test-service.py), then an exception
+ * is thrown:
+ * @code
+ * $./simplest 
+ * org.freedesktop.DBus.Error.ServiceUnknown: The name com.example.SampleService was not provided by any .service files
+ * $
+ * @endcode
+ * 
+ * @section explanations Some explanations
+ *
+ * @subsection parameters Parameters passing
+ * 
+ * By now you may be wondering: how the hell does DBusTL make the difference
+ * between input and output parameters ?
+ * The answer is quite simple: input parameters start after the first one, which
+ * is always the DBus method name, until a pointer is found. Attempts to mix
+ * pointers with non pointers will result in failure at compile time.
+ * This means all the method calls having a similar looks and feel:
+ * @code 
+ * proxy.call("MyMethod", inparam1, inparam2, ..., inparamN, &outparam1, &outparam2, ..., &outparamY)
+ * @endcode
+ * 
+ * @note There is no hard limit on the number of input/output parameters
+ * that can be passed.
+ * @note As an exception to the rule above, special support is provided for C strings, which means
+ * that the following code will work too:
+ * @code 
+ * proxy.call("MyMethod", inparam1,... , "a C string as input parameter",..., inparam2, ..., inparamN, &outparam1, ...)
+ * @endcode
+ * 
+ * @subsection interface_choosing Choosing the right interface
+ * The DBus specification allows to target messages calls to a specific object's interface. Specifying
+ * the interface is optionnal from the DBus protocol perspective, so it is for DBusTL.
+ * 
+ * Here is how we can do that with DBusTL:
+ * @subsubsection interface_setinterface ServerProxy::setInterface() method.
+ * This is the easiest way to target a given interface.
+ * Calling this method sets the interface to use for all the subsequent method calls
+ * of the given proxy object.
+ * 
+ * @subsubsection interface_modifiers Interface modifiers
+ * A ServerProxy::Interface "special class" is provided with ServerProxy. Here is how to use it:
+ * @code
+ * proxy.call("SimpleHello", ServerProxy::Interface("com.example.SampleInterface"), "Hi", &reply); 
+ * @endcode
+ * This has for effect to place the call on a given interface. This does not change the interface
+ * that will be use for subsequent calls.
+ * 
+ */
+
+/** 
+ * @page advanced_features Advanced features
+ * 
+ * @section datatypes More complex datatypes
+ * 
+ * DBusTL does its best not to enforce the used of any data type
+ * onto the user of: this makes it easier for DBusTL to fit with existing
+ * C++ toolkits that already have their own containers. This means
+ * DBusTL does not define new objects for the ARRAY, STRUCT, DICT, 
+ * and VARIANT DBus data types.
+ * 
+ * Currently DBusTL comes with builting support for the following 
+ * STL containers.
+ * 
+ *  <table>
+ *  <tr>
+ *     <th>Container</th>
+ *     <th>Mapped dbus type</th>
+ *     <th>Can serialize ?</th>
+ *     <th>Can deserialize ?</th>
+ *  </tr>
+ *  <tr>
+ *     <td>std::vector</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::list</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::set</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::multiset</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::map</td>
+ *     <td>DICT</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  <tr>
+ *     <td>std::multimap</td>
+ *     <td>DICT</td>
+ *     <td>no</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  </table> 
+ *  
+ * @note std::set: Duplicate array elements are merged during deserialization
+ * @note std::multimap: Serialization is not supported as there is no
+ * DBUS container able to store the content of a multimap.
+ *
+ * So let's see how simple this is:
+ * 
+ * @include containers.cpp
+ * 
+ * Support for those containers is generated "on the fly" using templates.
+ * This means that if Cont is a supported DBusTL container and T is a supported
+ * DBusTL type, then Cont<T> becomes a DBusTL supported type.
+ * This means that when recursivity comes into play Cont<Cont<T> > becomes
+ * a supported type too.
+ * Even more than that, you can mix supported containers of different kind, 
+ * such as std::map<std::string, std::list<double> > for instance, which
+ * works perfectly fine. All is computed behind the scene for you.
+ * 
+ * As you probably already have understood, DBusTL is designed to be 
+ * extended to support data types other than STL ones. You can even
+ * extended to support your own custom program internal data structures
+ * as explained in the @ref extending page.
+ * 
+ * @section async Asynchronous method calls
+ * To be written.
+ * @section signals Working with signals.
+ * To be written.
+ * @section exceptions C++ exceptions support
+ * 
+ * It is possible to use DBusTL with or without C++ exceptions: the main advantage
+ * is that without exceptions support, code generated by DBusTL template instanciation
+ * is typically 30-40% smaller, which can be nice for embedded systems.
+ * 
+ * DBusTL ships with two version of each library. For instance there is a
+ * library called dbustl, and a one called dbustl-noex.
+ * dbustl-noex stands for "no exceptions". This version of the library is
+ * built with C++ exceptions support disabled (-fno-exceptions gcc option).
+ * You should use this version if you don't use exceptions in your main program.
+ * 
+ * To used dbustl without exceptions, and benefit from a smaller generated code size, you should:
+ *   -# Use version xxxxx-noex instead of xxxxx of DBusTL libraries.
+ *   -# Add DBUSTL_NO_EXCEPTIONS compilation flag to your program
+ *   -# Add -fno-exceptions option on gcc command line.
+ *
+ * If your program used pkg-config, the the last two steps are not needed as all is handled for you behind the scene.
+ * 
+ */
+
+/** 
+ * @page compat_syntax Compatibility syntax
+ * 
+ * Compatibility syntax is there to allow you to use DBusTL even
+ * if you don't have a C++ compiler that support variadic templates.
+ * 
+ * The main inconvenient of this alternative approach is that it makes
+ * the code a bit more verbose, and far less 'magical':
+ * 
+ * @include compat.cpp
+ * 
+ * As you can see this is a bit more complicated that the equivalent
+ * code for our @ref hello_world "variadic templates enabled hello world" example.
+ * The main issue is the serialization and deserialization of the parameters
+ * that are handled should behind the scene, but that have to be exposed
+ * here.
+ * 
+ */
+
+/** 
+ * @page design Design paradigms
+ * 
+ * DBus is a great tool for next generation Linux desktops or mobile devices,
+ * where it provides a robust mechanism for decoupling of applicative services
+ * (e.g. power management, networking, bluetooth, and so many other possible things) 
+ * for the user of those services, such as configuration applets and other 
+ * GUI oriented applications. 
+ *
+ * DBusTL grew from the frustration that there was no easy way to use DBus with C++, apart from
+ * what ships with the famous Qt toolkit. There were some attempts such as dbus-cpp or dbus-c++, 
+ * dbusmm, or cbus, but none were "feeling right" to me. 
+ * 
+ * From my point of view the ideal toolkit has the following properties:
+ *   - Be lightweight: don't pretend libdbus does not exist by creating one class per existing
+ *     DBus concept, but just use libdbus' C functions when they can do the job.
+ *   - Even if the internals are coded in C, provide a high-level, C++-ish interface to the end user.
+ *   - Don't provide new data types for DBus types mapping: the user probably already has his own data types (STL or others),
+ *     so just use them.
+ *   - Provide integration with popular toolkits such as Glib, Qt
+ *   - Use "modern" C++ techniques to make the user or developer's life easier when it makes sense.
+ *   - Apart from asynchronous callbacks and signals, does not depend on an any external toolkit
+ *   - When you need such an external toolkit for mainloop support, don't go in your way by implementing
+ *     a heavyweight porting layer - just keep it simple.
+ *   - Be feature complete enough not to go in your way when you just need to have your job done.
+ *
+ * DBusTL is an attempt at fullfilling all those properties. 
+ * 
+ * DBusTL borrows some design ideas from Sergei Kuchin's OTL (http://otl.sourceforge.net), 
+ * and i would not have had the courage to start this without this new C++ facility called Variadic templates 
+ * (http://en.wikipedia.org/wiki/C%2B%2B0x#Variadic_templates).
+ */
+
+/** 
+ * @page extending Extending DBusTL to support custom data types
+ * 
+ * DBusTL can be extended to support program-specific data types in two
+ * different way.
+ * 
+ * First way(and easy way) is by allowing user to map
+ * their own data structures into DBus structs.
+ * 
+ * The second way(and more complex way) allows to map any user defined
+ * data type onto any DBUS message. This is allows for complete customization,
+ * with no limitation.
+ * 
+ * @section custom_struct Structs
+ * 
+ * @subsection cumstom_structs_theory How it works
+ * 
+ * The C++ language does not allow for compile time discovery of 
+ * a given structure's fields. What this means is that there is currently no
+ * way DBusTL can dynamically learn how to handle user defined structs.
+ * 
+ * The consequence is that user defined structs must be registered to DBusTL
+ * to be usable. Registering requires providing a set of template specializations.
+ * As the details can sometimes be tricky, they are hidden behind
+ * a set of do-it-all-for-you macros called 
+ * DBUSTL_REGISTER_STRUCT_N(structname, field1, field2, ...., fieldN), 
+ * where N is between 1 and 6.
+ * 
+ * All you have to do is call the macro once in a dedicated source file,
+ * and add this source file to your project.
+ * 
+ * @subsection cumstom_structs_example An example
+ * 
+ * On our example, we register a Struct called ExampleStruct, and then
+ * use it with DBusTL.
+ * 
+ * struct1.h containts the structure definition:
+ * @include struct1.h
+ * struct1.cpp containts the structure registration:
+ * @include struct1.cpp
+ * struct2.cpp containts the calling sequence:
+ * @include struct2.cpp
+ * 
+ * @note 1: Apart from registration step, the use of structure is completely
+ * transparent.
+ * @note 2: C++ classes can be serialized or deserialized the same way as C structs.
+ * The only limitation is that the members must be public.
+ * 
+ * @section custom_containers Any other data type
+ * 
+ * DBusTL can be extended to support any data type, as well as any container type.
+ * 
+ * The extension mechanism is similar to what is used natively by DBusTL to support
+ * the standard STL containers. It relies on template specializations.
+ * The following class templates need to be specialized so as to support a new type:
+ * @code
+    template<typename T>
+    struct Serializer {
+        static dbus_bool_t run(DBusMessageIter* it, const T& arg);
+    };
+    
+    template<typename T>
+    struct Deserializer {
+        static dbus_bool_t run(DBusMessageIter* it, T* arg);
+    };
+ * @endcode
+ * In addition, if you intend to be able to put your type as the value of a DBus Dict, 
+ * you will need to specialize this one:
+ * @code
+    template <typename T>
+    struct Signature {
+        static const char* value();
+    };
+ * @endcode
+ * 
+ * For more details on how to do it, having a look in the include/dbustl-1/types directory
+ * will help you to understand how it is done for STL containers.
+ * 
+ */
+
+#include <dbustl-1/Message>
+#include <dbustl-1/Connection>
+#include <dbustl-1/ServerProxy>
+#include <dbustl-1/types/vector>
+#include <dbustl-1/types/list>
+#include <dbustl-1/types/set>
+#include <dbustl-1/types/map>
+#include <dbustl-1/types/Struct>
+

@@ -1,0 +1,90 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_EVENTLOOPINTEGRATION
+#define DBUSTL_EVENTLOOPINTEGRATION
+
+namespace dbustl {
+
+    class Connection;
+
+    /**
+     * Abstract base class for integration of DBusTL into native toolkits such as Glib or Qt.
+     * 
+     * Refer to Connection class documentation to see how this class is to be used in
+     * conjunction with DBUS connections.
+     */
+
+    class EventLoopIntegration {
+        public:
+            /**
+             * Virtual desctructor
+             */
+            virtual ~EventLoopIntegration();
+
+            /**
+             * Virtual copy constructor
+             * 
+             * Builds an EventLoopIntegration object with the same characteristics 
+             * as this one (same integration method, same thread, same everything ...)
+             * Any child class C must implement this by returning a newly instanciated
+             * object of class C.
+             */
+            virtual EventLoopIntegration* clone() const = 0;
+
+            /** 
+             * Associates this EventLoopIntegration object with the given DBus connection.
+             * 
+             * An EventLoopIntegration object can only be associated with one Connection at a time, 
+             * and moreover this method must be called exactly once.
+             * This methods does the sanity checks listed above and calls internalConnect() if
+             * checks succeed. If checks fail assert() is called.
+             */
+            void connect(Connection* conn);
+
+        protected:
+            /**
+             * Constructor for children classes
+             */
+            EventLoopIntegration();
+            
+            /**
+             * Does the toolkit specific world to bind the connection to toolkit event loop.
+             * 
+             * The way is is done is completely specific to each toolkit, however this usually
+             * means calling dbus_connection_set_watch_functions(), dbus_connection_set_timeout_functions()
+             * and dbus_connection_set_wakeup_main_function() as a bare minimum.
+             */
+            virtual bool internalConnect(Connection* conn) = 0;
+
+        private:
+            //forbidden methods
+            EventLoopIntegration(const EventLoopIntegration&);
+            EventLoopIntegration& operator=(EventLoopIntegration&);
+            
+            Connection* _conn;
+    };
+
+}
+
+#endif /* DBUSTL_EVENTLOOPINTEGRATION */

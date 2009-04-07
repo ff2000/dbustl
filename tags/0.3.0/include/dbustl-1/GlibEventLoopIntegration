@@ -1,0 +1,105 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_EVENTMAINLOOPINTEGRATION
+#define DBUSTL_EVENTMAINLOOPINTEGRATION
+
+#include <dbustl-1/EventLoopIntegration>
+
+#include <glib.h>
+
+namespace dbustl {
+
+    class Connection;
+
+    /**
+     * Class used for integration of DBusTL with Glib toolkit.
+     * 
+     * Refer to Connection class documentation to see how this class is to be used in
+     * conjunction with DBUS connections.
+     */
+
+    class GlibEventLoopIntegration : public EventLoopIntegration {
+        public:
+            /**
+             * Constructor that binds the created object with a given GMainContext.
+             * 
+             * All signals and methods callbacks for the eventual DBUS connection that will be
+             * associated with this object will be processed in this GMainContext.
+             * 
+             * @param ctxt the GMainContext to bind with. If null the default GMainContext is used
+             */
+            GlibEventLoopIntegration(GMainContext *ctxt = 0);
+
+            /**
+             * Virtual destructor
+             */
+            virtual ~GlibEventLoopIntegration();
+            /**
+             * Virtual copy constructor
+             * 
+             * @return a new instance of GlibEventLoopIntegration
+             */
+            virtual EventLoopIntegration* clone() const;
+
+        private:
+            //forbidden methods
+            GlibEventLoopIntegration(const GlibEventLoopIntegration&);
+            GlibEventLoopIntegration& operator=(GlibEventLoopIntegration&);
+            
+            //This method is guaranteed to be called no more than once.
+            virtual bool internalConnect(Connection* conn);
+            
+            static dbus_bool_t addWatchCallBack(DBusWatch *watch, void *data);
+            static void removeWatchCallBack(DBusWatch *watch, void *data);
+            static void toggleWatchCallBack(DBusWatch *watch, void *data);
+            static gboolean dispatchWatch(GIOChannel *source, GIOCondition condition, gpointer data);
+            
+            static dbus_bool_t addTimeoutCallBack(DBusTimeout *timeout, void *data);
+            static void removeTimeoutCallBack(DBusTimeout *timeout, void *data);
+            static void toggleTimeoutCallBack(DBusTimeout *timeout, void *data);
+            static gboolean dispatchTimeout(gpointer data);
+
+            struct DispatchGSource : public GSource {
+                Connection *_conn;
+            };
+            static GSourceFuncs _dispatchCallbacks;
+
+            static void wakeUpCallBack(void *data);
+
+            GMainContext *_ctxt;
+            DispatchGSource *_dispatchGSource;
+
+        public:
+            /** @cond */
+            // Those ones have to be public as they have to be accessible from GSourceFuncs C typedef
+            static gboolean prepareDispatch (GSource *source, gint *timeout);
+            static gboolean checkDispatch (GSource *source);
+            static gboolean doDispatch (GSource *source, GSourceFunc  callback, gpointer user_data);
+            /** @endcond */
+
+    };
+
+}
+
+#endif /* DBUSTL_EVENTMAINLOOPINTEGRATION */

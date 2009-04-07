@@ -1,0 +1,210 @@
+/*
+ *  DBUSTL - DBus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_MESSAGE
+#define DBUSTL_MESSAGE
+
+#include <iostream>
+#include <dbus/dbus.h>
+#include <dbustl-1/types/Serialization>
+
+namespace dbustl {
+
+    /**
+      * Message is a lightweight wrapper class around DBus C API DBusMessage struct.
+      * 
+      * This class encapsulates  a DBusMessage DBus C API object.
+      * 
+      * This class provides the following benefits over its C counterpart:
+      *   - Partial encapsulation of a what a DBUS message is, so that the end user
+      * does not have to manipulate the DBus C API directly.
+      *   - Automatic reference counting of underlying C struct
+      *   - operator >> to deserialize messages arguments
+      *   - operator << to serialize messages arguments
+      * 
+      * This class is implicitly shared, which means that if you make a copy
+      * of it, the new copy with share its internal data and state with the original.
+      * 
+      * Please note that as end user of DBus library, you are not supposed
+      * to instantiate objects from this class by yourself, but use instances that
+      * are built for your by DBUSTL.
+      * 
+      * You will have to use this class for signals reception or asynchronous
+      * method calls reply. In all other cases everything should be handled
+      * behind the scene for you.
+      * 
+      * This class provides a dbus() method that is public but that you are not
+      * supposed to use, unless you *really* know what you are doing. 
+      */
+
+    class Message {
+        public:
+            /**
+             * Builds a Message from a DBusMessage C-API struct.
+             *
+             * Once the object has been created, it takes ownership of
+             * the underlying DBusMessage C struct and is responsible
+             * to unref it when it is not needed anymore.
+             *  
+             * If you are using this constructor in your code, then you probably
+             * are trying to abuse DBUSTL in a way it was never design to be
+             * used. Do it at your own risk.
+             */
+            explicit Message(DBusMessage *msg);
+
+            /**
+             * Copy constructor
+             * 
+             * Handles refcounting of unrelying DBusMessage C struct
+             */
+            Message(const Message& other);
+
+            /**
+             * Destructor
+             * 
+             * The destructor is non virtual on purpose, this class is not
+             * designed for inheritance.
+             */
+            ~Message();
+            
+            /**
+             * Copy operator
+             * 
+             * Handles refcounting of unrelying DBusMessage C struct
+             */
+            Message& operator=(const Message& other);
+            
+            /**
+             * Copy operator
+             * 
+             * Handles refcounting of unrelying DBusMessage C struct
+             */
+            Message& operator=(DBusMessage *msg);
+            
+            /**
+             * Adds an argument to the message.
+             */
+            template<typename T> 
+            Message& operator<<(const T& inarg);
+
+            /**
+             * Adds an argument to the message: special case for C strings.
+             */
+            Message& operator<<(const char* inarg);
+
+            /**
+             * Reads an argument from the message.
+             */
+            template<typename T> 
+            Message& operator>>(T& outarg);
+
+            /**
+             * Reads an argument from the message.
+             */
+            template<typename T> 
+            Message& operator>>(T* outarg);
+            
+            /**
+             * Tells if the underlying C struct is NULL.
+             * 
+             * If it is null then calling any other method is invalid.
+             */
+            bool isNull() const { return (_msg == NULL); };
+            
+            /**
+             * A message is invalid if some issues (such as arguments type mismatch)
+             * happens during serialization or deserialization.
+             */
+            bool isValid() const { return _valid; };
+            
+            /**
+             * Returns the number of times the >> operator has been called
+             */
+            int parsedArguments() const { return _parsedArguments; };
+            
+            /**
+             * Returns the message member, as per the DBUS specification.
+             * 
+             * If the message is a signal, this equivalentto the signal name
+             */
+            std::string member() const;
+            
+            /**
+             * Returns the message interface, as per the DBUS specification
+             */
+            std::string interface() const;
+            
+            /**
+             * The DBUS C api structure: don't use it!
+             * 
+             * You should only use it if you <strong>really</strong> know
+             * what you are doing.
+             */
+            DBusMessage* dbus() { return _msg; };
+            
+        private:
+            bool serializationInit();
+            bool deSerializationInit(int *arg_type);
+            
+            DBusMessage *_msg;
+            bool _valid;
+            bool _iteratorInitialized;
+            int _parsedArguments;
+            DBusMessageIter _it;
+    };
+
+    template<typename T>
+    Message& Message::operator<<(const T& inarg)
+    {
+        using namespace types;
+
+        if(serializationInit()) {
+            _valid = (Serializer<T>::run(&_it, inarg) == TRUE);
+        }
+
+        return *this;
+    }
+
+    template<typename T>
+    Message& Message::operator>>(T& outarg)
+    {
+        return this->operator>>(&outarg);
+    }
+
+    template<typename T>
+    Message& Message::operator>>(T* outarg)
+    {
+        using namespace types;
+        int arg_type;
+
+        if(deSerializationInit(&arg_type)) {
+            _valid = (Deserializer<T>::run(&_it, outarg) == TRUE);
+        }
+        _parsedArguments++;
+        return *this;
+    }
+
+}
+
+#endif /* DBUSTL_MESSAGE */
+
