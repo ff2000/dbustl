@@ -7,3 +7,4 @@ This is some kind of a TODO list i have in mind at he moment:
   * Support for server side DBUS (i.e. expose C++ objects as DBUS objects)
   * DONE: Test exceptions less support
   * Support DBus variant type: don't know if that's really used
+  * Define and implement a policy for handling loss of DBus connection
