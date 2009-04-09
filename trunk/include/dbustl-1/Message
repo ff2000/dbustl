@@ -164,7 +164,7 @@ namespace dbustl {
             
         private:
             bool serializationInit();
-            bool deSerializationInit(int *arg_type);
+            bool deSerializationInit();
             
             DBusMessage *_msg;
             bool _valid;
@@ -195,9 +195,8 @@ namespace dbustl {
     Message& Message::operator>>(T* outarg)
     {
         using namespace types;
-        int arg_type;
 
-        if(deSerializationInit(&arg_type)) {
+        if(deSerializationInit()) {
             _valid = (Deserializer<T>::run(&_it, outarg) == TRUE);
         }
         _parsedArguments++;
