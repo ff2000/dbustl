@@ -382,7 +382,7 @@ namespace dbustl {
             return;
         }
         
-	//If needed, reset error status
+        //If needed, reset error status
         errorReset();
         processInArgs(method_call, args...);
     }
@@ -452,7 +452,7 @@ namespace dbustl {
             return;
         }
         
-	//If needed, reset error status
+        //If needed, reset error status
         errorReset();
         processAsyncInArgs(method_call, callback, args...);
     }
