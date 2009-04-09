@@ -98,7 +98,9 @@ std::string Message::interface() const
 
 bool Message::serializationInit()
 {
-    assert(_msg);
+    if(!_msg) {
+        return false;
+    }
     
     if(!_iteratorInitialized) {
         dbus_message_iter_init_append(_msg, &_it);
@@ -111,7 +113,9 @@ bool Message::serializationInit()
 
 bool Message::deSerializationInit()
 {
-    assert(_msg);
+    if(!_msg) {
+        return false;
+    }
 
     if(_iteratorInitialized) {
         dbus_message_iter_next(&_it);

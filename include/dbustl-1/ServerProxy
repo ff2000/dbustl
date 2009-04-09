@@ -120,7 +120,7 @@ namespace dbustl {
              * @param methodName the name of the DBUS method to call
              * @throw DBusException if anything goes wrong
              */
-            Message createMethodCall(const std::string& methodName) const;
+            Message createMethodCall(const std::string& methodName);
             /**
              * Compatibility C++ syntax: Executes a DBUS method call.
              * 
@@ -376,14 +376,6 @@ namespace dbustl {
     void ServerProxy::call(const std::string& methodName, const Args&... args)
     {
         Message method_call(createMethodCall(methodName));
-        
-        if(!method_call.dbus()) {
-            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
-            return;
-        }
-        
-        //If needed, reset error status
-        errorReset();
         processInArgs(method_call, args...);
     }
 #endif
@@ -446,14 +438,6 @@ namespace dbustl {
     void ServerProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
     {
         Message method_call(createMethodCall(methodName));
-        
-        if(!method_call.dbus()) {
-            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
-            return;
-        }
-        
-        //If needed, reset error status
-        errorReset();
         processAsyncInArgs(method_call, callback, args...);
     }
 #endif

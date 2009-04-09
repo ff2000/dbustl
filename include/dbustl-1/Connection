@@ -110,7 +110,7 @@ namespace dbustl {
              * In case exceptions are not enabled, check if the connection creation has 
              * succeeded by calling isConnected().
              * 
-             * @param bustype one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION}
+             * @param busType one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION}
              * @throw DBusException if something prevents us from getting on the bus
              */
             explicit Connection(DBusBusType busType);
