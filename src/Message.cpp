@@ -109,7 +109,7 @@ bool Message::serializationInit()
     return _valid;
 }
 
-bool Message::deSerializationInit(int *arg_type)
+bool Message::deSerializationInit()
 {
     assert(_msg);
 
@@ -122,11 +122,7 @@ bool Message::deSerializationInit(int *arg_type)
     }
 
     //If we are past the end, we mark the message as invalid
-    int type = dbus_message_iter_get_arg_type(&_it);
-    if(type != DBUS_TYPE_INVALID) {
-        *arg_type = type;
-    }
-    else {
+    if(dbus_message_iter_get_arg_type(&_it) == DBUS_TYPE_INVALID) {
         _valid = false;
     }
 
