@@ -243,7 +243,7 @@ namespace dbustl {
             inline void throw_or_set(const DBusException& error) { _error = error; };
             inline void throw_or_set(const char *name, const char *message) { _error = DBusException(name, message); };
             inline void errorReset() { _error = DBusException(); };
-	    #define DBUSTL_HAS_ERROR() (_error.isSet())
+	        #define DBUSTL_HAS_ERROR() (_error.isSet())
         #else
             static inline void throw_or_set(const DBusException& error) { throw error; };
             static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
