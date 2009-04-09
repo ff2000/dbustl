@@ -27,6 +27,7 @@
 #include <dbustl-1/ServerProxy>
 
 #include <sstream>
+#include <cassert>
 
 namespace dbustl {
 
@@ -42,6 +43,7 @@ DBusObjectPathVTable ServerProxy::_vtable = {
 ServerProxy::ServerProxy(Connection* conn, const std::string& path, const std::string& destination) :
   _conn(conn), _path(path), _destination(destination), _timeout(-1)
 {
+    assert(_conn->isConnected());
     if(!dbus_connection_register_object_path(_conn->dbus(), _path.c_str(), &_vtable, this)) {
         throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to register object path handler");
     }

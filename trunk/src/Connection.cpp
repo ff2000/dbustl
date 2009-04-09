@@ -23,8 +23,11 @@
 
 #include <dbus/dbus.h>
 
-#include <dbustl-1/Connection>
 #include <dbustl-1/EventLoopIntegration>
+#include <dbustl-1/DBusException>
+
+#include <dbustl-1/Connection>
+
 #include <cassert>
 
 namespace dbustl {
@@ -71,12 +74,9 @@ DBusConnection* Connection::dbus()
     return _llconn;
 }
 
-Connection::Connection(DBusBusType bustype) : _eventLoop(0), _isPrivate(false)
+Connection::Connection(DBusBusType busType) : _eventLoop(0), _isPrivate(false)
 {
-    //As per DBUS documentation, it is safe to call it more than once, as
-    //calls other than the first one are ignored
-    dbus_threads_init_default();
-    _llconn = dbus_bus_get_private(bustype, 0);
+    construct(busType);
 
     if(_defaultEventLoop != 0) {
         _eventLoop = _defaultEventLoop->clone();
@@ -84,15 +84,26 @@ Connection::Connection(DBusBusType bustype) : _eventLoop(0), _isPrivate(false)
     }
 }
 
-Connection::Connection(DBusBusType bustype, const EventLoopIntegration& eventLoop) : 
+Connection::Connection(DBusBusType busType, const EventLoopIntegration& eventLoop) : 
   _eventLoop(eventLoop.clone()), _isPrivate(false)
+{
+    construct(busType);
+
+    _eventLoop->connect(this);
+}
+
+void Connection::construct(DBusBusType busType)
 {
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
     dbus_threads_init_default();
-    _llconn = dbus_bus_get_private(bustype, 0);
-    
-    _eventLoop->connect(this);
+    _llconn = dbus_bus_get_private(busType, 0);
+
+#ifndef DBUSTL_NO_EXCEPTIONS
+    if(!_llconn) {
+        throw DBusException("org.dbustl.ConnectionError", "Unable to connect to Bus"); 
+    }
+#endif
 }
 
 Connection::~Connection()
