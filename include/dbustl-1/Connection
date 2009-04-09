@@ -31,6 +31,8 @@ namespace dbustl {
     class ConnectionInitializer;
    
     class EventLoopIntegration;
+    
+    class DBusException;
 
     /**
      * Provides an abstraction of a DBus Connection. 
@@ -66,7 +68,12 @@ namespace dbustl {
              * this connection is not associated with any main loop.
              * 
              * Do not destroy it, it will be automatically freed at
-             * program shutdown
+             * program shutdown.
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * 
+             * @throw DBusException if something prevents us from getting on the system bus
              */
             static Connection * systemBus();
 
@@ -78,7 +85,12 @@ namespace dbustl {
              * this connection is not associated with any main loop.
              * 
              * Do not destroy it, it will be automatically freed at
-             * program shutdown
+             * program shutdown.
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * 
+             * @throw DBusException if something prevents us from getting on the session bus
              */
             static Connection * sessionBus();
 
@@ -95,15 +107,23 @@ namespace dbustl {
              * is associated with the provided mainloop. Otherwise
              * this connection is not associated with any main loop.
              * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * 
              * @param bustype one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION}
+             * @throw DBusException if something prevents us from getting on the bus
              */
-            explicit Connection(DBusBusType bustype);
+            explicit Connection(DBusBusType busType);
             
             /**
              * Creates a new dedicated connection on the given bus, specifying in which main loop
              * to process received messages
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * @throw DBusException if something prevents us from getting on the bus
              */
-            Connection(DBusBusType bustype, 
+            Connection(DBusBusType busType, 
               const EventLoopIntegration& eventLoop);
             
             /**
@@ -115,10 +135,15 @@ namespace dbustl {
             ~Connection();
 
             /**
-             * If True, means the connection is not on a system or session bus, 
+             * If True, means the connection is not on a bus, 
              * but is private between two applications.
              */
             bool isPrivate() { return _isPrivate;};
+
+            /**
+             * Tells if we are currently connected to a remote party, either bus or private connection
+             */
+            bool isConnected() { return _llconn;};
 
             /**
              * The DBUS C api structure: don't use it!
@@ -132,6 +157,8 @@ namespace dbustl {
             //Disallow construct that would bypass the static initializers
             Connection(const Connection&);
             Connection& operator=(Connection&);
+        
+            void construct(DBusBusType busType);
         
             //Low level connection
             DBusConnection *_llconn;

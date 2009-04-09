@@ -43,7 +43,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#b8988d45ec51513e5394087a42d89120"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#d99ba5583f0ac4d46362966bfcf0e743">isPrivate</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">If True, means the connection is not on a system or session bus, but is private between two applications.  <a href="#d99ba5583f0ac4d46362966bfcf0e743"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">If True, means the connection is not on a bus, but is private between two applications.  <a href="#d99ba5583f0ac4d46362966bfcf0e743"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168">isConnected</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells if we are currently connected to a remote party, either bus or private connection.  <a href="#1ecb95e999960bff33c5d9db8869f168"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">DBusConnection *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#957fd7bb3c486aebfc7a32357c7518fd">dbus</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#957fd7bb3c486aebfc7a32357c7518fd"></a><br></td></tr>
@@ -88,9 +91,15 @@ If no signals are to be received, then event loop association remains optionnal.
 Creates a new dedicated connection on the given bus. 
 <p>
 If Connection::useMainLoop has been called beforehand, this connection is associated with the provided mainloop. Otherwise this connection is not associated with any main loop.<p>
+In case exceptions are not enabled, check if the connection creation has succeeded by calling <a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168" title="Tells if we are currently connected to a remote party, either bus or private connection...">isConnected()</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>bustype</em>&nbsp;</td><td>one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION} </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if something prevents us from getting on the bus </td></tr>
   </table>
 </dl>
 
@@ -124,6 +133,11 @@ If Connection::useMainLoop has been called beforehand, this connection is associ
 <p>
 Creates a new dedicated connection on the given bus, specifying in which main loop to process received messages. 
 <p>
+In case exceptions are not enabled, check if the connection creation has succeeded by calling <a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168" title="Tells if we are currently connected to a remote party, either bus or private connection...">isConnected()</a>. <dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if something prevents us from getting on the bus </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -168,7 +182,14 @@ The destructor is non virtual on purpose, this class is not designed for inherit
 Returns a singleton to the system bus. 
 <p>
 If Connection::useMainLoop has been called beforehand, this connection is associated with the provided mainloop. Otherwise this connection is not associated with any main loop.<p>
-Do not destroy it, it will be automatically freed at program shutdown 
+Do not destroy it, it will be automatically freed at program shutdown.<p>
+In case exceptions are not enabled, check if the connection creation has succeeded by calling <a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168" title="Tells if we are currently connected to a remote party, either bus or private connection...">isConnected()</a>.<p>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if something prevents us from getting on the system bus </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="5dd064d01bb7100810e51660443a825f"></a><!-- doxytag: member="dbustl::Connection::sessionBus" ref="5dd064d01bb7100810e51660443a825f" args="()" -->
@@ -190,7 +211,14 @@ Do not destroy it, it will be automatically freed at program shutdown
 Returns a singleton to the session bus. 
 <p>
 If Connection::useMainLoop has been called beforehand, this connection is associated with the provided mainloop. Otherwise this connection is not associated with any main loop.<p>
-Do not destroy it, it will be automatically freed at program shutdown 
+Do not destroy it, it will be automatically freed at program shutdown.<p>
+In case exceptions are not enabled, check if the connection creation has succeeded by calling <a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168" title="Tells if we are currently connected to a remote party, either bus or private connection...">isConnected()</a>.<p>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if something prevents us from getting on the session bus </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="11ce4ad1f70b793b1351909b01b07334"></a><!-- doxytag: member="dbustl::Connection::useEventLoop" ref="11ce4ad1f70b793b1351909b01b07334" args="(const EventLoopIntegration &amp;eventloop)" -->
@@ -231,7 +259,28 @@ It is safe to call it more than once.
 <div class="memdoc">
 
 <p>
-If True, means the connection is not on a system or session bus, but is private between two applications. 
+If True, means the connection is not on a bus, but is private between two applications. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="1ecb95e999960bff33c5d9db8869f168"></a><!-- doxytag: member="dbustl::Connection::isConnected" ref="1ecb95e999960bff33c5d9db8869f168" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool dbustl::Connection::isConnected           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Tells if we are currently connected to a remote party, either bus or private connection. 
 <p>
 
 </div>
