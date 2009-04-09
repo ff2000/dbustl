@@ -491,7 +491,7 @@ namespace dbustl {
             }
         }
         else {
-            throw_or_set("org.dbustl", "The remote side of has closed the connection prematurely");
+            throw_or_set("org.dbustl", "The remote side has closed the connection prematurely");
         }
     }
 
