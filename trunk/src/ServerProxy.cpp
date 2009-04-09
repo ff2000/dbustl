@@ -68,13 +68,23 @@ ServerProxy::~ServerProxy()
     }
 }
 
-Message ServerProxy::createMethodCall(const std::string& methodName) const
+Message ServerProxy::createMethodCall(const std::string& methodName)
 {
     const char *dest = _destination.empty() ? NULL : _destination.c_str();
     const char *intf = _interface.empty() ? NULL : _interface.c_str();
     
-    return Message(dbus_message_new_method_call(dest, _path.c_str(), 
+    Message method_call(dbus_message_new_method_call(dest, _path.c_str(), 
                     intf, methodName.c_str()));
+                    
+    if(method_call.dbus()) {
+        // Blank out error status
+        errorReset();
+    }
+    else {
+        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+    }
+
+    return method_call;
 }
 
 Message ServerProxy::call(Message& method_call)
