@@ -343,7 +343,9 @@ namespace dbustl {
             std::string _interface;
             //call timeout in milliseconds, -1 means default
             int _timeout; 
+        #ifdef DBUSTL_NO_EXCEPTIONS
             DBusException _error;
+        #endif
             
             /** @cond */
             //This does not show up in doxygen
