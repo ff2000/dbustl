@@ -178,8 +178,8 @@ void ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
         std::stringstream match;
         DBusException error;
         
-	//Reset global error status
-	errorReset();
+        //Reset global error status
+        errorReset();
 
         match << "type='signal',path='" << _path << "'";
         
