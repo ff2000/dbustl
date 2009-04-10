@@ -100,7 +100,7 @@ namespace dbustl {
 
             /**@name Synchronous calls handling*/
             /*@{*/
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             /**
              * Calls a D-Bus method on a remote object
              *
@@ -136,19 +136,19 @@ namespace dbustl {
             /**@name Asynchronous calls handling*/
             /*@{*/
             //Asynchronous call : functor version            
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename MethodCallback, typename... Args>
             void asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args);
         #endif
             
             //Asynchronous call : pointer to function version
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename... Args>
             inline void asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args);
         #endif
             
             //Asynchronous call : pointer to member version
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename _Class, typename... Args>
             inline void asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args);
         #endif
@@ -256,25 +256,25 @@ namespace dbustl {
             /////////////////////////////////
             
             //This method processes input arguments of the form const T&
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename T, typename... Args>            
             void processInArgs(Message& method_call, const T& invalue, const Args&... args);
         #endif
 
             //This method processes input arguments of the form const T*
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename T, typename... Args>            
             void processInArgs(Message& method_call, const T* invalue, const Args&... args);
         #endif
 
             //This method processes Interface input argument
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename... Args>            
             void processInArgs(Message& method_call, const Interface& intf, const Args&... args);
         #endif
 
             //This method gets called when all arguments are processed
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename T, typename... Args>            
             void processInArgs(Message& msg, T* outvalue, const Args&... args);
         #endif
@@ -282,7 +282,7 @@ namespace dbustl {
             void processInArgs(Message& msg);
 
             //This method processes output arguments of the form T*
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename T, typename... Args>            
             void processOutArgs(Message& method_call, T* outvalue, const Args&... args);
         #endif
@@ -294,19 +294,19 @@ namespace dbustl {
             //////////////////////////////////
             
             //This method processes input arguments of the form const T&
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename T, typename MethodCallback, typename... Args>            
             void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args);
         #endif
 
             //This method processes input arguments of the form const T*
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename T, typename MethodCallback, typename... Args>            
             void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args);
         #endif
 
             //This method processes Interface input argument
-        #ifdef DBUSTL_VARIADIC_TEMPLATES
+        #ifdef DBUSTL_CXX0X
             template<typename MethodCallback, typename... Args>            
             void processAsyncInArgs(Message& method_call, const MethodCallback& callback, const Interface& intf, const Args&... args);
         #endif
@@ -382,7 +382,7 @@ namespace dbustl {
             static DBusObjectPathVTable _vtable;
     };
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename... Args>
     void ServerProxy::call(const std::string& methodName, const Args&... args)
     {
@@ -391,7 +391,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
     void ServerProxy::processInArgs(Message& method_call, const T& invalue, const Args&... args)
     {
@@ -400,7 +400,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
     void ServerProxy::processInArgs(Message& method_call, const T* invalue, const Args&... args)
     {
@@ -409,7 +409,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
     void ServerProxy::processInArgs(Message& msg, T* outvalue, const Args&... args)
     {
@@ -419,7 +419,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename... Args>            
     void ServerProxy::processInArgs(Message& method_call, const Interface& intf, const Args&... args)
     {
@@ -428,7 +428,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
     void ServerProxy::processOutArgs(Message& method_reply, T* outvalue, const Args&... args)
     {
@@ -437,7 +437,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename MethodCallback, typename... Args>
     void ServerProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
     {
@@ -446,7 +446,7 @@ namespace dbustl {
     }
 #endif
     
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename... Args>
     void ServerProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
     {
@@ -454,7 +454,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename _Class, typename... Args>
     void ServerProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
     {
@@ -473,7 +473,7 @@ namespace dbustl {
         asyncCall(method_call, std::ptr_fun(callback));
     }
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename T, typename MethodCallback, typename... Args>            
     void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args)
     {
@@ -482,7 +482,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename T, typename MethodCallback, typename... Args>            
     void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args)
     {
@@ -491,7 +491,7 @@ namespace dbustl {
     }
 #endif
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
     template<typename MethodCallback, typename... Args>            
     void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const Interface& intf, const Args&... args)
     {
