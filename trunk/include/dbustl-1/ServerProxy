@@ -415,9 +415,7 @@ namespace dbustl {
     {
         //All input arguments are consumed, process call now...
         processInArgs(msg);
-        if(!DBUSTL_HAS_ERROR()) {
-            processOutArgs(msg, outvalue, args...);
-        }
+        processOutArgs(msg, outvalue, args...);
     }
 #endif
 
