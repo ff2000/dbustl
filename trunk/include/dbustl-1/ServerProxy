@@ -312,7 +312,7 @@ namespace dbustl {
         #endif
 
             template<typename MethodCallback>            
-            void processAsyncInArgs(Message& msg, const MethodCallback& callback);
+            inline void processAsyncInArgs(Message& msg, const MethodCallback& callback);
 
             //Implementation of asyncCall
             class MethodCallbackWrapperBase;
@@ -503,11 +503,9 @@ namespace dbustl {
 #endif
 
     template<typename MethodCallback>            
-    void ServerProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
+    inline void ServerProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
     {
-        if(!msg.error()) {
-            asyncCall(msg, callback);
-        }
+        asyncCall(msg, callback);
     }
     
     void ServerProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))

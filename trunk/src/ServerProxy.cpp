@@ -138,25 +138,29 @@ void ServerProxy::methodCallbackWrapperDelete(void *object)
 
 void ServerProxy::executeAsyncCall(Message& method_call, MethodCallbackWrapperBase *wrapper)
 {
-    DBusPendingCall *pending_return;
-
-    if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == TRUE) {
-        if(pending_return) {
-            if(dbus_pending_call_set_notify(pending_return, callCompleted, 
-                  wrapper, methodCallbackWrapperDelete) == FALSE) {
+    if(!method_call.error()) {
+        DBusPendingCall *pending_return;
+        if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == TRUE) {
+            if(pending_return) {
+                if(dbus_pending_call_set_notify(pending_return, callCompleted, 
+                      wrapper, methodCallbackWrapperDelete) == FALSE) {
+                    delete wrapper;
+                    throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for D-Bus message");
+                }
+            }
+            else {
                 delete wrapper;
-                throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for D-Bus message");
+                //we borrowed this one from dbus library, to be in sync with what call() would do.
+                throw_or_set(DBUS_ERROR_DISCONNECTED, "Connection is closed");
             }
         }
         else {
             delete wrapper;
-            //we borrowed this one from dbus library, to be in sync with what call() would do.
-            throw_or_set(DBUS_ERROR_DISCONNECTED, "Connection is closed");
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send D-Bus message");
         }
     }
     else {
         delete wrapper;
-        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send D-Bus message");
     }
 }
 
