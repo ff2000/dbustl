@@ -132,7 +132,7 @@ bool operator==(const Struct6& f1, const Struct6& f2){
 }
 DBUSTL_REGISTER_STRUCT_6(Struct6, field1, field2, field3, field4, field5, field6);
 
-#ifdef DBUSTL_VARIADIC_TEMPLATES
+#ifdef DBUSTL_CXX0X
 int run_vt_tests()
 {
     dbustl::Connection *session = dbustl::Connection::sessionBus();
@@ -729,7 +729,7 @@ int run_vt_tests()
 {
     return 0;
 }
-#endif /* DBUSTL_VARIADIC_TEMPLATES */
+#endif /* DBUSTL_CXX0X */
 
 
 int main()
