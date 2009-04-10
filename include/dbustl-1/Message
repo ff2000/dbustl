@@ -24,11 +24,15 @@
 #ifndef DBUSTL_MESSAGE
 #define DBUSTL_MESSAGE
 
-#include <iostream>
 #include <dbus/dbus.h>
+
+#include <iostream>
+
 #include <dbustl-1/types/Serialization>
 
 namespace dbustl {
+
+    class DBusException;
 
     /**
       * Message is a lightweight wrapper class around DBus C API DBusMessage struct.
@@ -67,7 +71,7 @@ namespace dbustl {
              * to unref it when it is not needed anymore.
              *  
              * If you are using this constructor in your code, then you probably
-             * are trying to abuse DBUSTL in a way it was never design to be
+             * are trying to abuse DBusTL in a way it was never design to be
              * used. Do it at your own risk.
              */
             explicit Message(DBusMessage *msg);
@@ -132,15 +136,12 @@ namespace dbustl {
             bool isNull() const { return (_msg == NULL); };
             
             /**
-             * A message is invalid if some issues (such as arguments type mismatch)
-             * happens during serialization or deserialization.
+             * Returns the error object raise during serialization or deserialization
+             * for this message. 
+             * 
+             * If there no error happened, returns NULL.
              */
-            bool isValid() const { return _valid; };
-            
-            /**
-             * Returns the number of times the >> operator has been called
-             */
-            int parsedArguments() const { return _parsedArguments; };
+            const DBusException* error() const { return _serExcept; };
             
             /**
              * Returns the message member, as per the DBUS specification.
@@ -165,9 +166,11 @@ namespace dbustl {
         private:
             bool serializationInit();
             bool deSerializationInit();
+            void setDeserializationError();
+            void setSerializationError();
             
             DBusMessage *_msg;
-            bool _valid;
+            DBusException *_serExcept;
             bool _iteratorInitialized;
             int _parsedArguments;
             DBusMessageIter _it;
@@ -179,7 +182,10 @@ namespace dbustl {
         using namespace types;
 
         if(serializationInit()) {
-            _valid = (Serializer<T>::run(&_it, inarg) == TRUE);
+            // Note: if we are here we cannot already have an exception
+            if(Serializer<T>::run(&_it, inarg) == FALSE) {
+                setSerializationError();
+            }
         }
 
         return *this;
@@ -197,7 +203,10 @@ namespace dbustl {
         using namespace types;
 
         if(deSerializationInit()) {
-            _valid = (Deserializer<T>::run(&_it, outarg) == TRUE);
+            // Note: if we are here we cannot already have an exception
+            if(Deserializer<T>::run(&_it, outarg) == FALSE) {
+                setDeserializationError();
+            }
         }
         _parsedArguments++;
         return *this;

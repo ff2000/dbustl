@@ -289,8 +289,6 @@ namespace dbustl {
 
             void processOutArgs(Message& method_call);
             
-            void outArgsIssue(int argIndex);
-            
             //////////////////////////////////
             // Asynchronous calls templates //
             //////////////////////////////////
@@ -424,12 +422,7 @@ namespace dbustl {
     void ServerProxy::processOutArgs(Message& method_reply, T* outvalue, const Args&... args)
     {
         method_reply >> outvalue;
-        if(method_reply.isValid()) {
-            processOutArgs(method_reply, args...);
-        }
-        else {
-            outArgsIssue(method_reply.parsedArguments() - 1);
-        }
+        processOutArgs(method_reply, args...);
     }
 #endif
 
@@ -471,11 +464,11 @@ namespace dbustl {
         if(pending_return) {
             if(dbus_pending_call_set_notify(pending_return, callCompleted<MethodCallback>, 
                   new MethodCallback(callback), methodCallbackDelete<MethodCallback>) == FALSE) {
-                throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for DBUS message");
+                throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for D-Bus message");
             }
         }
         else {
-            throw_or_set("org.dbustl", "The remote side has closed the connection prematurely");
+            throw_or_set("org.dbustl.ConnectionError", "The remote side has closed the connection prematurely");
         }
     }
 
@@ -514,7 +507,7 @@ namespace dbustl {
     template<typename MethodCallback>            
     void ServerProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
     {
-        if(msg.isValid()) {
+        if(!msg.error()) {
             asyncCall(msg, callback);
         }
     }
@@ -560,7 +553,7 @@ namespace dbustl {
             setWatchSignal(signalName, true);
         }
 
-	if(!DBUSTL_HAS_ERROR()) {
+        if(!DBUSTL_HAS_ERROR()) {
             _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
                                             signalHandlerCallback<SignalHandlerFunctor>,
                                             signalHandlerDelete<SignalHandlerFunctor>);

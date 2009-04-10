@@ -43,7 +43,7 @@ The main inconvenient of this alternative approach is that it makes the code a b
         <span class="comment">/* Deserialization of the arguments in the reply message */</span>
         replyMsg &gt;&gt; reply;
         <span class="comment">/* isValid() checks that reading reply message parameters suceeded */</span>
-        <span class="keywordflow">if</span>(replyMsg.isValid()) {
+        <span class="keywordflow">if</span>(!replyMsg.error()) {
             <span class="comment">/* reply now contains a valid string */</span>
             cout &lt;&lt; reply &lt;&lt; endl;
         }

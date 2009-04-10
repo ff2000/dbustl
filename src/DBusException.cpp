@@ -59,7 +59,7 @@ DBusException::~DBusException() throw()
     dbus_error_free(&_dbusError);
 }
 
-//Expanded description of the exception of the forme "name: description"
+//Expanded description of the exception of the form "name: description"
 const char* DBusException::what() const throw()
 {
     if(_whatMsg.empty()) {

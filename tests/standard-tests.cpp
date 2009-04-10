@@ -709,7 +709,7 @@ int run_vt_tests()
             pythonServerProxy.call("SimpleHello", "Hi", &message); 
         }
         CATCH(const std::exception& e,
-            if(e.what() == std::string("org.dbustl.ReturnParameterError: Unable to deserialize return parameter at index 0")) {
+            if(e.what() == std::string("org.dbustl.MethodReplyError: Unable to assign D-Bus value with signature 's' to argument at position (0)")) {
                 exception_thrown = true;
             }
             else {
