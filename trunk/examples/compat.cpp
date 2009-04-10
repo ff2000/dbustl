@@ -46,7 +46,7 @@ int main()
         /* Deserialization of the arguments in the reply message */
         replyMsg >> reply;
         /* isValid() checks that reading reply message parameters suceeded */
-        if(replyMsg.isValid()) {
+        if(!replyMsg.error()) {
             /* reply now contains a valid string */
             cout << reply << endl;
         }

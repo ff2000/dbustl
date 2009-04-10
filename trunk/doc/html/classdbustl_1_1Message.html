@@ -65,12 +65,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#e3bdff6ee7c564a5715ba1b097f24708">isNull</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells if the underlying C struct is NULL.  <a href="#e3bdff6ee7c564a5715ba1b097f24708"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#991b3f7371fac0cc963c599bb869c482">isValid</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#29ef828567e2988ad388c4884feaa142">error</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A message is invalid if some issues (such as arguments type mismatch) happens during serialization or deserialization.  <a href="#991b3f7371fac0cc963c599bb869c482"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#cd87973a987b85df6294efb10a59353b">parsedArguments</a> () const </td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the number of times the &gt;&gt; operator has been called.  <a href="#cd87973a987b85df6294efb10a59353b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the error object raise during serialization or deserialization for this message.  <a href="#29ef828567e2988ad388c4884feaa142"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#cbe945c144afee9b1a9c47c5a65f6db5">member</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the message member, as per the DBUS specification.  <a href="#cbe945c144afee9b1a9c47c5a65f6db5"></a><br></td></tr>
@@ -112,7 +109,7 @@ This class provides a <a class="el" href="classdbustl_1_1Message.html#cb2e6658f4
 Builds a <a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around DBus C API DBusMessage struct.">Message</a> from a DBusMessage C-API struct. 
 <p>
 Once the object has been created, it takes ownership of the underlying DBusMessage C struct and is responsible to unref it when it is not needed anymore.<p>
-If you are using this constructor in your code, then you probably are trying to abuse DBUSTL in a way it was never design to be used. Do it at your own risk. 
+If you are using this constructor in your code, then you probably are trying to abuse DBusTL in a way it was never design to be used. Do it at your own risk. 
 </div>
 </div><p>
 <a class="anchor" name="808ec17b67d750414abf1129c1bfddc1"></a><!-- doxytag: member="dbustl::Message::Message" ref="808ec17b67d750414abf1129c1bfddc1" args="(const Message &amp;other)" -->
@@ -318,12 +315,12 @@ Tells if the underlying C struct is NULL.
 If it is null then calling any other method is invalid. 
 </div>
 </div><p>
-<a class="anchor" name="991b3f7371fac0cc963c599bb869c482"></a><!-- doxytag: member="dbustl::Message::isValid" ref="991b3f7371fac0cc963c599bb869c482" args="() const " -->
+<a class="anchor" name="29ef828567e2988ad388c4884feaa142"></a><!-- doxytag: member="dbustl::Message::error" ref="29ef828567e2988ad388c4884feaa142" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool dbustl::Message::isValid           </td>
+          <td class="memname">const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a>* dbustl::Message::error           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -334,30 +331,9 @@ If it is null then calling any other method is invalid.
 <div class="memdoc">
 
 <p>
-A message is invalid if some issues (such as arguments type mismatch) happens during serialization or deserialization. 
+Returns the error object raise during serialization or deserialization for this message. 
 <p>
-
-</div>
-</div><p>
-<a class="anchor" name="cd87973a987b85df6294efb10a59353b"></a><!-- doxytag: member="dbustl::Message::parsedArguments" ref="cd87973a987b85df6294efb10a59353b" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int dbustl::Message::parsedArguments           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Returns the number of times the &gt;&gt; operator has been called. 
-<p>
-
+If there no error happened, returns NULL. 
 </div>
 </div><p>
 <a class="anchor" name="cbe945c144afee9b1a9c47c5a65f6db5"></a><!-- doxytag: member="dbustl::Message::member" ref="cbe945c144afee9b1a9c47c5a65f6db5" args="() const " -->

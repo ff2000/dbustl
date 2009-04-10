@@ -101,30 +101,18 @@ Message ServerProxy::call(Message& method_call)
 
 void ServerProxy::processInArgs(Message& msg)
 {
-    if(msg.isValid()) {
+    if(!msg.error()) {
         Message reply(call(msg));
-        if(!reply.isNull()) {
-            //Overwrite message 
-            msg = reply;
-        }
-    }
-    else {
-        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send DBUS message");
+        // Overwrite message 
+        msg = reply;
     }
 }
 
-void ServerProxy::processOutArgs(Message&)
+void ServerProxy::processOutArgs(Message& reply)
 {
-    //TODO handle case where:
-    // Not enough return arguments where provided
-    // Too much return arguments are provided
-}
-
-void ServerProxy::outArgsIssue(int argIndex)
-{
-    std::stringstream ss;
-    ss << "Unable to deserialize return parameter at index " << argIndex;
-    throw_or_set("org.dbustl.ReturnParameterError", ss.str().c_str());
+    if(reply.error()) {
+        throw_or_set( *(reply.error()) );
+    }
 }
 
 DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *, 

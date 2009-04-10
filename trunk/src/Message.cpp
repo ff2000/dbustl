@@ -23,12 +23,16 @@
 
 #include <dbustl-1/Message>
 
+#include <dbustl-1/DBusException>
+
+#include <sstream>
+
 #include <cassert>
 
 namespace dbustl {
 
 Message::Message(DBusMessage *msg)
-  : _msg(msg), _valid(true), _iteratorInitialized(false), _parsedArguments(0)
+  : _msg(msg), _serExcept(0), _iteratorInitialized(false), _parsedArguments(0)
 {
 }
 
@@ -38,7 +42,7 @@ Message::Message(const Message& other)
         dbus_message_ref(other._msg);
     }
     _msg = other._msg;
-    _valid = other._valid;
+    _serExcept = other._serExcept;
     _iteratorInitialized = other._iteratorInitialized;
     _parsedArguments = other._parsedArguments;
 }
@@ -48,6 +52,7 @@ Message::~Message()
     if(_msg) {
         dbus_message_unref(_msg);
     }
+    delete _serExcept;
 }
 
 Message& Message::operator=(const Message& other) {
@@ -59,7 +64,12 @@ Message& Message::operator=(const Message& other) {
         dbus_message_unref(_msg);
     }
     
-    _valid = other._valid;
+    if(other._serExcept ) {
+        _serExcept = new DBusException(*other._serExcept);
+    }
+    else {
+        _serExcept = 0;
+    }
     _iteratorInitialized = other._iteratorInitialized;
     _parsedArguments = other._parsedArguments;
     _msg = other._msg;
@@ -71,7 +81,7 @@ Message& Message::operator=(DBusMessage *msg) {
         dbus_message_unref(_msg);
     }
     
-    _valid = true;
+    _serExcept = 0;
     _iteratorInitialized = false;
     _parsedArguments = 0;
     _msg = msg;
@@ -108,12 +118,12 @@ bool Message::serializationInit()
     }
     
     //If message is already screwed up, we just discard the other arguments
-    return _valid;
+    return !_serExcept;
 }
 
 bool Message::deSerializationInit()
 {
-    if(!_msg) {
+    if(!_msg || _serExcept) {
         return false;
     }
 
@@ -127,10 +137,28 @@ bool Message::deSerializationInit()
 
     //If we are past the end, we mark the message as invalid
     if(dbus_message_iter_get_arg_type(&_it) == DBUS_TYPE_INVALID) {
-        _valid = false;
+        _serExcept = new DBusException("org.dbustl.MethodReplyError", 
+            "All arguments in D-Bus method reply message have already been consumed");
     }
 
-    return _valid;
+    return !_serExcept;
+}
+
+void Message::setSerializationError()
+{
+    std::stringstream ss;
+    ss << "Unable to serialize parameter at index " << _parsedArguments;
+    _serExcept = new DBusException("org.dbustl.MethodCallError", ss.str().c_str());
+}
+
+void Message::setDeserializationError()
+{
+    std::stringstream ss;
+    char * sign = dbus_message_iter_get_signature(&_it);
+    ss << "Unable to assign D-Bus value with signature '" << sign 
+       << "' to argument at position (" << _parsedArguments << ")";
+    dbus_free(sign);
+    _serExcept = new DBusException("org.dbustl.MethodReplyError", ss.str().c_str());
 }
 
 Message& Message::operator<<(const char* inarg)
@@ -138,7 +166,10 @@ Message& Message::operator<<(const char* inarg)
     using namespace types;
 
     if(serializationInit()) {
-        _valid = (Serializer<const char*>::run(&_it, inarg) == TRUE);
+        // Note: if we are here we cannot already have an exception
+        if(Serializer<const char *>::run(&_it, inarg) == FALSE) {
+            setSerializationError();
+        }
     }
 
     return *this;
