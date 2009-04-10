@@ -30,9 +30,9 @@
  * For now the only supported compiler is GCC.
  */
 
-#undef DBUSTL_VARIADIC_TEMPLATES
+#undef DBUSTL_CXX0X
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
-	#define DBUSTL_VARIADIC_TEMPLATES
+	#define DBUSTL_CXX0X
 #endif
 
 #endif
