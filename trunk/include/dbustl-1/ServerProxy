@@ -328,6 +328,8 @@ namespace dbustl {
                 DBusMessage *dbusMessage, void *user_data);
 
             //Helper methods for signals processing
+            class SignalCallbackWrapperBase;
+            void enableSignal(const std::string& signalName, SignalCallbackWrapperBase* signalCb);
             void setWatchSignal(const std::string& signalName, bool enable);
 
             Connection *_conn;
@@ -522,11 +524,7 @@ namespace dbustl {
     template<typename SignalHandlerFunctor>
     void ServerProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
     {
-        setWatchSignal(signalName, true);
-
-        if(!DBUSTL_HAS_ERROR()) {
-            _signalsHandlers[signalName] = new SignalCallbackWrapper<SignalHandlerFunctor>(handler);
-        }
+        enableSignal(signalName, new SignalCallbackWrapper<SignalHandlerFunctor>(handler));
     }
 }
 
