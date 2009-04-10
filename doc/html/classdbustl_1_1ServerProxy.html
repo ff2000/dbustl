@@ -24,7 +24,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>dbustl::ServerProxy Class Reference</h1><!-- doxytag: class="dbustl::ServerProxy" -->Defines a proxy, used to call methods an receive signals on a remote DBus object.  
+<h1>dbustl::ServerProxy Class Reference</h1><!-- doxytag: class="dbustl::ServerProxy" -->Defines a proxy, used to call methods an receive signals on a remote D-Bus object.  
 <a href="#_details">More...</a>
 <p>
 
@@ -88,10 +88,10 @@
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html">Interface</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote DBus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Defines a proxy, used to call methods an receive signals on a remote DBus object. <hr><h2>Constructor &amp; Destructor Documentation</h2>
+Defines a proxy, used to call methods an receive signals on a remote D-Bus object. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="c3df3a25dec4e1cfdd1f89452e64aa2f"></a><!-- doxytag: member="dbustl::ServerProxy::ServerProxy" ref="c3df3a25dec4e1cfdd1f89452e64aa2f" args="(Connection *conn, const std::string &amp;path, const std::string &amp;destination=&quot;&quot;)" -->
 <div class="memitem">
 <div class="memproto">
@@ -129,9 +129,9 @@ Creates a proxy for the object uniquely identified by the (conn, path, destinati
 Beware: It is a design error to create more that one proxy on the same object on the same connection.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>conn</em>&nbsp;</td><td>The DBus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a DBus Connection.">Connection</a> used on which the object to call on is found. Usually one of <a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f" title="Returns a singleton to the session bus.">Connection::sessionBus</a>. The conn object must remain valid until the proxy object is destroyed. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>The DBus object path of the target objet </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>destination</em>&nbsp;</td><td>The DBus connection name on the given bus where the object we which to call on is found. Destination is only required if this connection talks to a message bus. In this case it must contain the name of the connection this message is intended for. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>conn</em>&nbsp;</td><td>The D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a DBus Connection.">Connection</a> used on which the object to call on is found. Usually one of <a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f" title="Returns a singleton to the session bus.">Connection::sessionBus</a>. The conn object must remain valid until the proxy object is destroyed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>The D-Bus object path of the target objet </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>destination</em>&nbsp;</td><td>The D-Bus connection name on the given bus where the object we which to call on is found. Destination is only required if this connection talks to a message bus. In this case it must contain the name of the connection this message is intended for. </td></tr>
   </table>
 </dl>
 
@@ -202,7 +202,7 @@ Sets the interface to use for all the calls on the remote object.
 <p>
 If empty (the default), the default interface is used. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>dbus interface name </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>D-Bus interface name </td></tr>
   </table>
 </dl>
 
