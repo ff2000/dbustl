@@ -48,13 +48,13 @@
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df">call</a> (const std::string &amp;methodName, const Args &amp;...args)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls a DBUS method on a remote object.  <a href="#c2ba5238dfd4c216204da9ba287e99df"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls a D-Bus method on a remote object.  <a href="#c2ba5238dfd4c216204da9ba287e99df"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#50d188516cd98b83b010cc8b25a0e453">createMethodCall</a> (const std::string &amp;methodName)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Creates a method call message.  <a href="#50d188516cd98b83b010cc8b25a0e453"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#9d1533ead0f132c6950f1819780a6c53">call</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;methodCall)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Executes a DBUS method call.  <a href="#9d1533ead0f132c6950f1819780a6c53"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Executes a D-Bus method call.  <a href="#9d1533ead0f132c6950f1819780a6c53"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Asynchronous calls handling</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename MethodCallback, typename... Args&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#d51f05cc233fcc2bde1c68a80131dfd7">asyncCall</a> (const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)</td></tr>
@@ -74,21 +74,21 @@
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename SignalHandlerFunctor&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362">setSignalHandler</a> (const std::string &amp;signalName, const SignalHandlerFunctor &amp;handler)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a DBUS signal : C++ functor version.  <a href="#0ce3928d90c9332a0ef7fdd2fdb98362"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : C++ functor version.  <a href="#0ce3928d90c9332a0ef7fdd2fdb98362"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#599f5cd96de569f5e14664896ba52610">setSignalHandler</a> (const std::string &amp;signalName, void(*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal))</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a DBUS signal : function pointer version.  <a href="#599f5cd96de569f5e14664896ba52610"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : function pointer version.  <a href="#599f5cd96de569f5e14664896ba52610"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#089709f5132e105f0f57b4025218b93e">setSignalHandler</a> (const std::string &amp;signalName, void(_Class::*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> signal), _Class *object)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a DBUS signal : member pointer version.  <a href="#089709f5132e105f0f57b4025218b93e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : member pointer version.  <a href="#089709f5132e105f0f57b4025218b93e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#fe875b185faaf41a2648d4a862e92091">removeSignalHandler</a> (const std::string &amp;signalName)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362" title="Registers a handler to receive a DBUS signal : C++ functor version.">setSignalHandler()</a>.  <a href="#fe875b185faaf41a2648d4a862e92091"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>.  <a href="#fe875b185faaf41a2648d4a862e92091"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html">Interface</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df" title="Calls a DBUS method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote DBus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote DBus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Defines a proxy, used to call methods an receive signals on a remote DBus object. <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -236,11 +236,11 @@ template&lt;typename... Args&gt; </div>
 <div class="memdoc">
 
 <p>
-Calls a DBUS method on a remote object. 
+Calls a D-Bus method on a remote object. 
 <p>
 This blocks until the reply is received or a timeout occurs. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the DBUS method to call </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the D-Bus method to call </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed by references, followed by a list of output parameters passed as pointers. </td></tr>
   </table>
 </dl>
@@ -273,7 +273,7 @@ Compatibility C++ syntax: Creates a method call message.
 <p>
 see <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more details <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the DBUS method to call </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the D-Bus method to call </td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Exceptions:</b></dt><dd>
@@ -301,7 +301,7 @@ see <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more de
 <div class="memdoc">
 
 <p>
-Compatibility C++ syntax: Executes a DBUS method call. 
+Compatibility C++ syntax: Executes a D-Bus method call. 
 <p>
 Sends the message over the wire and waits for the answer.<p>
 see <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more details <dl compact><dt><b>Parameters:</b></dt><dd>
@@ -522,7 +522,7 @@ template&lt;typename SignalHandlerFunctor&gt; </div>
 <div class="memdoc">
 
 <p>
-Registers a handler to receive a DBUS signal : C++ functor version. 
+Registers a handler to receive a D-Bus signal : C++ functor version. 
 <p>
 If a handler is already registered, the previous handler is overwritten with the new one. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -564,7 +564,7 @@ If a handler is already registered, the previous handler is overwritten with the
 <div class="memdoc">
 
 <p>
-Registers a handler to receive a DBUS signal : function pointer version. 
+Registers a handler to receive a D-Bus signal : function pointer version. 
 <p>
 If a handler is already registered, the previous handler is overwritten with the new one. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -614,7 +614,7 @@ template&lt;typename _Class&gt; </div>
 <div class="memdoc">
 
 <p>
-Registers a handler to receive a DBUS signal : member pointer version. 
+Registers a handler to receive a D-Bus signal : member pointer version. 
 <p>
 If a handler is already registered, the previous handler is overwritten with the new one. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -648,7 +648,7 @@ If a handler is already registered, the previous handler is overwritten with the
 <div class="memdoc">
 
 <p>
-Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362" title="Registers a handler to receive a DBUS signal : C++ functor version.">setSignalHandler()</a>. 
+Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">

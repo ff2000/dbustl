@@ -105,7 +105,7 @@ namespace dbustl {
              * Calls a D-Bus method on a remote object
              *
              * This blocks until the reply is received or a timeout occurs.
-             * @param methodName the name of the DBUS method to call
+             * @param methodName the name of the D-Bus method to call
              * @param args A list of input parameters passed by references, followed by a list
              * of output parameters passed as pointers.
              * @throw DBusException if anything goes wrong
@@ -117,12 +117,12 @@ namespace dbustl {
              * Compatibility C++ syntax: Creates a method call message
              * 
              * see @ref compat_syntax for more details
-             * @param methodName the name of the DBUS method to call
+             * @param methodName the name of the D-Bus method to call
              * @throw DBusException if anything goes wrong
              */
             Message createMethodCall(const std::string& methodName);
             /**
-             * Compatibility C++ syntax: Executes a DBUS method call.
+             * Compatibility C++ syntax: Executes a D-Bus method call.
              * 
              * Sends the message over the wire and waits for the answer.
              * 
@@ -164,7 +164,7 @@ namespace dbustl {
             /**@name Signals handling*/
             /*@{*/
             /**
-             * Registers a handler to receive a DBUS signal : C++ functor version.
+             * Registers a handler to receive a D-Bus signal : C++ functor version.
              *
              * If a handler is already registered, the previous handler is overwritten with the new one.
              * @param signalName The name of the message to receive. If set to an empty string, all
@@ -178,7 +178,7 @@ namespace dbustl {
             void setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler);
 
             /**
-             * Registers a handler to receive a DBUS signal : function pointer version.
+             * Registers a handler to receive a D-Bus signal : function pointer version.
              *
              * If a handler is already registered, the previous handler is overwritten with the new one.
              * @param signalName The name of the message to receive. If set to an empty string, all
@@ -191,7 +191,7 @@ namespace dbustl {
             inline void setSignalHandler(const std::string& signalName, void (*handler)(Message& signal));
 
             /**
-             * Registers a handler to receive a DBUS signal : member pointer version.
+             * Registers a handler to receive a D-Bus signal : member pointer version.
              *
              * If a handler is already registered, the previous handler is overwritten with the new one.
              * @param signalName The name of the mesignalssage to receive. If set to an empty string, all
