@@ -457,7 +457,7 @@ namespace dbustl {
         DBusPendingCall *pending_return;
 	
         if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == FALSE) {
-            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send DBUS message");
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send D-Bus message");
             return;
         }
     
@@ -468,7 +468,8 @@ namespace dbustl {
             }
         }
         else {
-            throw_or_set("org.dbustl.ConnectionError", "The remote side has closed the connection prematurely");
+            //we borrowed this one from dbus library, to be in sync with what call() would do.
+            throw_or_set(DBUS_ERROR_DISCONNECTED, "Connection is closed");
         }
     }
 
