@@ -39,7 +39,7 @@ namespace dbustl {
     class Connection;
 
     /** 
-     * Defines a proxy, used to call methods an receive signals on a remote DBus object.
+     * Defines a proxy, used to call methods an receive signals on a remote D-Bus object.
      * @nosubgrouping
      */
 
@@ -52,11 +52,11 @@ namespace dbustl {
              * 
              * Beware: It is a design error to create more that one proxy on the same object on the same connection.
              * 
-             * @param conn The DBus Connection used on which the object to call on is found.
+             * @param conn The D-Bus Connection used on which the object to call on is found.
              *  Usually one of Connection::systemBus or Connection::sessionBus. The conn object must remain valid
              *  until the proxy object is destroyed.
-             * @param path The DBus object path of the target objet
-             * @param destination The DBus connection name on the given bus where the object we which
+             * @param path The D-Bus object path of the target objet
+             * @param destination The D-Bus connection name on the given bus where the object we which
              *  to call on is found. Destination is only required if this connection talks to a message bus.
              *  In this case it must contain the name of the connection this message is intended for.
              */
@@ -82,7 +82,7 @@ namespace dbustl {
              * Sets the interface to use for all the calls on the remote object.
              * 
              * If empty (the default), the default interface is used.
-             * @param interface dbus interface name
+             * @param interface D-Bus interface name
              */
             void setInterface(const std::string& interface) { _interface = interface; };
 
