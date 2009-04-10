@@ -248,24 +248,23 @@ void ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
 void ServerProxy::enableSignal(const std::string& signalName, SignalCallbackWrapperBase* signalCb)
 {
     if(!_signalsHandlers.count(signalName)) {
-#ifndef DBUSTL_NO_EXCEPTIONS
         try {
-#endif
             setWatchSignal(signalName, true);
 
             if(!DBUSTL_HAS_ERROR()) {
                 _signalsHandlers[signalName] = signalCb;
             }
+            else {
+                delete signalCb;
+            }
             return;
-#ifndef DBUSTL_NO_EXCEPTIONS
         }
         catch(...) {
             delete signalCb;
+#ifndef DBUSTL_NO_EXCEPTIONS
             throw;
-        }
-#else
-        delete signalCb;
 #endif
+        }
     }
     else {
         //Already there
