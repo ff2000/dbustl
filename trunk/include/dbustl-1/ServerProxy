@@ -314,6 +314,10 @@ namespace dbustl {
             template<typename MethodCallback>            
             void processAsyncInArgs(Message& msg, const MethodCallback& callback);
 
+            //Implementation of asyncCall
+            void executeAsyncCall(Message& method_call, DBusPendingCallNotifyFunction function,
+                void* user_data, DBusFreeFunction free_user_data);
+
             //static methods for asynchronous calls handling
             template<typename MethodCallback>            
             static void methodCallbackDelete(void *object);
@@ -454,23 +458,8 @@ namespace dbustl {
     template<typename MethodCallback>            
     void ServerProxy::asyncCall(Message& method_call, const MethodCallback& callback)
     {
-        DBusPendingCall *pending_return;
-	
-        if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == FALSE) {
-            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send D-Bus message");
-            return;
-        }
-    
-        if(pending_return) {
-            if(dbus_pending_call_set_notify(pending_return, callCompleted<MethodCallback>, 
-                  new MethodCallback(callback), methodCallbackDelete<MethodCallback>) == FALSE) {
-                throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for D-Bus message");
-            }
-        }
-        else {
-            //we borrowed this one from dbus library, to be in sync with what call() would do.
-            throw_or_set(DBUS_ERROR_DISCONNECTED, "Connection is closed");
-        }
+        executeAsyncCall(method_call, callCompleted<MethodCallback>,
+            new MethodCallback(callback), methodCallbackDelete<MethodCallback>);
     }
 
     void ServerProxy::asyncCall(Message& method_call, void (*callback)(Message&, const DBusException&))
