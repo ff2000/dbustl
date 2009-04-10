@@ -35,13 +35,13 @@ namespace dbustl {
     class DBusException;
 
     /**
-      * Message is a lightweight wrapper class around DBus C API DBusMessage struct.
+      * Message is a lightweight wrapper class around D-Bus C API DBusMessage struct.
       * 
-      * This class encapsulates  a DBusMessage DBus C API object.
+      * This class encapsulates  a DBusMessage D-Bus C API object.
       * 
       * This class provides the following benefits over its C counterpart:
-      *   - Partial encapsulation of a what a DBUS message is, so that the end user
-      * does not have to manipulate the DBus C API directly.
+      *   - Partial encapsulation of a what a D-Bus message is, so that the end user
+      * does not have to manipulate the D-Bus C API directly.
       *   - Automatic reference counting of underlying C struct
       *   - operator >> to deserialize messages arguments
       *   - operator << to serialize messages arguments
@@ -49,9 +49,9 @@ namespace dbustl {
       * This class is implicitly shared, which means that if you make a copy
       * of it, the new copy with share its internal data and state with the original.
       * 
-      * Please note that as end user of DBus library, you are not supposed
+      * Please note that as end user of D-Bus library, you are not supposed
       * to instantiate objects from this class by yourself, but use instances that
-      * are built for your by DBUSTL.
+      * are built for your by DBusTL.
       * 
       * You will have to use this class for signals reception or asynchronous
       * method calls reply. In all other cases everything should be handled

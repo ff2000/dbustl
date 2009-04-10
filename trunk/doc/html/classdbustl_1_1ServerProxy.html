@@ -45,10 +45,6 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the interface to use for all the calls on the remote object.  <a href="#df5a271c2cd99518f4977f8591cf8b8c"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Synchronous calls handling</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df">call</a> (const std::string &amp;methodName, const Args &amp;...args)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls a D-Bus method on a remote object.  <a href="#c2ba5238dfd4c216204da9ba287e99df"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#50d188516cd98b83b010cc8b25a0e453">createMethodCall</a> (const std::string &amp;methodName)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Creates a method call message.  <a href="#50d188516cd98b83b010cc8b25a0e453"></a><br></td></tr>
@@ -56,15 +52,6 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Executes a D-Bus method call.  <a href="#9d1533ead0f132c6950f1819780a6c53"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Asynchronous calls handling</h2></td></tr>
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename MethodCallback, typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#d51f05cc233fcc2bde1c68a80131dfd7">asyncCall</a> (const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)</td></tr>
-
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#b30380def900f23eac1a127cdc54d0b5">asyncCall</a> (const std::string &amp;methodName, void(*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;), const Args &amp;...args)</td></tr>
-
-<tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#1545721988fa71b8a57f798af485e3aa">asyncCall</a> (const std::string &amp;methodName, void(_Class::*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;), _Class *c, const Args &amp;...args)</td></tr>
-
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename MethodCallback&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#e412d79e3d13e19b24a6378b00853c94">asyncCall</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;method_call, const MethodCallback &amp;callback)</td></tr>
 
@@ -88,7 +75,7 @@
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html">Interface</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#9d1533ead0f132c6950f1819780a6c53" title="Compatibility C++ syntax: Executes a D-Bus method call.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Defines a proxy, used to call methods an receive signals on a remote D-Bus object. <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -208,50 +195,6 @@ If empty (the default), the default interface is used. <dl compact><dt><b>Parame
 
 </div>
 </div><p>
-<a class="anchor" name="c2ba5238dfd4c216204da9ba287e99df"></a><!-- doxytag: member="dbustl::ServerProxy::call" ref="c2ba5238dfd4c216204da9ba287e99df" args="(const std::string &amp;methodName, const Args &amp;...args)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void dbustl::ServerProxy::call           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>methodName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Args &amp;...&nbsp;</td>
-          <td class="paramname"> <em>args</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Calls a D-Bus method on a remote object. 
-<p>
-This blocks until the reply is received or a timeout occurs. <dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the D-Bus method to call </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed by references, followed by a list of output parameters passed as pointers. </td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Exceptions:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if anything goes wrong </td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
 <a class="anchor" name="50d188516cd98b83b010cc8b25a0e453"></a><!-- doxytag: member="dbustl::ServerProxy::createMethodCall" ref="50d188516cd98b83b010cc8b25a0e453" args="(const std::string &amp;methodName)" -->
 <div class="memitem">
 <div class="memproto">
@@ -314,123 +257,6 @@ see <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more de
     <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if anything goes wrong </td></tr>
   </table>
 </dl>
-
-</div>
-</div><p>
-<a class="anchor" name="d51f05cc233fcc2bde1c68a80131dfd7"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="d51f05cc233fcc2bde1c68a80131dfd7" args="(const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename MethodCallback, typename... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>methodName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const MethodCallback &amp;&nbsp;</td>
-          <td class="paramname"> <em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Args &amp;...&nbsp;</td>
-          <td class="paramname"> <em>args</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="b30380def900f23eac1a127cdc54d0b5"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="b30380def900f23eac1a127cdc54d0b5" args="(const std::string &amp;methodName, void(*callback)(Message &amp;, const DBusException &amp;), const Args &amp;...args)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>methodName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void(*)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;)&nbsp;</td>
-          <td class="paramname"> <em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Args &amp;...&nbsp;</td>
-          <td class="paramname"> <em>args</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="1545721988fa71b8a57f798af485e3aa"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="1545721988fa71b8a57f798af485e3aa" args="(const std::string &amp;methodName, void(_Class::*callback)(Message &amp;, const DBusException &amp;), _Class *c, const Args &amp;...args)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename _Class, typename... Args&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>methodName</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void(_Class::*)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;)&nbsp;</td>
-          <td class="paramname"> <em>callback</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">_Class *&nbsp;</td>
-          <td class="paramname"> <em>c</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const Args &amp;...&nbsp;</td>
-          <td class="paramname"> <em>args</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
 
 </div>
 </div><p>
