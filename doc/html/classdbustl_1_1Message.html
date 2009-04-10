@@ -24,7 +24,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>dbustl::Message Class Reference</h1><!-- doxytag: class="dbustl::Message" --><a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around DBus C API DBusMessage struct.">Message</a> is a lightweight wrapper class around DBus C API DBusMessage struct.  
+<h1>dbustl::Message Class Reference</h1><!-- doxytag: class="dbustl::Message" --><a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around D-Bus C API DBusMessage struct.">Message</a> is a lightweight wrapper class around D-Bus C API DBusMessage struct.  
 <a href="#_details">More...</a>
 <p>
 
@@ -34,7 +34,7 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#63de0c801936cda3165c38dbfea83cf7">Message</a> (DBusMessage *msg)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds a <a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around DBus C API DBusMessage struct.">Message</a> from a DBusMessage C-API struct.  <a href="#63de0c801936cda3165c38dbfea83cf7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds a <a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around D-Bus C API DBusMessage struct.">Message</a> from a DBusMessage C-API struct.  <a href="#63de0c801936cda3165c38dbfea83cf7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#808ec17b67d750414abf1129c1bfddc1">Message</a> (const <a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;other)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#808ec17b67d750414abf1129c1bfddc1"></a><br></td></tr>
@@ -79,14 +79,14 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#cb2e6658f4deccc94c71be4031bd5453"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around DBus C API DBusMessage struct.">Message</a> is a lightweight wrapper class around DBus C API DBusMessage struct. 
+<a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around D-Bus C API DBusMessage struct.">Message</a> is a lightweight wrapper class around D-Bus C API DBusMessage struct. 
 <p>
-This class encapsulates a DBusMessage DBus C API object.<p>
+This class encapsulates a DBusMessage D-Bus C API object.<p>
 This class provides the following benefits over its C counterpart:<ul>
-<li>Partial encapsulation of a what a DBUS message is, so that the end user does not have to manipulate the DBus C API directly.</li><li>Automatic reference counting of underlying C struct</li><li>operator &gt;&gt; to deserialize messages arguments</li><li>operator &lt;&lt; to serialize messages arguments</li></ul>
+<li>Partial encapsulation of a what a D-Bus message is, so that the end user does not have to manipulate the D-Bus C API directly.</li><li>Automatic reference counting of underlying C struct</li><li>operator &gt;&gt; to deserialize messages arguments</li><li>operator &lt;&lt; to serialize messages arguments</li></ul>
 <p>
 This class is implicitly shared, which means that if you make a copy of it, the new copy with share its internal data and state with the original.<p>
-Please note that as end user of DBus library, you are not supposed to instantiate objects from this class by yourself, but use instances that are built for your by DBUSTL.<p>
+Please note that as end user of D-Bus library, you are not supposed to instantiate objects from this class by yourself, but use instances that are built for your by DBusTL.<p>
 You will have to use this class for signals reception or asynchronous method calls reply. In all other cases everything should be handled behind the scene for you.<p>
 This class provides a <a class="el" href="classdbustl_1_1Message.html#cb2e6658f4deccc94c71be4031bd5453" title="The DBUS C api structure: don&#39;t use it!">dbus()</a> method that is public but that you are not supposed to use, unless you *really* know what you are doing. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="63de0c801936cda3165c38dbfea83cf7"></a><!-- doxytag: member="dbustl::Message::Message" ref="63de0c801936cda3165c38dbfea83cf7" args="(DBusMessage *msg)" -->
@@ -106,7 +106,7 @@ This class provides a <a class="el" href="classdbustl_1_1Message.html#cb2e6658f4
 <div class="memdoc">
 
 <p>
-Builds a <a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around DBus C API DBusMessage struct.">Message</a> from a DBusMessage C-API struct. 
+Builds a <a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around D-Bus C API DBusMessage struct.">Message</a> from a DBusMessage C-API struct. 
 <p>
 Once the object has been created, it takes ownership of the underlying DBusMessage C struct and is responsible to unref it when it is not needed anymore.<p>
 If you are using this constructor in your code, then you probably are trying to abuse DBusTL in a way it was never design to be used. Do it at your own risk. 
