@@ -26,7 +26,6 @@
 #include <dbustl-1/Connection>
 #include <dbustl-1/ServerProxy>
 
-#include <sstream>
 #include <cassert>
 
 namespace dbustl {
@@ -222,23 +221,23 @@ void ServerProxy::removeSignalHandler(const std::string& signalName)
 void ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
 {
     if(!_conn->isPrivate()) {
-        std::stringstream match;
+        std::string match;
         DBusException error;
         
         //Reset global error status
         errorReset();
 
-        match << "type='signal',path='" << _path << "'";
+        match = std::string("type='signal',path='") +  _path + "'";
         
         if(signalName.size()) {
-            match << ",member='" << signalName << "'";
+            match = match + ",member='" + signalName + "'";
         }
         
         if(enable) {
-            dbus_bus_add_match(_conn->dbus(), match.str().c_str(), error.dbus());
+            dbus_bus_add_match(_conn->dbus(), match.c_str(), error.dbus());
         }
         else {
-            dbus_bus_remove_match(_conn->dbus(), match.str().c_str(), error.dbus());
+            dbus_bus_remove_match(_conn->dbus(), match.c_str(), error.dbus());
         }
         
         if(error.isSet()) {
