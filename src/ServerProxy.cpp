@@ -115,6 +115,28 @@ void ServerProxy::processOutArgs(Message& reply)
     }
 }
 
+void ServerProxy::executeAsyncCall(Message& method_call, DBusPendingCallNotifyFunction function,
+    void* user_data, DBusFreeFunction free_user_data)
+{
+    DBusPendingCall *pending_return;
+
+    if(dbus_connection_send_with_reply(_conn->dbus(), method_call.dbus(), &pending_return, _timeout) == FALSE) {
+        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to send D-Bus message");
+        return;
+    }
+
+    if(pending_return) {
+        if(dbus_pending_call_set_notify(pending_return, function, 
+              user_data, free_user_data) == FALSE) {
+            throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to set callback for D-Bus message");
+        }
+    }
+    else {
+        //we borrowed this one from dbus library, to be in sync with what call() would do.
+        throw_or_set(DBUS_ERROR_DISCONNECTED, "Connection is closed");
+    }
+}
+
 DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *, 
     DBusMessage *dbusMessage, void *user_data)
 {
