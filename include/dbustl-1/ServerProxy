@@ -102,7 +102,7 @@ namespace dbustl {
             /*@{*/
         #ifdef DBUSTL_VARIADIC_TEMPLATES
             /**
-             * Calls a DBUS method on a remote object
+             * Calls a D-Bus method on a remote object
              *
              * This blocks until the reply is received or a timeout occurs.
              * @param methodName the name of the DBUS method to call
@@ -315,14 +315,12 @@ namespace dbustl {
             void processAsyncInArgs(Message& msg, const MethodCallback& callback);
 
             //Implementation of asyncCall
-            void executeAsyncCall(Message& method_call, DBusPendingCallNotifyFunction function,
-                void* user_data, DBusFreeFunction free_user_data);
+            class MethodCallbackWrapperBase;
+            void executeAsyncCall(Message& method_call, MethodCallbackWrapperBase *wrapper);
 
             //static methods for asynchronous calls handling
-            template<typename MethodCallback>            
-            static void methodCallbackDelete(void *object);
+            static void methodCallbackWrapperDelete(void *object);
 
-            template<typename MethodCallback>            
             static void callCompleted(DBusPendingCall *pending, void *user_data);
 
             //static methods for signals handling
@@ -366,6 +364,22 @@ namespace dbustl {
                 call_functor_t call_functor;
                 delete_functor_t delete_functor;
             };                
+            
+            class MethodCallbackWrapperBase {
+            public:
+                virtual ~MethodCallbackWrapperBase() {};
+                virtual void execute(Message& msg, const DBusException& e) = 0;
+            };
+            
+            template<class T>
+            class MethodCallbackWrapper : public MethodCallbackWrapperBase {
+            public:
+                MethodCallbackWrapper(const T& callback): _cb(callback) {};
+                virtual void execute(Message& msg, const DBusException& e) { _cb(msg, e); };
+            private:
+                T _cb;
+            };
+
             /** @endcond */
             //Signals callbacks, per signal
             std::map<std::string, FunctorWrapper> _signalsHandlers;    
@@ -458,8 +472,7 @@ namespace dbustl {
     template<typename MethodCallback>            
     void ServerProxy::asyncCall(Message& method_call, const MethodCallback& callback)
     {
-        executeAsyncCall(method_call, callCompleted<MethodCallback>,
-            new MethodCallback(callback), methodCallbackDelete<MethodCallback>);
+        executeAsyncCall(method_call, new MethodCallbackWrapper<MethodCallback>(callback));
     }
 
     void ServerProxy::asyncCall(Message& method_call, void (*callback)(Message&, const DBusException&))
@@ -500,29 +513,6 @@ namespace dbustl {
         if(!msg.error()) {
             asyncCall(msg, callback);
         }
-    }
-
-    template<typename MethodCallback>            
-    void ServerProxy::methodCallbackDelete(void *object)
-    {
-        MethodCallback *cb = static_cast<MethodCallback*>(object);
-        delete cb;
-    }
-
-    template<typename MethodCallback>            
-    void ServerProxy::callCompleted(DBusPendingCall *pending, void *user_data)
-    {
-        DBusException e;
-        MethodCallback *callback = static_cast<MethodCallback*>(user_data);
-    
-        Message reply(dbus_pending_call_steal_reply(pending));
-     
-        dbus_set_error_from_message(e.dbus(), reply.dbus());
-
-        //call user function
-        (*callback)(reply, e);
-
-        dbus_pending_call_unref(pending);
     }
     
     void ServerProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
