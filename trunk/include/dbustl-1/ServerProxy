@@ -327,12 +327,6 @@ namespace dbustl {
             static DBusHandlerResult signalsProcessingMethod(DBusConnection *connection, 
                 DBusMessage *dbusMessage, void *user_data);
 
-            template<typename SignalHandlerFunctor>            
-            static void signalHandlerCallback(void *functor, Message& signal);
-
-            template<typename SignalHandlerFunctor>            
-            static void signalHandlerDelete(void *functor);
-
             //Helper methods for signals processing
             void setWatchSignal(const std::string& signalName, bool enable);
 
@@ -349,22 +343,21 @@ namespace dbustl {
             
             /** @cond */
             //This does not show up in doxygen
-            struct FunctorWrapper {
-                typedef void (*call_functor_t)(void *functor, Message& signal);
-                typedef void (*delete_functor_t)(void *functor);
-                
-                FunctorWrapper() {};
-                
-                FunctorWrapper(void* lfunctor, call_functor_t lcall_functor, delete_functor_t ldelete_functor)
-                 : functor(lfunctor), call_functor(lcall_functor), delete_functor(ldelete_functor)
-                {
-                }
-                
-                void *functor;
-                call_functor_t call_functor;
-                delete_functor_t delete_functor;
-            };                
+            class SignalCallbackWrapperBase {
+            public:
+                virtual ~SignalCallbackWrapperBase() {};
+                virtual void execute(Message& signal) = 0;
+            };
             
+            template<class T>
+            class SignalCallbackWrapper : public SignalCallbackWrapperBase {
+            public:
+                SignalCallbackWrapper(const T& callback): _cb(callback) {};
+                virtual void execute(Message& signal) { _cb(signal); };
+            private:
+                T _cb;
+            };
+
             class MethodCallbackWrapperBase {
             public:
                 virtual ~MethodCallbackWrapperBase() {};
@@ -382,7 +375,7 @@ namespace dbustl {
 
             /** @endcond */
             //Signals callbacks, per signal
-            std::map<std::string, FunctorWrapper> _signalsHandlers;    
+            std::map<std::string, SignalCallbackWrapperBase *> _signalsHandlers;    
             
             static DBusObjectPathVTable _vtable;
     };
@@ -529,29 +522,11 @@ namespace dbustl {
     template<typename SignalHandlerFunctor>
     void ServerProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
     {
-        if(!_signalsHandlers.count(signalName)) {
-            setWatchSignal(signalName, true);
-        }
+        setWatchSignal(signalName, true);
 
         if(!DBUSTL_HAS_ERROR()) {
-            _signalsHandlers[signalName] = FunctorWrapper(new SignalHandlerFunctor(handler),
-                                            signalHandlerCallback<SignalHandlerFunctor>,
-                                            signalHandlerDelete<SignalHandlerFunctor>);
+            _signalsHandlers[signalName] = new SignalCallbackWrapper<SignalHandlerFunctor>(handler);
         }
-    }
-
-    template<typename SignalHandlerFunctor>            
-    void ServerProxy::signalHandlerCallback(void *functor, Message& signal)
-    {
-        SignalHandlerFunctor *sh = static_cast<SignalHandlerFunctor *>(functor);
-        (*sh)(signal);
-    }
-
-    template<typename SignalHandlerFunctor>            
-    void ServerProxy::signalHandlerDelete(void *functor)
-    {
-        SignalHandlerFunctor *sh = static_cast<SignalHandlerFunctor *>(functor);
-        delete sh;
     }
 }
 

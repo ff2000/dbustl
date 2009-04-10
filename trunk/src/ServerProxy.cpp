@@ -53,7 +53,7 @@ ServerProxy::~ServerProxy()
 {
     dbus_connection_unregister_object_path(_conn->dbus(), _path.c_str());
 
-    std::map<std::string, FunctorWrapper>::iterator it;
+    std::map<std::string, SignalCallbackWrapperBase* >::iterator it;
     while((it = _signalsHandlers.begin()) != _signalsHandlers.end()) {
         // Beware : due to the fact the method below erases() the map element while we still
         // need some bits of its (i.e. signal name), we have to make a copy
@@ -195,10 +195,8 @@ DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *,
             return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
         }
         
-        FunctorWrapper& fw = proxy->_signalsHandlers[handlerName];
+        proxy->_signalsHandlers[handlerName]->execute(msg);
         
-        (*fw.call_functor)(fw.functor, msg);
-
     	return DBUS_HANDLER_RESULT_HANDLED;
     }
     else {
@@ -209,8 +207,10 @@ DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *,
 void ServerProxy::removeSignalHandler(const std::string& signalName)
 {
     if(_signalsHandlers.count(signalName)) {
-        _signalsHandlers[signalName].delete_functor(_signalsHandlers[signalName].functor);
+        SignalCallbackWrapperBase *cb = _signalsHandlers[signalName];
         _signalsHandlers.erase(signalName);
+        delete cb;
+        //Note: we do free mem ops before to call this as it may throw
         setWatchSignal(signalName, false);
     }
 }
