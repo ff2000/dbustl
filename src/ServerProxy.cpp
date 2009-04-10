@@ -175,14 +175,13 @@ DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *,
         return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
     }
     
-    Message msg(dbusMessage);
-
-    /* libdbus keeps ownership of the message, but our Message class
-     * wants ownership too: as a result both will free the message
-     * once it is not used anymore. Ref it one more time as a workaround. */
-    dbus_message_ref(msg.dbus());
-
-    if(dbus_message_get_type(msg.dbus()) == DBUS_MESSAGE_TYPE_SIGNAL) {
+    if(dbus_message_get_type(dbusMessage) == DBUS_MESSAGE_TYPE_SIGNAL) {
+        /* libdbus keeps ownership of the message, but our Message class
+         * wants ownership too: as a result both will free the message
+         * once it is not used anymore. Ref it one more time as a workaround. */
+        dbus_message_ref(dbusMessage);
+        
+        Message msg(dbusMessage);
         std::string sigName = msg.member();
         std::string handlerName;
         
