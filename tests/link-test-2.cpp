@@ -1,5 +1,6 @@
 #include <dbustl-1/Message>
 
+#include <dbustl-1/types/Basic>
 #include <dbustl-1/types/list>
 #include <dbustl-1/types/vector>
 #include <dbustl-1/types/set>

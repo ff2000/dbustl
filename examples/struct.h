@@ -21,8 +21,16 @@
  *
  */
  
-#include "struct1.h"
+#include <string>
+#include <vector>
+ 
 #include <dbustl-1/dbustl>
+
+struct ExampleStruct {
+	std::string field1;
+	double field2;
+	std::vector<int> field3;
+};
 
 DBUSTL_REGISTER_STRUCT_3(
     ExampleStruct, 

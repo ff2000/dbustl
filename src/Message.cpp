@@ -22,7 +22,7 @@
  */
 
 #include <dbustl-1/Message>
-
+#include <dbustl-1/types/Basic> //Needed for operator<< in this file
 #include <dbustl-1/DBusException>
 
 #include <sstream>

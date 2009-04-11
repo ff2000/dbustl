@@ -26,18 +26,17 @@ The consequence is that user defined structs must be registered to DBusTL to be 
 All you have to do is call the macro once in a dedicated source file, and add this source file to your project.<h3><a class="anchor" name="cumstom_structs_example">
 An example</a></h3>
 On our example, we register a Struct called ExampleStruct, and then use it with DBusTL.<p>
-struct1.h containts the structure definition: <div class="fragment"><pre class="fragment">
+struct.h containts the structure definition, as well as a call to a special macro to register the type to DBusTL: <div class="fragment"><pre class="fragment">
 <span class="preprocessor">#include &lt;string&gt;</span>
 <span class="preprocessor">#include &lt;vector&gt;</span>
  
+<span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>
+
 <span class="keyword">struct </span>ExampleStruct {
         std::string field1;
         <span class="keywordtype">double</span> field2;
         std::vector&lt;int&gt; field3;
 };
-</pre></div> struct1.cpp containts the structure registration: <div class="fragment"><pre class="fragment">
-<span class="preprocessor">#include "struct1.h"</span>
-<span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>
 
 DBUSTL_REGISTER_STRUCT_3(
     ExampleStruct, 
@@ -45,10 +44,10 @@ DBUSTL_REGISTER_STRUCT_3(
     field2, 
     field3
 )
-</pre></div> struct2.cpp containts the calling sequence: <div class="fragment"><pre class="fragment">
+</pre></div> struct.cpp containts the calling sequence: <div class="fragment"><pre class="fragment">
 <span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>
 
-<span class="preprocessor">#include "struct1.h"</span>
+<span class="preprocessor">#include "struct.h"</span>
 <span class="preprocessor">#include &lt;string&gt;</span>
 
 <span class="keyword">using namespace </span>std;
@@ -73,7 +72,8 @@ DBUSTL_REGISTER_STRUCT_3(
 }
 </pre></div><p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>1: Apart from registration step, the use of structure is completely transparent. <p>
-2: C++ classes can be serialized or deserialized the same way as C structs. The only limitation is that the members must be public.</dd></dl>
+2: C++ classes can be serialized or deserialized the same way as C structs. The only limitation is that the members must be public. <p>
+3: You must register the type to DBusTL right after it's declaration: this means that every other file who sees the type declaration must also see its registration to DBusTL.</dd></dl>
 <h2><a class="anchor" name="custom_containers">
 Any other data type</a></h2>
 DBusTL can be extended to support any data type, as well as any container type.<p>

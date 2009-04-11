@@ -104,14 +104,14 @@ void testMessage1(dbustl::Message& m)
 	}
 	
 	{
-		float t;
+		float t = 0;
 		//Note : deserialization does not exist for float due to lack of 
 		//adequate DBUS representation
 		m << t;
 	}
 	
 	{
-		double t;
+		double t = 0;
 		m >> t;
 		m << t;
 	}	
