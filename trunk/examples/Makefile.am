@@ -11,7 +11,7 @@ noinst_PROGRAMS += simplest containers struct
 endif
 simplest_SOURCES = simplest.cpp
 containers_SOURCES = containers.cpp
-struct_SOURCES = struct1.cpp struct2.cpp struct1.h
+struct_SOURCES = struct.cpp struct.h
 
 if HAVE_GLIB
 noinst_PROGRAMS += signals

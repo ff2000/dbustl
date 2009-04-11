@@ -14,14 +14,12 @@ libdbustl_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp \
-                   src/EventLoopIntegration.cpp \
-                   src/types/Basic.cpp
+                   src/EventLoopIntegration.cpp 
 libdbustl_noex_1_la_SOURCES = src/ServerProxy.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp \
-                   src/EventLoopIntegration.cpp \
-                   src/types/Basic.cpp
+                   src/EventLoopIntegration.cpp
 libdbustl_noex_1_la_CPPFLAGS = -DDBUSTL_NO_EXCEPTIONS -fno-exceptions
 
 #dbustl pkg-config support

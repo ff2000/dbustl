@@ -1,4 +1,4 @@
-/** 
+/**
  *  DBusTL - DBus Template Library
  *
  *  Copyright (C) 2008  Fabien Chevalier <chefabien@gmail.com>
@@ -21,11 +21,28 @@
  *
  */
  
+#include <dbustl-1/dbustl>
+
+#include "struct.h"
 #include <string>
-#include <vector>
+
+using namespace std;
+using namespace dbustl;
  
-struct ExampleStruct {
-	std::string field1;
-	double field2;
-	std::vector<int> field3;
-};
+int main()
+{
+    ServerProxy remoteObject(Connection::sessionBus(), 
+    "/PythonServerObject", "com.example.SampleService");
+    try {
+        ExampleStruct s1, s2;
+        s1.field1 = "String";
+        s1.field2 = 1.1;
+        remoteObject.call("test_ExampleStruct", s1, &s2); 
+        cout << s1.field1 << ", " << s1.field2 << endl;
+    }
+    catch(const DBusException& e) {
+        /* Dbus call failed: e.name() constains error cause */
+        cerr << e.what() << endl;
+    } 
+    return 0;
+}
