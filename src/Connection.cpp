@@ -97,6 +97,11 @@ void Connection::construct(DBusBusType busType)
     //As per DBUS documentation, it is safe to call it more than once, as
     //calls other than the first one are ignored
     dbus_threads_init_default();
+    DBusException e;
+    DBusConnection *c = dbus_connection_open_private("unix:path=/tmp/dbus-test", e.dbus());
+#ifndef DBUSTL_NO_EXCEPTIONS
+    if(!c) throw e;
+#endif
     _llconn = dbus_bus_get_private(busType, 0);
 
 #ifndef DBUSTL_NO_EXCEPTIONS
