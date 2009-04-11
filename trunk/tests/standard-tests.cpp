@@ -203,8 +203,8 @@ int run_vt_tests()
         dbustl::ServerProxy pythonServerProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
             pythonServerProxy.setInterface("com.example.SampleInterface");
-            unsigned int in = 254;
-            unsigned int out;
+            unsigned char in = 254;
+            unsigned char out;
             pythonServerProxy.call("test_byte", in, &out); 
             assert(in == (out - 1));            
         }
