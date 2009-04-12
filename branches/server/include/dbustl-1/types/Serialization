@@ -1,0 +1,50 @@
+/*
+ *  DBusTL - DBus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_TYPES_SERIALIZATION
+#define DBUSTL_TYPES_SERIALIZATION
+
+// DBUS arguments types convertion
+
+//This file only declares the templates used for arguments serialization/deserialization
+//Implementations live in other files
+
+#include <dbus/dbus.h>
+
+namespace dbustl {
+namespace types {
+
+    template<typename T>
+    struct Serializer {
+        static dbus_bool_t run(DBusMessageIter* it, const T& arg);
+    };
+    
+    template<typename T>
+    struct Deserializer {
+        static dbus_bool_t run(DBusMessageIter* it, T* arg);
+    };
+
+}
+}
+
+#endif /* DBUSTL_TYPES_SERIALIZATION */
