@@ -24,7 +24,8 @@
 #include <iostream>
 #include <string>
 
-#include <dbustl-1/Glib>
+#include <dbustl-1/dbustl>
+#include <dbustl-1/GlibEventLoopIntegration>
 
 class DeviceManager {
 public:
