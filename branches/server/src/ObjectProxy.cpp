@@ -24,22 +24,22 @@
 #include <dbus/dbus.h>
 
 #include <dbustl-1/Connection>
-#include <dbustl-1/ServerProxy>
+#include <dbustl-1/ObjectProxy>
 
 #include <cassert>
 
 namespace dbustl {
 
-DBusObjectPathVTable ServerProxy::_vtable = {
+DBusObjectPathVTable ObjectProxy::_vtable = {
     NULL,
-    &ServerProxy::signalsProcessingMethod, 
+    &ObjectProxy::signalsProcessingMethod, 
     0,
     0,
     0,
     0
 };
 
-ServerProxy::ServerProxy(Connection* conn, const std::string& path, const std::string& destination) :
+ObjectProxy::ObjectProxy(Connection* conn, const std::string& path, const std::string& destination) :
   _conn(conn), _path(path), _destination(destination), _timeout(-1)
 {
     assert(_conn->isConnected());
@@ -48,7 +48,7 @@ ServerProxy::ServerProxy(Connection* conn, const std::string& path, const std::s
     }
 }
 
-ServerProxy::~ServerProxy()
+ObjectProxy::~ObjectProxy()
 {
     dbus_connection_unregister_object_path(_conn->dbus(), _path.c_str());
 
@@ -67,7 +67,7 @@ ServerProxy::~ServerProxy()
     }
 }
 
-Message ServerProxy::createMethodCall(const std::string& methodName)
+Message ObjectProxy::createMethodCall(const std::string& methodName)
 {
     const char *dest = _destination.empty() ? NULL : _destination.c_str();
     const char *intf = _interface.empty() ? NULL : _interface.c_str();
@@ -86,7 +86,7 @@ Message ServerProxy::createMethodCall(const std::string& methodName)
     return method_call;
 }
 
-Message ServerProxy::call(Message& method_call)
+Message ObjectProxy::call(Message& method_call)
 {
     DBusException error;
     DBusMessage *reply;
@@ -98,7 +98,7 @@ Message ServerProxy::call(Message& method_call)
     return Message(reply);
 }
 
-void ServerProxy::processInArgs(Message& msg)
+void ObjectProxy::processInArgs(Message& msg)
 {
     if(!msg.error()) {
         Message reply(call(msg));
@@ -107,14 +107,14 @@ void ServerProxy::processInArgs(Message& msg)
     }
 }
 
-void ServerProxy::processOutArgs(Message& reply)
+void ObjectProxy::processOutArgs(Message& reply)
 {
     if(reply.error()) {
         throw_or_set( *(reply.error()) );
     }
 }
 
-void ServerProxy::callCompleted(DBusPendingCall *pending, void *user_data)
+void ObjectProxy::callCompleted(DBusPendingCall *pending, void *user_data)
 {
     DBusException e;
     MethodCallbackWrapperBase *callback = static_cast<MethodCallbackWrapperBase*>(user_data);
@@ -129,13 +129,13 @@ void ServerProxy::callCompleted(DBusPendingCall *pending, void *user_data)
     dbus_pending_call_unref(pending);
 }
 
-void ServerProxy::methodCallbackWrapperDelete(void *object)
+void ObjectProxy::methodCallbackWrapperDelete(void *object)
 {
     MethodCallbackWrapperBase *cb = static_cast<MethodCallbackWrapperBase*>(object);
     delete cb;
 }
 
-void ServerProxy::executeAsyncCall(Message& method_call, MethodCallbackWrapperBase *wrapper)
+void ObjectProxy::executeAsyncCall(Message& method_call, MethodCallbackWrapperBase *wrapper)
 {
     if(!method_call.error()) {
         DBusPendingCall *pending_return;
@@ -163,10 +163,10 @@ void ServerProxy::executeAsyncCall(Message& method_call, MethodCallbackWrapperBa
     }
 }
 
-DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *, 
+DBusHandlerResult ObjectProxy::signalsProcessingMethod(DBusConnection *, 
     DBusMessage *dbusMessage, void *user_data)
 {
-    ServerProxy* proxy = static_cast<ServerProxy *>(user_data);
+    ObjectProxy* proxy = static_cast<ObjectProxy *>(user_data);
     
     /* Basic sanity check : libdbus tries an approximate match on objects
      * paths, but we want a perfect match */
@@ -206,7 +206,7 @@ DBusHandlerResult ServerProxy::signalsProcessingMethod(DBusConnection *,
     }
 }
 
-void ServerProxy::removeSignalHandler(const std::string& signalName)
+void ObjectProxy::removeSignalHandler(const std::string& signalName)
 {
     if(_signalsHandlers.count(signalName)) {
         SignalCallbackWrapperBase *cb = _signalsHandlers[signalName];
@@ -217,7 +217,7 @@ void ServerProxy::removeSignalHandler(const std::string& signalName)
     }
 }
 
-void ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
+void ObjectProxy::setWatchSignal(const std::string& signalName, bool enable)
 {
     if(!_conn->isPrivate()) {
         std::string match;
@@ -245,7 +245,7 @@ void ServerProxy::setWatchSignal(const std::string& signalName, bool enable)
     }
 }
 
-void ServerProxy::enableSignal(const std::string& signalName, SignalCallbackWrapperBase* signalCb)
+void ObjectProxy::enableSignal(const std::string& signalName, SignalCallbackWrapperBase* signalCb)
 {
     if(!_signalsHandlers.count(signalName)) {
         try {
