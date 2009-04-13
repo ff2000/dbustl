@@ -1,3 +1,9 @@
+v0.4.0: Cleanup release
+ * Fixed deserialization of unsigned char type, that would abort.
+ * Internal code refactoring and cleanup
+ * Some minor API changes regarding custom structs and compat C++ mode
+ * Renames ServerProxy as ObjectProxy
+
 v0.3.0: Feature release
  * Added exception-less mode
  * Made ServerProxy methods signature independant of the use of C++ exceptions

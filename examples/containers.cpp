@@ -32,7 +32,7 @@ using namespace dbustl;
  
 int main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), 
+    ObjectProxy remoteObject(Connection::sessionBus(), 
         "/PythonServerObject", "com.example.SampleService");
     try {
         list<int32_t> in, out;

@@ -43,7 +43,7 @@ namespace dbustl {
      * at the moment), or be connections to a bus, which is in charge
      * of routing messages to the right process.
      * 
-     * A DBus Connection is needed to instantiate ServerProxy objects.
+     * A DBus Connection is needed to instantiate ObjectProxy objects.
      * 
      * The simplest way to have a connection to a bus is through a call 
      * to Connection::systemBus or Connection::sessionBus
