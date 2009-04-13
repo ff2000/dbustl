@@ -27,7 +27,7 @@ The main inconvenient of this alternative approach is that it makes the code a b
  
 <span class="keywordtype">int</span> main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), 
+    ObjectProxy remoteObject(Connection::sessionBus(), 
         <span class="stringliteral">"/PythonServerObject"</span>, <span class="stringliteral">"com.example.SampleService"</span>);
     <span class="keywordflow">try</span> {
         Message methodMsg(NULL), replyMsg(NULL);

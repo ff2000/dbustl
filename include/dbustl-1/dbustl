@@ -162,15 +162,15 @@
  * the interface is optionnal from the DBus protocol perspective, so it is for DBusTL.
  * 
  * Here is how we can do that with DBusTL:
- * @subsubsection interface_setinterface ServerProxy::setInterface() method.
+ * @subsubsection interface_setinterface ObjectProxy::setInterface() method.
  * This is the easiest way to target a given interface.
  * Calling this method sets the interface to use for all the subsequent method calls
  * of the given proxy object.
  * 
  * @subsubsection interface_modifiers Interface modifiers
- * A ServerProxy::Interface "special class" is provided with ServerProxy. Here is how to use it:
+ * A ObjectProxy::Interface "special class" is provided with ObjectProxy. Here is how to use it:
  * @code
- * proxy.call("SimpleHello", ServerProxy::Interface("com.example.SampleInterface"), "Hi", &reply); 
+ * proxy.call("SimpleHello", ObjectProxy::Interface("com.example.SampleInterface"), "Hi", &reply); 
  * @endcode
  * This has for effect to place the call on a given interface. This does not change the interface
  * that will be use for subsequent calls.
@@ -417,7 +417,7 @@
 
 #include <dbustl-1/Message>
 #include <dbustl-1/Connection>
-#include <dbustl-1/ServerProxy>
+#include <dbustl-1/ObjectProxy>
 #include <dbustl-1/types/Basic>
 #include <dbustl-1/types/vector>
 #include <dbustl-1/types/list>

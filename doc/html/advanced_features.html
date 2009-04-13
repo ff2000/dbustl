@@ -49,7 +49,7 @@ So let's see how simple this is:<p>
  
 <span class="keywordtype">int</span> main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), 
+    ObjectProxy remoteObject(Connection::sessionBus(), 
         <span class="stringliteral">"/PythonServerObject"</span>, <span class="stringliteral">"com.example.SampleService"</span>);
     <span class="keywordflow">try</span> {
         list&lt;int32_t&gt; in, out;
