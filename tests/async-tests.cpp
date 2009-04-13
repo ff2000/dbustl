@@ -21,7 +21,8 @@
  *
  */
 
-#include <dbustl-1/Glib>
+#include <dbustl-1/dbustl>
+#include <dbustl-1/GlibEventLoopIntegration>
 
 #include <iostream>
 #include <string>

@@ -18,6 +18,5 @@ nobase_include_HEADERS = \
 
 if HAVE_GLIB
 nobase_include_HEADERS += \
-	dbustl-1/Glib \
    	dbustl-1/GlibEventLoopIntegration
 endif
