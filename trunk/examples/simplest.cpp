@@ -30,7 +30,7 @@ using namespace dbustl;
  
 int main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), "/PythonServerObject", "com.example.SampleService");
+    ObjectProxy remoteObject(Connection::sessionBus(), "/PythonServerObject", "com.example.SampleService");
     try {
         string reply;
         remoteObject.call("SimpleHello", "Hello world", &reply); 

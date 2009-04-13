@@ -55,7 +55,7 @@ DBUSTL_REGISTER_STRUCT_3(
  
 <span class="keywordtype">int</span> main()
 {
-    ServerProxy remoteObject(Connection::sessionBus(), 
+    ObjectProxy remoteObject(Connection::sessionBus(), 
     <span class="stringliteral">"/PythonServerObject"</span>, <span class="stringliteral">"com.example.SampleService"</span>);
     <span class="keywordflow">try</span> {
         ExampleStruct s1, s2;

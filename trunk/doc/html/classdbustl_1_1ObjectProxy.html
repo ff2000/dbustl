@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>DBus Template Library: dbustl::ServerProxy Class Reference</title>
+<title>DBus Template Library: dbustl::ObjectProxy Class Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -20,84 +20,84 @@
       <li><a href="functions.html"><span>Class&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><b>dbustl</b>::<a class="el" href="classdbustl_1_1ServerProxy.html">ServerProxy</a>
+  <div class="navpath"><b>dbustl</b>::<a class="el" href="classdbustl_1_1ObjectProxy.html">ObjectProxy</a>
   </div>
 </div>
 <div class="contents">
-<h1>dbustl::ServerProxy Class Reference</h1><!-- doxytag: class="dbustl::ServerProxy" -->Defines a proxy, used to call methods an receive signals on a remote D-Bus object.  
+<h1>dbustl::ObjectProxy Class Reference</h1><!-- doxytag: class="dbustl::ObjectProxy" -->Defines a proxy, used to call methods an receive signals on a remote D-Bus object.  
 <a href="#_details">More...</a>
 <p>
 
 <p>
-<a href="classdbustl_1_1ServerProxy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
+<a href="classdbustl_1_1ObjectProxy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Proxy settings</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#c3df3a25dec4e1cfdd1f89452e64aa2f">ServerProxy</a> (<a class="el" href="classdbustl_1_1Connection.html">Connection</a> *conn, const std::string &amp;path, const std::string &amp;destination=&quot;&quot;)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#a97a2b397770c93e56674189d2c6514c">ObjectProxy</a> (<a class="el" href="classdbustl_1_1Connection.html">Connection</a> *conn, const std::string &amp;path, const std::string &amp;destination=&quot;&quot;)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a proxy for the object uniquely identified by the (conn, path, destination) triplet.  <a href="#c3df3a25dec4e1cfdd1f89452e64aa2f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#630ebc97581da1e76973ac7b5edaef3b">~ServerProxy</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates a proxy for the object uniquely identified by the (conn, path, destination) triplet.  <a href="#a97a2b397770c93e56674189d2c6514c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#25c3d116969b7e3dc472044d2687f358">~ObjectProxy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#630ebc97581da1e76973ac7b5edaef3b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#941e591f7b3b08d807dfdc1577e9a656">setTimeout</a> (int timeout)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#25c3d116969b7e3dc472044d2687f358"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#25dfc4cd5f7a07f8a7586a65c1d79b06">setTimeout</a> (int timeout)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">For synchronous blocking calls, set the timeout in milliseconds.  <a href="#941e591f7b3b08d807dfdc1577e9a656"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#df5a271c2cd99518f4977f8591cf8b8c">setInterface</a> (const std::string &amp;interface)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">For synchronous blocking calls, set the timeout in milliseconds.  <a href="#25dfc4cd5f7a07f8a7586a65c1d79b06"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#af39d6e575b4c5bcfd77f8436b3a5f7c">setInterface</a> (const std::string &amp;interface)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the interface to use for all the calls on the remote object.  <a href="#df5a271c2cd99518f4977f8591cf8b8c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets the interface to use for all the calls on the remote object.  <a href="#af39d6e575b4c5bcfd77f8436b3a5f7c"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Synchronous calls handling</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df">call</a> (const std::string &amp;methodName, const Args &amp;...args)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#73551b8702f3b38106f69d2baf3cb11c">call</a> (const std::string &amp;methodName, const Args &amp;...args)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls a D-Bus method on a remote object.  <a href="#c2ba5238dfd4c216204da9ba287e99df"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#50d188516cd98b83b010cc8b25a0e453">createMethodCall</a> (const std::string &amp;methodName)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calls a D-Bus method on a remote object.  <a href="#73551b8702f3b38106f69d2baf3cb11c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#19555e80a3805c473b2be8f0c437b5ad">createMethodCall</a> (const std::string &amp;methodName)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Creates a method call message.  <a href="#50d188516cd98b83b010cc8b25a0e453"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#9d1533ead0f132c6950f1819780a6c53">call</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;methodCall)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Creates a method call message.  <a href="#19555e80a3805c473b2be8f0c437b5ad"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#a882b85a53e49efc032d721cc1b1ba69">call</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;methodCall)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Executes a D-Bus method call.  <a href="#9d1533ead0f132c6950f1819780a6c53"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compatibility C++ syntax: Executes a D-Bus method call.  <a href="#a882b85a53e49efc032d721cc1b1ba69"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Asynchronous calls handling</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename MethodCallback, typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#d51f05cc233fcc2bde1c68a80131dfd7">asyncCall</a> (const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#ecd1edd4a7744554e7e8825fe2940db2">asyncCall</a> (const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#b30380def900f23eac1a127cdc54d0b5">asyncCall</a> (const std::string &amp;methodName, void(*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;), const Args &amp;...args)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#3422f24c7efc321c7fed0d5122b5e104">asyncCall</a> (const std::string &amp;methodName, void(*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;), const Args &amp;...args)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#1545721988fa71b8a57f798af485e3aa">asyncCall</a> (const std::string &amp;methodName, void(_Class::*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;), _Class *c, const Args &amp;...args)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#15e57c55d579f829fc13b98fe5c01ba2">asyncCall</a> (const std::string &amp;methodName, void(_Class::*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;), _Class *c, const Args &amp;...args)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename MethodCallback&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#e412d79e3d13e19b24a6378b00853c94">asyncCall</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;method_call, const MethodCallback &amp;callback)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#f2023cf48d1e0b7036a0f7227d17470b">asyncCall</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;method_call, const MethodCallback &amp;callback)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#679e2aa906acdd9f85e975b1fb6bfaa5">asyncCall</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;method_call, void(*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#7e72ea692af1c6b3bcb62d887aa69900">asyncCall</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;method_call, void(*callback)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;, const <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> &amp;))</td></tr>
 
 <tr><td colspan="2"><br><h2>Signals handling</h2></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename SignalHandlerFunctor&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362">setSignalHandler</a> (const std::string &amp;signalName, const SignalHandlerFunctor &amp;handler)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#d089d8c9ecfbc674623f61c2a6ffa877">setSignalHandler</a> (const std::string &amp;signalName, const SignalHandlerFunctor &amp;handler)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : C++ functor version.  <a href="#0ce3928d90c9332a0ef7fdd2fdb98362"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#599f5cd96de569f5e14664896ba52610">setSignalHandler</a> (const std::string &amp;signalName, void(*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : C++ functor version.  <a href="#d089d8c9ecfbc674623f61c2a6ffa877"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#7fb78dd8ae050bf94df87edf82a960e4">setSignalHandler</a> (const std::string &amp;signalName, void(*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal))</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : function pointer version.  <a href="#599f5cd96de569f5e14664896ba52610"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : function pointer version.  <a href="#7fb78dd8ae050bf94df87edf82a960e4"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#089709f5132e105f0f57b4025218b93e">setSignalHandler</a> (const std::string &amp;signalName, void(_Class::*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> signal), _Class *object)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#033a44a231e2709392230518e6e69d39">setSignalHandler</a> (const std::string &amp;signalName, void(_Class::*handler)(<a class="el" href="classdbustl_1_1Message.html">Message</a> signal), _Class *object)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : member pointer version.  <a href="#089709f5132e105f0f57b4025218b93e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy.html#fe875b185faaf41a2648d4a862e92091">removeSignalHandler</a> (const std::string &amp;signalName)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Registers a handler to receive a D-Bus signal : member pointer version.  <a href="#033a44a231e2709392230518e6e69d39"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#a8d2526a7495629efec106e37d22c246">removeSignalHandler</a> (const std::string &amp;signalName)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>.  <a href="#fe875b185faaf41a2648d4a862e92091"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ObjectProxy.html#d089d8c9ecfbc674623f61c2a6ffa877" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>.  <a href="#a8d2526a7495629efec106e37d22c246"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html">Interface</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy_1_1Interface.html">Interface</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ServerProxy.html#c2ba5238dfd4c216204da9ba287e99df" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ServerProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ServerProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ServerProxy_1_1Interface.html" title="This class is used in call() member of ServerProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ServerProxy_1_1Interface.html#_details">More...</a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ObjectProxy.html#73551b8702f3b38106f69d2baf3cb11c" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ObjectProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ObjectProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ObjectProxy_1_1Interface.html" title="This class is used in call() member of ObjectProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ObjectProxy_1_1Interface.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Defines a proxy, used to call methods an receive signals on a remote D-Bus object. <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="c3df3a25dec4e1cfdd1f89452e64aa2f"></a><!-- doxytag: member="dbustl::ServerProxy::ServerProxy" ref="c3df3a25dec4e1cfdd1f89452e64aa2f" args="(Connection *conn, const std::string &amp;path, const std::string &amp;destination=&quot;&quot;)" -->
+<a class="anchor" name="a97a2b397770c93e56674189d2c6514c"></a><!-- doxytag: member="dbustl::ObjectProxy::ObjectProxy" ref="a97a2b397770c93e56674189d2c6514c" args="(Connection *conn, const std::string &amp;path, const std::string &amp;destination=&quot;&quot;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">dbustl::ServerProxy::ServerProxy           </td>
+          <td class="memname">dbustl::ObjectProxy::ObjectProxy           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classdbustl_1_1Connection.html">Connection</a> *&nbsp;</td>
           <td class="paramname"> <em>conn</em>, </td>
@@ -137,12 +137,12 @@ Beware: It is a design error to create more that one proxy on the same object on
 
 </div>
 </div><p>
-<a class="anchor" name="630ebc97581da1e76973ac7b5edaef3b"></a><!-- doxytag: member="dbustl::ServerProxy::~ServerProxy" ref="630ebc97581da1e76973ac7b5edaef3b" args="()" -->
+<a class="anchor" name="25c3d116969b7e3dc472044d2687f358"></a><!-- doxytag: member="dbustl::ObjectProxy::~ObjectProxy" ref="25c3d116969b7e3dc472044d2687f358" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">dbustl::ServerProxy::~ServerProxy           </td>
+          <td class="memname">dbustl::ObjectProxy::~ObjectProxy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -159,12 +159,12 @@ The destructor is non virtual on purpose, this class is not designed for inherit
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="941e591f7b3b08d807dfdc1577e9a656"></a><!-- doxytag: member="dbustl::ServerProxy::setTimeout" ref="941e591f7b3b08d807dfdc1577e9a656" args="(int timeout)" -->
+<a class="anchor" name="25dfc4cd5f7a07f8a7586a65c1d79b06"></a><!-- doxytag: member="dbustl::ObjectProxy::setTimeout" ref="25dfc4cd5f7a07f8a7586a65c1d79b06" args="(int timeout)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::setTimeout           </td>
+          <td class="memname">void dbustl::ObjectProxy::setTimeout           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>timeout</em>          </td>
@@ -181,12 +181,12 @@ For synchronous blocking calls, set the timeout in milliseconds.
 -1 means default value (very long) 
 </div>
 </div><p>
-<a class="anchor" name="df5a271c2cd99518f4977f8591cf8b8c"></a><!-- doxytag: member="dbustl::ServerProxy::setInterface" ref="df5a271c2cd99518f4977f8591cf8b8c" args="(const std::string &amp;interface)" -->
+<a class="anchor" name="af39d6e575b4c5bcfd77f8436b3a5f7c"></a><!-- doxytag: member="dbustl::ObjectProxy::setInterface" ref="af39d6e575b4c5bcfd77f8436b3a5f7c" args="(const std::string &amp;interface)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::setInterface           </td>
+          <td class="memname">void dbustl::ObjectProxy::setInterface           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>interface</em>          </td>
@@ -208,14 +208,14 @@ If empty (the default), the default interface is used. <dl compact><dt><b>Parame
 
 </div>
 </div><p>
-<a class="anchor" name="c2ba5238dfd4c216204da9ba287e99df"></a><!-- doxytag: member="dbustl::ServerProxy::call" ref="c2ba5238dfd4c216204da9ba287e99df" args="(const std::string &amp;methodName, const Args &amp;...args)" -->
+<a class="anchor" name="73551b8702f3b38106f69d2baf3cb11c"></a><!-- doxytag: member="dbustl::ObjectProxy::call" ref="73551b8702f3b38106f69d2baf3cb11c" args="(const std::string &amp;methodName, const Args &amp;...args)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::call           </td>
+          <td class="memname">void dbustl::ObjectProxy::call           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>methodName</em>, </td>
@@ -252,12 +252,12 @@ This blocks until the reply is received or a timeout occurs. <dl compact><dt><b>
 
 </div>
 </div><p>
-<a class="anchor" name="50d188516cd98b83b010cc8b25a0e453"></a><!-- doxytag: member="dbustl::ServerProxy::createMethodCall" ref="50d188516cd98b83b010cc8b25a0e453" args="(const std::string &amp;methodName)" -->
+<a class="anchor" name="19555e80a3805c473b2be8f0c437b5ad"></a><!-- doxytag: member="dbustl::ObjectProxy::createMethodCall" ref="19555e80a3805c473b2be8f0c437b5ad" args="(const std::string &amp;methodName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::ServerProxy::createMethodCall           </td>
+          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::ObjectProxy::createMethodCall           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>methodName</em>          </td>
@@ -284,12 +284,12 @@ see <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more de
 
 </div>
 </div><p>
-<a class="anchor" name="9d1533ead0f132c6950f1819780a6c53"></a><!-- doxytag: member="dbustl::ServerProxy::call" ref="9d1533ead0f132c6950f1819780a6c53" args="(Message &amp;methodCall)" -->
+<a class="anchor" name="a882b85a53e49efc032d721cc1b1ba69"></a><!-- doxytag: member="dbustl::ObjectProxy::call" ref="a882b85a53e49efc032d721cc1b1ba69" args="(Message &amp;methodCall)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::ServerProxy::call           </td>
+          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::ObjectProxy::call           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>methodCall</em>          </td>
@@ -317,14 +317,14 @@ see <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more de
 
 </div>
 </div><p>
-<a class="anchor" name="d51f05cc233fcc2bde1c68a80131dfd7"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="d51f05cc233fcc2bde1c68a80131dfd7" args="(const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)" -->
+<a class="anchor" name="ecd1edd4a7744554e7e8825fe2940db2"></a><!-- doxytag: member="dbustl::ObjectProxy::asyncCall" ref="ecd1edd4a7744554e7e8825fe2940db2" args="(const std::string &amp;methodName, const MethodCallback &amp;callback, const Args &amp;...args)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename MethodCallback, typename... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
+          <td class="memname">void dbustl::ObjectProxy::asyncCall           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>methodName</em>, </td>
@@ -354,14 +354,14 @@ template&lt;typename MethodCallback, typename... Args&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="b30380def900f23eac1a127cdc54d0b5"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="b30380def900f23eac1a127cdc54d0b5" args="(const std::string &amp;methodName, void(*callback)(Message &amp;, const DBusException &amp;), const Args &amp;...args)" -->
+<a class="anchor" name="3422f24c7efc321c7fed0d5122b5e104"></a><!-- doxytag: member="dbustl::ObjectProxy::asyncCall" ref="3422f24c7efc321c7fed0d5122b5e104" args="(const std::string &amp;methodName, void(*callback)(Message &amp;, const DBusException &amp;), const Args &amp;...args)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
+          <td class="memname">void dbustl::ObjectProxy::asyncCall           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>methodName</em>, </td>
@@ -391,14 +391,14 @@ template&lt;typename... Args&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="1545721988fa71b8a57f798af485e3aa"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="1545721988fa71b8a57f798af485e3aa" args="(const std::string &amp;methodName, void(_Class::*callback)(Message &amp;, const DBusException &amp;), _Class *c, const Args &amp;...args)" -->
+<a class="anchor" name="15e57c55d579f829fc13b98fe5c01ba2"></a><!-- doxytag: member="dbustl::ObjectProxy::asyncCall" ref="15e57c55d579f829fc13b98fe5c01ba2" args="(const std::string &amp;methodName, void(_Class::*callback)(Message &amp;, const DBusException &amp;), _Class *c, const Args &amp;...args)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename _Class, typename... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
+          <td class="memname">void dbustl::ObjectProxy::asyncCall           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>methodName</em>, </td>
@@ -434,14 +434,14 @@ template&lt;typename _Class, typename... Args&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="e412d79e3d13e19b24a6378b00853c94"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="e412d79e3d13e19b24a6378b00853c94" args="(Message &amp;method_call, const MethodCallback &amp;callback)" -->
+<a class="anchor" name="f2023cf48d1e0b7036a0f7227d17470b"></a><!-- doxytag: member="dbustl::ObjectProxy::asyncCall" ref="f2023cf48d1e0b7036a0f7227d17470b" args="(Message &amp;method_call, const MethodCallback &amp;callback)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename MethodCallback&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
+          <td class="memname">void dbustl::ObjectProxy::asyncCall           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>method_call</em>, </td>
@@ -465,12 +465,12 @@ template&lt;typename MethodCallback&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="679e2aa906acdd9f85e975b1fb6bfaa5"></a><!-- doxytag: member="dbustl::ServerProxy::asyncCall" ref="679e2aa906acdd9f85e975b1fb6bfaa5" args="(Message &amp;method_call, void(*callback)(Message &amp;, const DBusException &amp;))" -->
+<a class="anchor" name="7e72ea692af1c6b3bcb62d887aa69900"></a><!-- doxytag: member="dbustl::ObjectProxy::asyncCall" ref="7e72ea692af1c6b3bcb62d887aa69900" args="(Message &amp;method_call, void(*callback)(Message &amp;, const DBusException &amp;))" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::asyncCall           </td>
+          <td class="memname">void dbustl::ObjectProxy::asyncCall           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>method_call</em>, </td>
@@ -494,14 +494,14 @@ template&lt;typename MethodCallback&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="0ce3928d90c9332a0ef7fdd2fdb98362"></a><!-- doxytag: member="dbustl::ServerProxy::setSignalHandler" ref="0ce3928d90c9332a0ef7fdd2fdb98362" args="(const std::string &amp;signalName, const SignalHandlerFunctor &amp;handler)" -->
+<a class="anchor" name="d089d8c9ecfbc674623f61c2a6ffa877"></a><!-- doxytag: member="dbustl::ObjectProxy::setSignalHandler" ref="d089d8c9ecfbc674623f61c2a6ffa877" args="(const std::string &amp;signalName, const SignalHandlerFunctor &amp;handler)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename SignalHandlerFunctor&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::setSignalHandler           </td>
+          <td class="memname">void dbustl::ObjectProxy::setSignalHandler           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>signalName</em>, </td>
@@ -538,12 +538,12 @@ If a handler is already registered, the previous handler is overwritten with the
 
 </div>
 </div><p>
-<a class="anchor" name="599f5cd96de569f5e14664896ba52610"></a><!-- doxytag: member="dbustl::ServerProxy::setSignalHandler" ref="599f5cd96de569f5e14664896ba52610" args="(const std::string &amp;signalName, void(*handler)(Message &amp;signal))" -->
+<a class="anchor" name="7fb78dd8ae050bf94df87edf82a960e4"></a><!-- doxytag: member="dbustl::ObjectProxy::setSignalHandler" ref="7fb78dd8ae050bf94df87edf82a960e4" args="(const std::string &amp;signalName, void(*handler)(Message &amp;signal))" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::setSignalHandler           </td>
+          <td class="memname">void dbustl::ObjectProxy::setSignalHandler           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>signalName</em>, </td>
@@ -580,14 +580,14 @@ If a handler is already registered, the previous handler is overwritten with the
 
 </div>
 </div><p>
-<a class="anchor" name="089709f5132e105f0f57b4025218b93e"></a><!-- doxytag: member="dbustl::ServerProxy::setSignalHandler" ref="089709f5132e105f0f57b4025218b93e" args="(const std::string &amp;signalName, void(_Class::*handler)(Message signal), _Class *object)" -->
+<a class="anchor" name="033a44a231e2709392230518e6e69d39"></a><!-- doxytag: member="dbustl::ObjectProxy::setSignalHandler" ref="033a44a231e2709392230518e6e69d39" args="(const std::string &amp;signalName, void(_Class::*handler)(Message signal), _Class *object)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename _Class&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::setSignalHandler           </td>
+          <td class="memname">void dbustl::ObjectProxy::setSignalHandler           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>signalName</em>, </td>
@@ -631,12 +631,12 @@ If a handler is already registered, the previous handler is overwritten with the
 
 </div>
 </div><p>
-<a class="anchor" name="fe875b185faaf41a2648d4a862e92091"></a><!-- doxytag: member="dbustl::ServerProxy::removeSignalHandler" ref="fe875b185faaf41a2648d4a862e92091" args="(const std::string &amp;signalName)" -->
+<a class="anchor" name="a8d2526a7495629efec106e37d22c246"></a><!-- doxytag: member="dbustl::ObjectProxy::removeSignalHandler" ref="a8d2526a7495629efec106e37d22c246" args="(const std::string &amp;signalName)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::ServerProxy::removeSignalHandler           </td>
+          <td class="memname">void dbustl::ObjectProxy::removeSignalHandler           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>signalName</em>          </td>
@@ -648,7 +648,7 @@ If a handler is already registered, the previous handler is overwritten with the
 <div class="memdoc">
 
 <p>
-Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ServerProxy.html#0ce3928d90c9332a0ef7fdd2fdb98362" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>. 
+Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ObjectProxy.html#d089d8c9ecfbc674623f61c2a6ffa877" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -664,7 +664,7 @@ Removes a signal handler previously registered with <a class="el" href="classdbu
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>dbustl-1/ServerProxy<li>ServerProxy.cpp</ul>
+<li>dbustl-1/ObjectProxy<li>ObjectProxy.cpp</ul>
 </div>
 <hr size="1"><address style="text-align: right;"><small>DBus Template Library 0.3.0 documentation, generated by &nbsp;
 <a href="http://www.doxygen.org/index.html">

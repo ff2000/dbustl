@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef DBUSTL_SERVERPROXY
-#define DBUSTL_SERVERPROXY
+#ifndef DBUSTL_OBJECTPROXY
+#define DBUSTL_OBJECTPROXY
 
 #include <dbus/dbus.h>
 
@@ -43,7 +43,7 @@ namespace dbustl {
      * @nosubgrouping
      */
 
-    class ServerProxy {
+    class ObjectProxy {
         public:
             /**@name Proxy settings*/
             /*@{*/
@@ -60,7 +60,7 @@ namespace dbustl {
              *  to call on is found. Destination is only required if this connection talks to a message bus.
              *  In this case it must contain the name of the connection this message is intended for.
              */
-            ServerProxy(Connection* conn, const std::string& path, const std::string& destination = "");
+            ObjectProxy(Connection* conn, const std::string& path, const std::string& destination = "");
 
             /**
              * Destructor
@@ -68,7 +68,7 @@ namespace dbustl {
              * The destructor is non virtual on purpose, this class is not
              * designed for inheritance.
              */
-            ~ServerProxy();
+            ~ObjectProxy();
 
             /** 
              * For synchronous blocking calls, set the timeout in milliseconds.
@@ -215,7 +215,7 @@ namespace dbustl {
             /*@}*/
 
             /**
-             * This class is used in call() member of ServerProxy class to use
+             * This class is used in call() member of ObjectProxy class to use
              * an alternative Interface name for that particular method call only.
              */
             class Interface {
@@ -236,8 +236,8 @@ namespace dbustl {
 
         private:
             //Disallow the following constructs
-            ServerProxy(const ServerProxy& con);
-            ServerProxy& operator=(ServerProxy&);
+            ObjectProxy(const ObjectProxy& con);
+            ObjectProxy& operator=(ObjectProxy&);
             
         #ifdef DBUSTL_NO_EXCEPTIONS
             inline void throw_or_set(const DBusException& error) { _error = error; };
@@ -384,7 +384,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename... Args>
-    inline void ServerProxy::call(const std::string& methodName, const Args&... args)
+    inline void ObjectProxy::call(const std::string& methodName, const Args&... args)
     {
         Message method_call(createMethodCall(methodName));
         processInArgs(method_call, args...);
@@ -393,7 +393,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
-    inline void ServerProxy::processInArgs(Message& method_call, const T& invalue, const Args&... args)
+    inline void ObjectProxy::processInArgs(Message& method_call, const T& invalue, const Args&... args)
     {
         method_call << invalue;
         processInArgs(method_call, args...);
@@ -402,7 +402,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
-    inline void ServerProxy::processInArgs(Message& method_call, const T* invalue, const Args&... args)
+    inline void ObjectProxy::processInArgs(Message& method_call, const T* invalue, const Args&... args)
     {
         method_call << invalue;
         processInArgs(method_call, args...);
@@ -411,7 +411,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
-    inline void ServerProxy::processInArgs(Message& msg, T* outvalue, const Args&... args)
+    inline void ObjectProxy::processInArgs(Message& msg, T* outvalue, const Args&... args)
     {
         //All input arguments are consumed, process call now...
         processInArgs(msg);
@@ -421,7 +421,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename... Args>            
-    inline void ServerProxy::processInArgs(Message& method_call, const Interface& intf, const Args&... args)
+    inline void ObjectProxy::processInArgs(Message& method_call, const Interface& intf, const Args&... args)
     {
         dbus_message_set_interface(method_call.dbus(), intf.name().c_str());
         processInArgs(method_call, args...);
@@ -430,7 +430,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename T, typename... Args>            
-    inline void ServerProxy::processOutArgs(Message& method_reply, T* outvalue, const Args&... args)
+    inline void ObjectProxy::processOutArgs(Message& method_reply, T* outvalue, const Args&... args)
     {
         method_reply >> outvalue;
         processOutArgs(method_reply, args...);
@@ -439,7 +439,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename MethodCallback, typename... Args>
-    inline void ServerProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
+    inline void ObjectProxy::asyncCall(const std::string& methodName, const MethodCallback& callback, const Args&... args)
     {
         Message method_call(createMethodCall(methodName));
         processAsyncInArgs(method_call, callback, args...);
@@ -448,7 +448,7 @@ namespace dbustl {
     
 #ifdef DBUSTL_CXX0X
     template<typename... Args>
-    inline void ServerProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
+    inline void ObjectProxy::asyncCall(const std::string& methodName, void (*callback)(Message&, const DBusException&), const Args&... args)
     {
         asyncCall(methodName, std::ptr_fun(callback), args...);
     }
@@ -456,26 +456,26 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename _Class, typename... Args>
-    inline void ServerProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
+    inline void ObjectProxy::asyncCall(const std::string& methodName, void (_Class::*callback)(Message&, const DBusException&), _Class *c, const Args&... args)
     {
         asyncCall(methodName, std::bind(callback, c, std::placeholders::_1, std::placeholders::_2), args...);
     }
 #endif
 
     template<typename MethodCallback>            
-    void ServerProxy::asyncCall(Message& method_call, const MethodCallback& callback)
+    void ObjectProxy::asyncCall(Message& method_call, const MethodCallback& callback)
     {
         executeAsyncCall(method_call, new MethodCallbackWrapper<MethodCallback>(callback));
     }
 
-    void ServerProxy::asyncCall(Message& method_call, void (*callback)(Message&, const DBusException&))
+    void ObjectProxy::asyncCall(Message& method_call, void (*callback)(Message&, const DBusException&))
     {
         asyncCall(method_call, std::ptr_fun(callback));
     }
 
 #ifdef DBUSTL_CXX0X
     template<typename T, typename MethodCallback, typename... Args>            
-    inline void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args)
+    inline void ObjectProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T& invalue, const Args&... args)
     {
         method_call << invalue;
         processAsyncInArgs(method_call, callback, args...);
@@ -484,7 +484,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename T, typename MethodCallback, typename... Args>            
-    inline void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args)
+    inline void ObjectProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const T* invalue, const Args&... args)
     {
         method_call << invalue;
         processAsyncInArgs(method_call, callback, args...);
@@ -493,7 +493,7 @@ namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
     template<typename MethodCallback, typename... Args>            
-    inline void ServerProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const Interface& intf, const Args&... args)
+    inline void ObjectProxy::processAsyncInArgs(Message& method_call, const MethodCallback& callback, const Interface& intf, const Args&... args)
     {
         dbus_message_set_interface(method_call.dbus(), intf.name().c_str());
         processAsyncInArgs(method_call, callback, args...);
@@ -501,28 +501,28 @@ namespace dbustl {
 #endif
 
     template<typename MethodCallback>            
-    inline void ServerProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
+    inline void ObjectProxy::processAsyncInArgs(Message& msg, const MethodCallback& callback)
     {
         asyncCall(msg, callback);
     }
     
-    void ServerProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
+    void ObjectProxy::setSignalHandler(const std::string& signalName, void (*handler)(Message& signal))
     {
         setSignalHandler(signalName, std::ptr_fun(handler));
     }
 
     template<typename _Class>
-    void ServerProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object)
+    void ObjectProxy::setSignalHandler(const std::string& signalName, void (_Class::*handler)(Message signal), _Class *object)
     {
         setSignalHandler(signalName, std::bind1st(std::mem_fun(handler), object));
     }
 
     template<typename SignalHandlerFunctor>
-    void ServerProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
+    void ObjectProxy::setSignalHandler(const std::string& signalName, const SignalHandlerFunctor& handler)
     {
         enableSignal(signalName, new SignalCallbackWrapper<SignalHandlerFunctor>(handler));
     }
 }
 
-#endif /* DBUSTL_SERVERPROXY */
+#endif /* DBUSTL_OBJECTPROXY */
 

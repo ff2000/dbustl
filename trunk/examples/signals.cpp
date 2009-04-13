@@ -49,7 +49,7 @@ int main()
     dbustl::Connection *systemBus = dbustl::Connection::systemBus();
 
     /* Creating proxy on HAL Manager object */
-    dbustl::ServerProxy halManager(systemBus, "/org/freedesktop/Hal/Manager", "org.freedesktop.Hal");
+    dbustl::ObjectProxy halManager(systemBus, "/org/freedesktop/Hal/Manager", "org.freedesktop.Hal");
 
     DeviceManager deviceManager;
 
