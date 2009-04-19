@@ -42,7 +42,9 @@ namespace dbustl {
 
     class DBusObject {
     public:
-        DBusObject(const std::string& objectPath, Connection *conn = 0);
+        DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
+
+        void setInterface(const std::string& interface) { _interface = interface; };
 
         void setPath(const std::string);
         std::string path() const;
@@ -71,15 +73,20 @@ namespace dbustl {
             void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface = "");
 
         template<typename ... Args>
-        void emitSignal(const std::string& name, const Args&... args);
+        void emitSignal(const std::string& name, const std::string& interface, const Args&... args);
 
-        void emitSignal(const std::string& name, const Message& signal);
+        void emitSignal(const std::string& name, const std::string& interface, const Message& signal);
   
     private:
         class MethodExecutorBase {
         public:
+            MethodExecutorBase(const std::string& interface) : _interface(interface) {};
             virtual ~MethodExecutorBase() {};
             virtual void processCall(Message* method_call, Message *method_reply) = 0;
+            const std::string& interface() const { return _interface; };
+            void setInterface(const std::string& interface) { _interface = interface; };
+        private:
+            std::string _interface;
         };
  
         template<typename T>
@@ -107,7 +114,8 @@ namespace dbustl {
         public:   
             typedef Result (TargetClassType::*MethodType) (void);
                 
-            MethodExecutor0(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *method_reply)
@@ -124,7 +132,8 @@ namespace dbustl {
         public:   
             typedef void (TargetClassType::*MethodType) (void);
                 
-            MethodExecutor0(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *)
@@ -141,7 +150,8 @@ namespace dbustl {
         public:   
             typedef Result (TargetClassType::*MethodType) (T1);
                 
-            MethodExecutor1(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -161,7 +171,8 @@ namespace dbustl {
         public:   
             typedef void (TargetClassType::*MethodType) (T1);
                 
-            MethodExecutor1(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -181,7 +192,8 @@ namespace dbustl {
         public:   
             typedef Result (TargetClassType::*MethodType) (T1, T2);
                 
-            MethodExecutor2(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -203,7 +215,8 @@ namespace dbustl {
         public:   
             typedef void (TargetClassType::*MethodType) (T1, T2);
                 
-            MethodExecutor2(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -225,7 +238,8 @@ namespace dbustl {
         public:   
             typedef Result (TargetClassType::*MethodType) (T1, T2, T3);
                 
-            MethodExecutor3(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -249,7 +263,8 @@ namespace dbustl {
         public:   
             typedef void (TargetClassType::*MethodType) (T1, T2, T3);
                 
-            MethodExecutor3(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            MethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -273,7 +288,8 @@ namespace dbustl {
         public:
             typedef void (TargetClassType::*MethodType) (Message method_call, Message method_reply);
                 
-            FlexibleMethodExecutor(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+            FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface)
+             : MethodExecutorBase(interface), _target(target), _method(method) {};
 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -299,7 +315,9 @@ namespace dbustl {
 
         Connection *_conn;
         std::string _objectPath;
-        std::map<std::string, MethodExecutorBase*> _exportedMethods;
+        std::string _interface;
+        typedef std::multimap<std::string, MethodExecutorBase*> MethodContainerType;
+        MethodContainerType _exportedMethods;
     #ifdef DBUSTL_NO_EXCEPTIONS
         DBusException _error;
     #endif
@@ -312,31 +330,31 @@ namespace dbustl {
     template<typename _Class, typename R>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor0<_Class, R>(target, method));
+        exportMethod(methodName, new MethodExecutor0<_Class, R>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor1<_Class, R, T1>(target, method));
+        exportMethod(methodName, new MethodExecutor1<_Class, R, T1>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1, typename T2>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor2<_Class, R, T1, T2>(target, method));
+        exportMethod(methodName, new MethodExecutor2<_Class, R, T1, T2>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1, typename T2, typename T3>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor3<_Class, R, T1, T2, T3>(target, method));
+        exportMethod(methodName, new MethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
     }
 
     template<typename _Class>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface)
     {
-        exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method));
+        exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
     }
 
 
