@@ -43,8 +43,9 @@ ObjectProxy::ObjectProxy(Connection* conn, const std::string& path, const std::s
   _conn(conn), _path(path), _destination(destination), _timeout(-1)
 {
     assert(_conn->isConnected());
-    if(!dbus_connection_register_object_path(_conn->dbus(), _path.c_str(), &_vtable, this)) {
-        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to register object path handler");
+    DBusException ex;
+    if(!dbus_connection_try_register_object_path(_conn->dbus(), _path.c_str(), &_vtable, this, ex.dbus())) {
+        throw_or_set(ex);
     }
 }
 
@@ -165,16 +166,7 @@ void ObjectProxy::executeAsyncCall(Message& method_call, MethodCallbackWrapperBa
 
 DBusHandlerResult ObjectProxy::signalsProcessingMethod(DBusConnection *, 
     DBusMessage *dbusMessage, void *user_data)
-{
-    ObjectProxy* proxy = static_cast<ObjectProxy *>(user_data);
-    
-    /* Basic sanity check : libdbus tries an approximate match on objects
-     * paths, but we want a perfect match */
-    
-    if(proxy->_path != dbus_message_get_path(dbusMessage)) {
-        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-    }
-    
+{   
     if(dbus_message_get_type(dbusMessage) == DBUS_MESSAGE_TYPE_SIGNAL) {
         /* libdbus keeps ownership of the message, but our Message class
          * wants ownership too: as a result both will free the message
@@ -184,7 +176,8 @@ DBusHandlerResult ObjectProxy::signalsProcessingMethod(DBusConnection *,
         Message msg(dbusMessage);
         std::string sigName = msg.member();
         std::string handlerName;
-        
+        ObjectProxy* proxy = static_cast<ObjectProxy *>(user_data);
+       
         //First check if we can have an exact match
         if(proxy->_signalsHandlers.count(sigName)) {
             handlerName = sigName;
