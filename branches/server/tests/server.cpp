@@ -30,22 +30,22 @@
 
 class TestServiceClass : private dbustl::DBusObject {
 public:
-    TestServiceClass(dbustl::Connection *conn) : DBusObject("/ServerObject", conn) {
-        exportMethod("test_ref", this, &TestServiceClass::test_ref, "com.example.SampleInterface");
-        exportMethod("test_const", this, &TestServiceClass::test_const, "com.example.SampleInterface");
-        exportMethod("test_const_ref", this, &TestServiceClass::test_const_ref, "com.example.SampleInterface");
-        exportMethod("test_ref_2", this, &TestServiceClass::test_ref_2, "com.example.SampleInterface");
-        exportMethod("test_const_2", this, &TestServiceClass::test_const_2, "com.example.SampleInterface");
-        exportMethod("test_const_ref_2", this, &TestServiceClass::test_const_ref_2, "com.example.SampleInterface");
+    TestServiceClass(dbustl::Connection *conn) : DBusObject("/ServerObject", "com.example.SampleInterface", conn) {
+        exportMethod("test_ref", this, &TestServiceClass::test_ref);
+        exportMethod("test_const", this, &TestServiceClass::test_const);
+        exportMethod("test_const_ref", this, &TestServiceClass::test_const_ref);
+        exportMethod("test_ref_2", this, &TestServiceClass::test_ref_2);
+        exportMethod("test_const_2", this, &TestServiceClass::test_const_2);
+        exportMethod("test_const_ref_2", this, &TestServiceClass::test_const_ref_2);
 
-        exportMethod("test_callvoid0", this, &TestServiceClass::test_callvoid0, "com.example.SampleInterface");
-        exportMethod("test_call0", this, &TestServiceClass::test_call0, "com.example.SampleInterface");        
-        exportMethod("test_callvoid1", this, &TestServiceClass::test_callvoid1, "com.example.SampleInterface");
-        exportMethod("test_call1", this, &TestServiceClass::test_call1, "com.example.SampleInterface");        
-        exportMethod("test_callvoid2", this, &TestServiceClass::test_callvoid2, "com.example.SampleInterface");
-        exportMethod("test_call2", this, &TestServiceClass::test_call2, "com.example.SampleInterface");        
-        exportMethod("test_callvoid3", this, &TestServiceClass::test_callvoid3, "com.example.SampleInterface");
-        exportMethod("test_call3", this, &TestServiceClass::test_call3, "com.example.SampleInterface");        
+        exportMethod("test_callvoid0", this, &TestServiceClass::test_callvoid0);
+        exportMethod("test_call0", this, &TestServiceClass::test_call0);        
+        exportMethod("test_callvoid1", this, &TestServiceClass::test_callvoid1);
+        exportMethod("test_call1", this, &TestServiceClass::test_call1);        
+        exportMethod("test_callvoid2", this, &TestServiceClass::test_callvoid2);
+        exportMethod("test_call2", this, &TestServiceClass::test_call2);        
+        exportMethod("test_callvoid3", this, &TestServiceClass::test_callvoid3);
+        exportMethod("test_call3", this, &TestServiceClass::test_call3);        
     }
 
 private:
@@ -69,11 +69,11 @@ private:
 
     void test_callvoid1(int p1)
     {
-        std::cerr << __FUNCTION__<< std::endl;
+        std::cerr << __FUNCTION__<< ":" << p1 << std::endl;
     };
     int test_call1(int p1)
     {
-        std::cerr << __FUNCTION__<< ":" << p1 << std::endl;
+        std::cerr << __FUNCTION__<< std::endl;
         return p1;
     }
 

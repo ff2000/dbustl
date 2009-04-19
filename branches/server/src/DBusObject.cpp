@@ -40,7 +40,8 @@ DBusObjectPathVTable DBusObject::_vtable = {
     0
 };
 
-DBusObject::DBusObject(const std::string& objectPath, Connection *conn) : _conn(0), _objectPath(objectPath)
+DBusObject::DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn) 
+ : _conn(0), _objectPath(objectPath), _interface(interface)
 {
     if(conn) {
         enable(conn);
@@ -73,10 +74,20 @@ void DBusObject::disable()
 
 void DBusObject::exportMethod(const std::string& methodName, MethodExecutorBase *executor)
 {
-    if(_exportedMethods.count(methodName)) {
-        delete _exportedMethods[methodName];
+    std::pair<MethodContainerType::iterator, MethodContainerType::iterator> its(_exportedMethods.equal_range(methodName));
+    MethodContainerType::iterator firstMatch = its.first;
+    MethodContainerType::iterator lastMatch = its.second;
+    if(executor->interface().empty()) {
+        executor->setInterface(_interface);
     }
-    _exportedMethods[methodName] = executor;
+    for(; (firstMatch != lastMatch) && (firstMatch->second->interface() != executor->interface()); ++firstMatch) {};
+    if(firstMatch != lastMatch) {
+        //Match found
+        MethodExecutorBase* match = firstMatch->second;
+        _exportedMethods.erase(firstMatch);        
+        delete match;
+    }
+    _exportedMethods.insert(std::make_pair(methodName, executor));
 }
 
 DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *, 
@@ -90,13 +101,35 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         
         Message call(dbusMessage);
         std::string methodName = call.member();
+        std::string interface = call.interface();
         DBusObject* object = static_cast<DBusObject *>(user_data);
 
-        if(object->_exportedMethods.count(methodName)) {
+        std::pair<MethodContainerType::iterator, MethodContainerType::iterator> its(object->_exportedMethods.equal_range(methodName));
+        MethodContainerType::iterator firstMatch = its.first;
+        MethodContainerType::iterator lastMatch = its.second;
+        
+        MethodExecutorBase* executor = 0;
+        
+        if(interface.empty()) {
+            /* Look for first match */
+            if(firstMatch != lastMatch) {
+                executor = firstMatch->second;
+            }
+        }
+        else {
+            /* Look for exact match */
+            for(; (firstMatch != lastMatch) && firstMatch->second->interface() != interface; ++firstMatch) {};
+            if(firstMatch != lastMatch) {
+                //Match found
+                executor = firstMatch->second;
+            }
+        }
+            
+        if(executor) {
             Message reply(dbus_message_new_method_return(call.dbus()));
             if(reply.dbus()) {
                 try {
-                    object->_exportedMethods[methodName]->processCall(&call, &reply);
+                    executor->processCall(&call, &reply);
                     dbus_connection_send(object->_conn->dbus(), reply.dbus(), NULL);
                 }
             #ifndef DBUSTL_NO_EXCEPTIONS
