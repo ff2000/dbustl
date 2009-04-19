@@ -26,6 +26,8 @@
 
 #include <dbus/dbus.h>
 
+#include <string>
+
 namespace dbustl {
 
     class ConnectionInitializer;
@@ -144,6 +146,10 @@ namespace dbustl {
              * Tells if we are currently connected to a remote party, either bus or private connection
              */
             bool isConnected() { return _llconn;};
+
+            int busRequestName(const std::string& name, unsigned int flags = 0);
+            int busReleaseName(const std::string& name);
+
 
             /**
              * The DBUS C api structure: don't use it!

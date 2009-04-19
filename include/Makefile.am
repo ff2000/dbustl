@@ -2,6 +2,7 @@ nobase_include_HEADERS = \
     dbustl-1/Config \
     dbustl-1/dbustl \
     dbustl-1/ObjectProxy \
+    dbustl-1/DBusObject \
     dbustl-1/Connection \
     dbustl-1/DBusException \
     dbustl-1/EventLoopIntegration \
