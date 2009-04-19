@@ -1,0 +1,345 @@
+/*
+ *  DBusTL - DBus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_DBUSOBJECT
+#define DBUSTL_DBUSOBJECT
+
+#include <dbus/dbus.h>
+
+#include <string>
+#include <map>
+
+#include <dbustl-1/Config>
+#include <dbustl-1/DBusException>
+
+#include <iostream>
+#include <dbustl-1/Message>
+namespace dbustl {
+
+    class Connection;
+
+    class Message;
+
+    class DBusObject {
+    public:
+        DBusObject(const std::string& objectPath, Connection *conn = 0);
+
+        void setPath(const std::string);
+        std::string path() const;
+            
+        void enable(Connection * conn);
+        void disable();
+
+        template<typename _Class, typename R>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), 
+            const std::string& interface = "");
+
+        template<typename _Class, typename R, typename T1>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), 
+            const std::string& interface = "");
+
+        template<typename _Class, typename R, typename T1, typename T2>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), 
+            const std::string& interface = "");
+
+        template<typename _Class, typename R, typename T1, typename T2, typename T3>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg3), 
+            const std::string& interface = "");
+
+        template<typename _Class>
+        void exportMethod(const std::string& methodName, _Class *target, 
+            void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface = "");
+
+        template<typename ... Args>
+        void emitSignal(const std::string& name, const Args&... args);
+
+        void emitSignal(const std::string& name, const Message& signal);
+  
+    private:
+        class MethodExecutorBase {
+        public:
+            virtual ~MethodExecutorBase() {};
+            virtual void processCall(Message* method_call, Message *method_reply) = 0;
+        };
+ 
+        template<typename T>
+        struct remove_const_ref {
+            typedef T type;
+        };
+        
+        template<typename T>
+        struct remove_const_ref<const T> {
+            typedef T type;
+        };
+        
+        template<typename T>
+        struct remove_const_ref<T&> {
+            typedef T type;
+        };
+        
+        template<typename T>
+        struct remove_const_ref<const T&> {
+            typedef T type;
+        };
+        
+        template<typename TargetClassType, typename Result>
+        class MethodExecutor0 : public MethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (void);
+                
+            MethodExecutor0(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message*, Message *method_reply)
+            {
+                *method_reply << (_target->*_method)();
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType>
+        class MethodExecutor0<TargetClassType, void> : public MethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (void);
+                
+            MethodExecutor0(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message*, Message *)
+            {
+                (_target->*_method)();
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType, typename Result, typename T1>
+        class MethodExecutor1 : public MethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (T1);
+                
+            MethodExecutor1(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                typename remove_const_ref<T1>::type a1;
+                *method_call >> a1;
+                if(method_call->error()) return;
+                *method_reply << (_target->*_method)(a1);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType, typename T1>
+        class MethodExecutor1<TargetClassType, void, T1> : public MethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (T1);
+                
+            MethodExecutor1(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *)
+            {
+                typename remove_const_ref<T1>::type a1;
+                *method_call >> a1;
+                if(method_call->error()) return;
+                (_target->*_method)(a1);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType, typename Result, typename T1, typename T2>
+        class MethodExecutor2 : public MethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (T1, T2);
+                
+            MethodExecutor2(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                typename remove_const_ref<T1>::type a1;
+                typename remove_const_ref<T2>::type a2;
+                *method_call >> a1;
+                *method_call >> a2;
+                if(method_call->error()) return;
+                *method_reply << (_target->*_method)(a1, a2);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType, typename T1, typename T2>
+        class MethodExecutor2<TargetClassType, void, T1, T2> : public MethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (T1, T2);
+                
+            MethodExecutor2(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *)
+            {
+                typename remove_const_ref<T1>::type a1;
+                typename remove_const_ref<T2>::type a2;
+                *method_call >> a1;
+                *method_call >> a2;
+                if(method_call->error()) return;
+                (_target->*_method)(a1, a2);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType, typename Result, typename T1, typename T2, typename T3>
+        class MethodExecutor3 : public MethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (T1, T2, T3);
+                
+            MethodExecutor3(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                typename remove_const_ref<T1>::type a1;
+                typename remove_const_ref<T2>::type a2;
+                typename remove_const_ref<T3>::type a3;
+                *method_call >> a1;
+                *method_call >> a2;
+                *method_call >> a3;
+                if(method_call->error()) return;
+                *method_reply << (_target->*_method)(a1, a2, a3);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType, typename T1, typename T2, typename T3>
+        class MethodExecutor3<TargetClassType, void, T1, T2, T3> : public MethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (T1, T2, T3);
+                
+            MethodExecutor3(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *)
+            {
+                typename remove_const_ref<T1>::type a1;
+                typename remove_const_ref<T2>::type a2;
+                typename remove_const_ref<T3>::type a3;
+                *method_call >> a1;
+                *method_call >> a2;
+                *method_call >> a3;
+                if(method_call->error()) return;
+                (_target->*_method)(a1, a2, a3);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType>
+        class FlexibleMethodExecutor : public MethodExecutorBase {
+        public:
+            typedef void (TargetClassType::*MethodType) (Message method_call, Message method_reply);
+                
+            FlexibleMethodExecutor(TargetClassType *target, MethodType method): _target(target), _method(method) {};
+
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                (_target->*_method)(*method_call, *method_reply);
+            }
+                
+            TargetClassType *_target;            
+            MethodType _method;
+        };
+
+        void exportMethod(const std::string& methodName, MethodExecutorBase *executor);
+
+    #ifdef DBUSTL_NO_EXCEPTIONS
+        inline void throw_or_set(const DBusException& error) { _error = error; };
+        inline void throw_or_set(const char *name, const char *message) { _error = DBusException(name, message); };
+        inline void errorReset() { _error = DBusException(); };
+    #else
+        static inline void throw_or_set(const DBusException& error) { throw error; };
+        static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
+        static inline void errorReset() {};
+    #endif
+
+        Connection *_conn;
+        std::string _objectPath;
+        std::map<std::string, MethodExecutorBase*> _exportedMethods;
+    #ifdef DBUSTL_NO_EXCEPTIONS
+        DBusException _error;
+    #endif
+        
+        static DBusHandlerResult incomingMessagesProcessing(DBusConnection *connection, 
+            DBusMessage *dbusMessage, void *user_data);
+        static DBusObjectPathVTable _vtable;
+    };
+   
+    template<typename _Class, typename R>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), const std::string& interface)
+    {
+        exportMethod(methodName, new MethodExecutor0<_Class, R>(target, method));
+    }
+
+    template<typename _Class, typename R, typename T1>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), const std::string& interface)
+    {
+        exportMethod(methodName, new MethodExecutor1<_Class, R, T1>(target, method));
+    }
+
+    template<typename _Class, typename R, typename T1, typename T2>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), const std::string& interface)
+    {
+        exportMethod(methodName, new MethodExecutor2<_Class, R, T1, T2>(target, method));
+    }
+
+    template<typename _Class, typename R, typename T1, typename T2, typename T3>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string& interface)
+    {
+        exportMethod(methodName, new MethodExecutor3<_Class, R, T1, T2, T3>(target, method));
+    }
+
+    template<typename _Class>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface)
+    {
+        exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method));
+    }
+
+
+}
+
+#endif /* DBUSTL_DBUSOBJECT */
