@@ -47,6 +47,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168">isConnected</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells if we are currently connected to a remote party, either bus or private connection.  <a href="#1ecb95e999960bff33c5d9db8869f168"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#6d7661f5d8a4503c17274693387c02a1">busRequestName</a> (const std::string &amp;name, unsigned int flags=0)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#41635468377ffc19dfcc78ca34506503">busReleaseName</a> (const std::string &amp;name)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">DBusConnection *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#957fd7bb3c486aebfc7a32357c7518fd">dbus</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#957fd7bb3c486aebfc7a32357c7518fd"></a><br></td></tr>
@@ -281,6 +285,55 @@ If True, means the connection is not on a bus, but is private between two applic
 
 <p>
 Tells if we are currently connected to a remote party, either bus or private connection. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="6d7661f5d8a4503c17274693387c02a1"></a><!-- doxytag: member="dbustl::Connection::busRequestName" ref="6d7661f5d8a4503c17274693387c02a1" args="(const std::string &amp;name, unsigned int flags=0)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dbustl::Connection::busRequestName           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&nbsp;</td>
+          <td class="paramname"> <em>flags</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="41635468377ffc19dfcc78ca34506503"></a><!-- doxytag: member="dbustl::Connection::busReleaseName" ref="41635468377ffc19dfcc78ca34506503" args="(const std::string &amp;name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int dbustl::Connection::busReleaseName           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>name</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
 <p>
 
 </div>

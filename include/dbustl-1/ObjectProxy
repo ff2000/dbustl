@@ -107,7 +107,8 @@ namespace dbustl {
              * This blocks until the reply is received or a timeout occurs.
              * @param methodName the name of the D-Bus method to call
              * @param args A list of input parameters passed by references, followed by a list
-             * of output parameters passed as pointers.
+             * of output parameters passed as pointers. The arg list can contain an Interface object,
+             * in which case it changes the interface used for this call only to the given interface.
              * @throw DBusException if anything goes wrong
              */
             template<typename... Args>
