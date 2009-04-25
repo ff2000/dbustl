@@ -241,7 +241,7 @@ Calls a D-Bus method on a remote object.
 This blocks until the reply is received or a timeout occurs. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the D-Bus method to call </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed by references, followed by a list of output parameters passed as pointers. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed by references, followed by a list of output parameters passed as pointers. The arg list can contain an <a class="el" href="classdbustl_1_1ObjectProxy_1_1Interface.html" title="This class is used in call() member of ObjectProxy class to use an alternative Interface...">Interface</a> object, in which case it changes the interface used for this call only to the given interface. </td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Exceptions:</b></dt><dd>
