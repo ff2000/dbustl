@@ -34,11 +34,11 @@
 
 #include <iostream>
 #include <dbustl-1/Message>
+#include <dbustl-1/Interface>
+
 namespace dbustl {
 
     class Connection;
-
-    class Message;
 
     class DBusObject {
     public:
@@ -73,11 +73,14 @@ namespace dbustl {
             void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface = "");
 
         template<typename ... Args>
-        void emitSignal(const std::string& name, const std::string& interface, const Args&... args);
+        void emit(const std::string& name, const std::string& interface, const Args&... args);
 
-        void emitSignal(const std::string& name, const std::string& interface, const Message& signal);
+        void emit(const std::string& name, const std::string& interface, const Message& signal);
   
     private:
+     
+        /** @cond */
+        //This does not show up in doxygen
         class MethodExecutorBase {
         public:
             MethodExecutorBase(const std::string& interface) : _interface(interface) {};
@@ -300,6 +303,7 @@ namespace dbustl {
             TargetClassType *_target;            
             MethodType _method;
         };
+        /** @endcond */
 
         void exportMethod(const std::string& methodName, MethodExecutorBase *executor);
 

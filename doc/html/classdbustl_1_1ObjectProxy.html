@@ -85,10 +85,6 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy.html#a8d2526a7495629efec106e37d22c246">removeSignalHandler</a> (const std::string &amp;signalName)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Removes a signal handler previously registered with <a class="el" href="classdbustl_1_1ObjectProxy.html#d089d8c9ecfbc674623f61c2a6ffa877" title="Registers a handler to receive a D-Bus signal : C++ functor version.">setSignalHandler()</a>.  <a href="#a8d2526a7495629efec106e37d22c246"></a><br></td></tr>
-<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1ObjectProxy_1_1Interface.html">Interface</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This class is used in <a class="el" href="classdbustl_1_1ObjectProxy.html#73551b8702f3b38106f69d2baf3cb11c" title="Calls a D-Bus method on a remote object.">call()</a> member of <a class="el" href="classdbustl_1_1ObjectProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ObjectProxy</a> class to use an alternative <a class="el" href="classdbustl_1_1ObjectProxy_1_1Interface.html" title="This class is used in call() member of ObjectProxy class to use an alternative Interface...">Interface</a> name for that particular method call only.  <a href="classdbustl_1_1ObjectProxy_1_1Interface.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Defines a proxy, used to call methods an receive signals on a remote D-Bus object. <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -241,7 +237,7 @@ Calls a D-Bus method on a remote object.
 This blocks until the reply is received or a timeout occurs. <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>the name of the D-Bus method to call </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed by references, followed by a list of output parameters passed as pointers. The arg list can contain an <a class="el" href="classdbustl_1_1ObjectProxy_1_1Interface.html" title="This class is used in call() member of ObjectProxy class to use an alternative Interface...">Interface</a> object, in which case it changes the interface used for this call only to the given interface. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed by references, followed by a list of output parameters passed as pointers. The arg list can contain an <a class="el" href="classdbustl_1_1Interface.html" title="This class is used in ObjectProxy::call() and DBusObject::emit() to specify an alternative...">Interface</a> object, in which case it changes the interface used for this call only to the given interface. </td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Exceptions:</b></dt><dd>
