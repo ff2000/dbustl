@@ -73,8 +73,10 @@ namespace dbustl {
         void exportMethod(const std::string& methodName, _Class *target, 
             void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface = "");
 
+    #ifdef DBUSTL_CXX0X
         template<typename ... Args>
         void emitSignal(const std::string& signalName, const Args&... args);
+    #endif
 
         Message createSignal(const std::string& signalName, const std::string& interface = "");
 
@@ -311,6 +313,7 @@ namespace dbustl {
         void exportMethod(const std::string& methodName, MethodExecutorBase *executor);
 
         // Signals handling - begin
+    #ifdef DBUSTL_CXX0X
         template<typename T, typename ... Args>
         void processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args);
         
@@ -318,6 +321,7 @@ namespace dbustl {
         void processEmitSignalArgs(Message& signal, const Interface& intf, const Args&... args);
         
         inline void processEmitSignalArgs(Message& signal);
+    #endif
         // Signals handling - end
 
     #ifdef DBUSTL_NO_EXCEPTIONS
@@ -374,31 +378,39 @@ namespace dbustl {
         exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
     }
 
+#ifdef DBUSTL_CXX0X
     template<typename ... Args>
     void DBusObject::emitSignal(const std::string& signalName, const Args&... args)
     {
         Message signal(createSignal(signalName));
         processEmitSignalArgs(signal, args...);
     }
+#endif
 
+#ifdef DBUSTL_CXX0X
     template<typename T, typename ... Args>
     void DBusObject::processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args)
     {
         signal << arg1;
         processEmitSignalArgs(signal, args...);
     }
+#endif
 
+#ifdef DBUSTL_CXX0X
     template<typename ... Args>
     void DBusObject::processEmitSignalArgs(Message& signal, const Interface& intf, const Args&... args)
     {
         dbus_message_set_interface(signal.dbus(), intf.name().c_str());
         processEmitSignalArgs(signal, args...);
     }
+#endif
     
+#ifdef DBUSTL_CXX0X
     inline void DBusObject::processEmitSignalArgs(Message& signal)
     {
         emitSignal(signal);
     }
+#endif
 
 }
 
