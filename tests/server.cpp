@@ -29,6 +29,8 @@
 #include <cassert>
 #include <stdexcept>
 
+GMainLoop *mainloop;
+
 class TestServiceClass : private dbustl::DBusObject {
 public:
     TestServiceClass(dbustl::Connection *conn) : DBusObject("/ServerObject", "com.example.SampleInterface", conn) {
@@ -53,6 +55,8 @@ public:
         exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
 
         exportMethod("test_signal", this, &TestServiceClass::test_signal);        
+
+        exportMethod("stop", this, &TestServiceClass::stop);        
     }
 
 private:
@@ -123,8 +127,12 @@ private:
     {
         emitSignal("TestSignal", "A value");
     };
-};
 
+    void stop()
+    {
+        g_main_loop_quit(mainloop);
+    };
+};
 
 int main()
 {    
@@ -138,7 +146,7 @@ int main()
     
     TestServiceClass srv(session);
     
-    GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
+    mainloop = g_main_loop_new(NULL, FALSE);
     g_main_loop_run(mainloop);        
     session->busReleaseName("com.example.SampleService");
 

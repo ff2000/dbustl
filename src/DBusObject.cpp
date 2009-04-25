@@ -47,6 +47,20 @@ DBusObject::DBusObject(const std::string& objectPath, const std::string& interfa
         enable(conn);
     }
 }
+
+DBusObject::~DBusObject() 
+{
+    if(_conn) {
+        disable();
+    }
+
+    MethodContainerType::iterator it;
+    while((it = _exportedMethods.begin()) != _exportedMethods.end()) {
+        MethodExecutorBase* match = it->second;
+        _exportedMethods.erase(it);
+        delete match;
+    }
+}
             
 void DBusObject::enable(Connection * conn)
 {
@@ -77,9 +91,11 @@ void DBusObject::exportMethod(const std::string& methodName, MethodExecutorBase 
     std::pair<MethodContainerType::iterator, MethodContainerType::iterator> its(_exportedMethods.equal_range(methodName));
     MethodContainerType::iterator firstMatch = its.first;
     MethodContainerType::iterator lastMatch = its.second;
+    
     if(executor->interface().empty()) {
         executor->setInterface(_interface);
     }
+    
     for(; (firstMatch != lastMatch) && (firstMatch->second->interface() != executor->interface()); ++firstMatch) {};
     if(firstMatch != lastMatch) {
         //Match found
