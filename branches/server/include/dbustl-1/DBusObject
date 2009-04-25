@@ -43,6 +43,7 @@ namespace dbustl {
     class DBusObject {
     public:
         DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
+        virtual ~DBusObject();
 
         void setInterface(const std::string& interface) { _interface = interface; };
 
