@@ -226,7 +226,7 @@ int main()
         std::cout << ">Interface modifier" << std::endl;
         pythonObjectProxy.setInterface("BOGUS.INTERFACE");
         pythonObjectProxy.asyncCall("SimpleHello", &userFunctionCallback,
-          dbustl::ObjectProxy::Interface("com.example.SampleInterface"), "Hi"); 
+          dbustl::Interface("com.example.SampleInterface"), "Hi"); 
         pythonObjectProxy.setInterface("com.example.SampleInterface");
         expected_cbs++; 
     }

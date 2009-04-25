@@ -33,6 +33,7 @@
 #include <dbustl-1/Config>
 #include <dbustl-1/DBusException>
 #include <dbustl-1/Message>
+#include <dbustl-1/Interface>
 
 namespace dbustl {
 
@@ -214,26 +215,6 @@ namespace dbustl {
              */
             void removeSignalHandler(const std::string& signalName);
             /*@}*/
-
-            /**
-             * This class is used in call() member of ObjectProxy class to use
-             * an alternative Interface name for that particular method call only.
-             */
-            class Interface {
-            public:    
-                /**
-                 * Public constructor.
-                 * @param name the interface to call method on.
-                 */
-                Interface(std::string name) : _name(name) {};
-                /**
-                 * Public accessor.
-                 * @returns the interface name.
-                 */
-                const std::string& name() const { return _name; };
-            private:
-                std::string _name;
-            };
 
         private:
             //Disallow the following constructs
