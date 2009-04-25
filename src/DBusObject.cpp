@@ -159,4 +159,38 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
   	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
+Message DBusObject::createSignal(const std::string& signalName, const std::string& interface)
+{
+    const char *intf = 
+        (interface.empty() ?
+            (_interface.empty() ? 
+                NULL :
+                _interface.c_str()
+            ) :
+            interface.c_str()
+        );
+    
+    Message signal(dbus_message_new_signal(_objectPath.c_str(), intf, signalName.c_str()));
+                    
+    if(signal.dbus()) {
+        // Blank out error status
+        errorReset();
+    }
+    else {
+        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+    }
+
+    return signal;
+}
+
+void DBusObject::emitSignal(Message& signal)
+{
+    if(!signal.error()) {
+        dbus_connection_send(_conn->dbus(), signal.dbus(), NULL);
+    }
+    else {
+        throw_or_set(*signal.error());
+    }
+}
+
 }

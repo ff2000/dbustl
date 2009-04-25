@@ -57,9 +57,11 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#7fc2eeb5036d525453c4ef666013dc36">exportMethod</a> (const std::string &amp;methodName, _Class *target, void(_Class::*method)(<a class="el" href="classdbustl_1_1Message.html">Message</a> method_call, <a class="el" href="classdbustl_1_1Message.html">Message</a> method_reply), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#40c5d290b5b904f36c2d838022f006af">emit</a> (const std::string &amp;name, const std::string &amp;interface, const Args &amp;...args)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#e44b895ad31e08b1c9803aeedd08ff04">emitSignal</a> (const std::string &amp;signalName, const Args &amp;...args)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#70e83685a33e4790dd4fdffeb27cf0b9">emit</a> (const std::string &amp;name, const std::string &amp;interface, const <a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#6191066d5e378a1864e1a5f03a409236">createSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#bb3024d80c739ab3169f3fce32c62744">emitSignal</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename R, typename T1, typename T2, typename T3&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#5c92995344d34ce11d6a443cff2e9b45">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string &amp;interface)</td></tr>
@@ -415,23 +417,17 @@ template&lt;typename _Class&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="40c5d290b5b904f36c2d838022f006af"></a><!-- doxytag: member="dbustl::DBusObject::emit" ref="40c5d290b5b904f36c2d838022f006af" args="(const std::string &amp;name, const std::string &amp;interface, const Args &amp;...args)" -->
+<a class="anchor" name="e44b895ad31e08b1c9803aeedd08ff04"></a><!-- doxytag: member="dbustl::DBusObject::emitSignal" ref="e44b895ad31e08b1c9803aeedd08ff04" args="(const std::string &amp;signalName, const Args &amp;...args)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename... Args&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::DBusObject::emit           </td>
+          <td class="memname">void dbustl::DBusObject::emitSignal           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>interface</em>, </td>
+          <td class="paramname"> <em>signalName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -452,32 +448,46 @@ template&lt;typename... Args&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="70e83685a33e4790dd4fdffeb27cf0b9"></a><!-- doxytag: member="dbustl::DBusObject::emit" ref="70e83685a33e4790dd4fdffeb27cf0b9" args="(const std::string &amp;name, const std::string &amp;interface, const Message &amp;signal)" -->
+<a class="anchor" name="6191066d5e378a1864e1a5f03a409236"></a><!-- doxytag: member="dbustl::DBusObject::createSignal" ref="6191066d5e378a1864e1a5f03a409236" args="(const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void dbustl::DBusObject::emit           </td>
+          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::DBusObject::createSignal           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>name</em>, </td>
+          <td class="paramname"> <em>signalName</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>interface</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>signal</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>interface</em> = <code>&quot;&quot;</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
           <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="bb3024d80c739ab3169f3fce32c62744"></a><!-- doxytag: member="dbustl::DBusObject::emitSignal" ref="bb3024d80c739ab3169f3fce32c62744" args="(Message &amp;signal)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dbustl::DBusObject::emitSignal           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>signal</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
         </tr>
       </table>
 </div>

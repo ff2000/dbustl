@@ -51,6 +51,8 @@ public:
         exportMethod("test_ex1", this, &TestServiceClass::test_ex1);        
         exportMethod("test_ex2", this, &TestServiceClass::test_ex2);        
         exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
+
+        exportMethod("test_signal", this, &TestServiceClass::test_signal);        
     }
 
 private:
@@ -116,6 +118,11 @@ private:
     {
       throw "Test";
     }
+
+    void test_signal()
+    {
+        emitSignal("TestSignal", "A value");
+    };
 };
 
 

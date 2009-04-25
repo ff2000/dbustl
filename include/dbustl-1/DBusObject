@@ -73,9 +73,11 @@ namespace dbustl {
             void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface = "");
 
         template<typename ... Args>
-        void emit(const std::string& name, const std::string& interface, const Args&... args);
+        void emitSignal(const std::string& signalName, const Args&... args);
 
-        void emit(const std::string& name, const std::string& interface, const Message& signal);
+        Message createSignal(const std::string& signalName, const std::string& interface = "");
+
+        void emitSignal(Message& signal);
   
     private:
      
@@ -307,6 +309,16 @@ namespace dbustl {
 
         void exportMethod(const std::string& methodName, MethodExecutorBase *executor);
 
+        // Signals handling - begin
+        template<typename T, typename ... Args>
+        void processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args);
+        
+        template<typename ... Args>
+        void processEmitSignalArgs(Message& signal, const Interface& intf, const Args&... args);
+        
+        inline void processEmitSignalArgs(Message& signal);
+        // Signals handling - end
+
     #ifdef DBUSTL_NO_EXCEPTIONS
         inline void throw_or_set(const DBusException& error) { _error = error; };
         inline void throw_or_set(const char *name, const char *message) { _error = DBusException(name, message); };
@@ -361,6 +373,31 @@ namespace dbustl {
         exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
     }
 
+    template<typename ... Args>
+    void DBusObject::emitSignal(const std::string& signalName, const Args&... args)
+    {
+        Message signal(createSignal(signalName));
+        processEmitSignalArgs(signal, args...);
+    }
+
+    template<typename T, typename ... Args>
+    void DBusObject::processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args)
+    {
+        signal << arg1;
+        processEmitSignalArgs(signal, args...);
+    }
+
+    template<typename ... Args>
+    void DBusObject::processEmitSignalArgs(Message& signal, const Interface& intf, const Args&... args)
+    {
+        dbus_message_set_interface(signal.dbus(), intf.name().c_str());
+        processEmitSignalArgs(signal, args...);
+    }
+    
+    inline void DBusObject::processEmitSignalArgs(Message& signal)
+    {
+        emitSignal(signal);
+    }
 
 }
 
