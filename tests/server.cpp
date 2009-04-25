@@ -27,6 +27,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <stdexcept>
 
 class TestServiceClass : private dbustl::DBusObject {
 public:
@@ -46,6 +47,10 @@ public:
         exportMethod("test_call2", this, &TestServiceClass::test_call2);        
         exportMethod("test_callvoid3", this, &TestServiceClass::test_callvoid3);
         exportMethod("test_call3", this, &TestServiceClass::test_call3);        
+
+        exportMethod("test_ex1", this, &TestServiceClass::test_ex1);        
+        exportMethod("test_ex2", this, &TestServiceClass::test_ex2);        
+        exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
     }
 
 private:
@@ -97,6 +102,20 @@ private:
         return p1 + p2 + p3;
     }
 
+    void test_ex1()
+    {
+      throw dbustl::DBusException("org.mycompany.test", "This is a test exception");
+    }
+
+    void test_ex2()
+    {
+      throw std::runtime_error("Error");
+    }
+
+    void test_ex3()
+    {
+      throw "Test";
+    }
 };
 
 
