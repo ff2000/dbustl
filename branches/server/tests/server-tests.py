@@ -32,4 +32,7 @@ except dbus.exceptions.DBusException, ex:
 
 print "Ok"
 
+proxy.test_signal()
+proxy.test_signal2()
+
 proxy.stop()

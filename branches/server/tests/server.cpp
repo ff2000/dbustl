@@ -55,6 +55,7 @@ public:
         exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
 
         exportMethod("test_signal", this, &TestServiceClass::test_signal);        
+        exportMethod("test_signal2", this, &TestServiceClass::test_signal2);        
 
         exportMethod("stop", this, &TestServiceClass::stop);        
     }
@@ -125,7 +126,20 @@ private:
 
     void test_signal()
     {
-        emitSignal("TestSignal", "A value");
+#ifdef DBUSTL_CXX0X
+        emitSignal("TestSignal", "Signal 1 value");
+#else
+        dbustl::Message signal = createSignal("TestSignal");
+        signal << "Signal 1 value";
+        emitSignal(signal);
+#endif
+    };
+
+    void test_signal2()
+    {
+        dbustl::Message signal = createSignal("TestSignal2");
+        signal << "Signal 2 value";
+        emitSignal(signal);
     };
 
     void stop()
