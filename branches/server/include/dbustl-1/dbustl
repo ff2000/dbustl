@@ -170,7 +170,7 @@
  * @subsubsection interface_modifiers Interface modifiers
  * A ServerProxy::Interface "special class" is provided with ServerProxy. Here is how to use it:
  * @code
- * proxy.call("SimpleHello", ServerProxy::Interface("com.example.SampleInterface"), "Hi", &reply); 
+ * proxy.call("SimpleHello", Interface("com.example.SampleInterface"), "Hi", &reply); 
  * @endcode
  * This has for effect to place the call on a given interface. This does not change the interface
  * that will be use for subsequent calls.
