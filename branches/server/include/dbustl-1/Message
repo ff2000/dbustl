@@ -156,6 +156,29 @@ namespace dbustl {
             std::string interface() const;
             
             /**
+             * Returns a new message of type DBUS_MESSAGE_TYPE_METHOD_RETURN, that is a reply
+             * to this message.
+             * 
+             * The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the case,
+             * this is a programmatic error and behaviour is undefined.
+             * @return a reply to this message.
+             */
+            Message createMethodReturn() const;
+
+            /**
+             * Returns a new message of type DBUS_MESSAGE_TYPE_ERROR, that is a reply
+             * to this message.
+             * 
+             * The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the case,
+             * this is a programmatic error and behaviour is undefined.
+             * @param name The error name must be a valid error name according to the syntax given 
+             * in the D-Bus specification. If you don't want to make up an error name just use DBUS_ERROR_FAILED.
+             * @param message can be empty string (but you should really use it anyway)
+             * @return a reply to this message.
+             */
+            Message createErrorMessage(const std::string& name, const std::string& message) const;
+
+            /**
              * The DBUS C api structure: don't use it!
              * 
              * You should only use it if you <strong>really</strong> know
