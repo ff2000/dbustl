@@ -168,7 +168,7 @@
  * of the given proxy object.
  * 
  * @subsubsection interface_modifiers Interface modifiers
- * A ServerProxy::Interface "special class" is provided with ServerProxy. Here is how to use it:
+ * An Interface "special class" is provided with DBusTL. Here is how to use it:
  * @code
  * proxy.call("SimpleHello", Interface("com.example.SampleInterface"), "Hi", &reply); 
  * @endcode
