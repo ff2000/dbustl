@@ -126,11 +126,13 @@ private:
       throw "Test";
     }
 
-    void test_flexible_executor(dbustl::Message call)
+    bool test_flexible_executor(dbustl::Message call)
     {
         double a, b;
         call >> a >> b;
-        assert(!call.error());
+        if(call.error()){
+            return false;
+        }
         if(b == 0) {
             dbustl::Message mreturn = call.createErrorMessage("org.mycompany.test", "Division by 0");
             sendReply(mreturn);
@@ -140,6 +142,7 @@ private:
             mreturn << (a / b);
             sendReply(mreturn);
         }
+        return true;
     }
 
     void test_signal()

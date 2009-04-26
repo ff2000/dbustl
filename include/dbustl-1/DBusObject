@@ -71,7 +71,7 @@ namespace dbustl {
 
         template<typename _Class>
         void exportMethod(const std::string& methodName, _Class *target, 
-            void (_Class::*method)(Message method_call), const std::string& interface = "");
+            bool (_Class::*method)(Message method_call), const std::string& interface = "");
 
     #ifdef DBUSTL_CXX0X
         template<typename ... Args>
@@ -92,7 +92,8 @@ namespace dbustl {
         public:
             MethodExecutorBase(const std::string& interface) : _interface(interface) {};
             virtual ~MethodExecutorBase() {};
-            virtual void processCall(DBusObject *object, Message* method_call) = 0;
+            //Returns true if signature was OK, false otherwise
+            virtual bool processCall(DBusObject *object, Message* method_call) = 0;
             const std::string& interface() const { return _interface; };
             void setInterface(const std::string& interface) { _interface = interface; };
         private:
@@ -103,16 +104,25 @@ namespace dbustl {
         public:
             EasyMethodExecutorBase(const std::string& interface) : MethodExecutorBase(interface) {};
             virtual ~EasyMethodExecutorBase() {};
-            virtual void processCall(DBusObject *object, Message* method_call)
+            //Returns true if signature was OK, false otherwise
+            virtual bool processCall(DBusObject *object, Message* method_call)
             {
                 Message mreturn(method_call->createMethodReturn());
                 if(mreturn.dbus()) {
-                    processCall(method_call, &mreturn);
-                    object->sendReply(mreturn);
+                    if(processCall(method_call, &mreturn)) {
+                        object->sendReply(mreturn);
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+                else {
+                    return true;
                 }
             }
         private:
-            virtual void processCall(Message* method_call, Message *method_return) = 0;
+            virtual bool processCall(Message* method_call, Message *method_return) = 0;
         };
 
         template<typename T>
@@ -144,9 +154,10 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message*, Message *method_reply)
+            virtual bool processCall(Message*, Message *method_reply)
             {
                 *method_reply << (_target->*_method)();
+                return true;
             }
 
             TargetClassType *_target;            
@@ -162,9 +173,10 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message*, Message *)
+            virtual bool processCall(Message*, Message *)
             {
                 (_target->*_method)();
+                return true;
             }
 
             TargetClassType *_target;            
@@ -180,12 +192,14 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message* method_call, Message *method_reply)
+            virtual bool processCall(Message* method_call, Message *method_reply)
             {
                 typename remove_const_ref<T1>::type a1;
                 *method_call >> a1;
-                if(method_call->error()) return;
-                *method_reply << (_target->*_method)(a1);
+                if(!method_call->error()) {
+                    *method_reply << (_target->*_method)(a1);
+                }
+                return !method_call->error();
             }
 
             TargetClassType *_target;            
@@ -201,12 +215,14 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message* method_call, Message *)
+            virtual bool processCall(Message* method_call, Message *)
             {
                 typename remove_const_ref<T1>::type a1;
                 *method_call >> a1;
-                if(method_call->error()) return;
-                (_target->*_method)(a1);
+                if(!method_call->error()) {
+                    (_target->*_method)(a1);
+                }
+                return !method_call->error();
             }
 
             TargetClassType *_target;            
@@ -222,14 +238,16 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message* method_call, Message *method_reply)
+            virtual bool processCall(Message* method_call, Message *method_reply)
             {
                 typename remove_const_ref<T1>::type a1;
                 typename remove_const_ref<T2>::type a2;
                 *method_call >> a1;
                 *method_call >> a2;
-                if(method_call->error()) return;
-                *method_reply << (_target->*_method)(a1, a2);
+                if(!method_call->error()) {
+                    *method_reply << (_target->*_method)(a1, a2);
+                }
+                return !method_call->error();
             }
 
             TargetClassType *_target;            
@@ -245,14 +263,16 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message* method_call, Message *)
+            virtual bool processCall(Message* method_call, Message *)
             {
                 typename remove_const_ref<T1>::type a1;
                 typename remove_const_ref<T2>::type a2;
                 *method_call >> a1;
                 *method_call >> a2;
-                if(method_call->error()) return;
-                (_target->*_method)(a1, a2);
+                if(!method_call->error()) {
+                    (_target->*_method)(a1, a2);
+                }
+                return !method_call->error();
             }
 
             TargetClassType *_target;            
@@ -268,7 +288,7 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message* method_call, Message *method_reply)
+            virtual bool processCall(Message* method_call, Message *method_reply)
             {
                 typename remove_const_ref<T1>::type a1;
                 typename remove_const_ref<T2>::type a2;
@@ -276,8 +296,10 @@ namespace dbustl {
                 *method_call >> a1;
                 *method_call >> a2;
                 *method_call >> a3;
-                if(method_call->error()) return;
-                *method_reply << (_target->*_method)(a1, a2, a3);
+                if(!method_call->error()) {
+                    *method_reply << (_target->*_method)(a1, a2, a3);
+                }
+                return !method_call->error();
             }
 
             TargetClassType *_target;            
@@ -293,7 +315,7 @@ namespace dbustl {
              : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
-            virtual void processCall(Message* method_call, Message *)
+            virtual bool processCall(Message* method_call, Message *)
             {
                 typename remove_const_ref<T1>::type a1;
                 typename remove_const_ref<T2>::type a2;
@@ -301,8 +323,10 @@ namespace dbustl {
                 *method_call >> a1;
                 *method_call >> a2;
                 *method_call >> a3;
-                if(method_call->error()) return;
-                (_target->*_method)(a1, a2, a3);
+                if(!method_call->error()) {
+                    (_target->*_method)(a1, a2, a3);
+                }
+                return !method_call->error();
             }
 
             TargetClassType *_target;            
@@ -312,15 +336,15 @@ namespace dbustl {
         template<typename TargetClassType>
         class FlexibleMethodExecutor : public MethodExecutorBase {
         public:
-            typedef void (TargetClassType::*MethodType) (Message method_call);
+            typedef bool (TargetClassType::*MethodType) (Message method_call);
                 
             FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface)
              : MethodExecutorBase(interface), _target(target), _method(method) {};
 
         private:
-            virtual void processCall(DBusObject *, Message* method_call)
+            virtual bool processCall(DBusObject *, Message* method_call)
             {
-                (_target->*_method)(*method_call);
+                return (_target->*_method)(*method_call);
             }
                 
             TargetClassType *_target;            
@@ -391,7 +415,7 @@ namespace dbustl {
     }
 
     template<typename _Class>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call), const std::string& interface)
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, bool (_Class::*method)(Message method_call), const std::string& interface)
     {
         exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
     }

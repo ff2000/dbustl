@@ -143,7 +143,10 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
             
         if(executor) {
             try {
-                executor->processCall(object, &call);
+                if(!executor->processCall(object, &call)) {
+                    //Wrong signature
+                  	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+                }
             }
         #ifndef DBUSTL_NO_EXCEPTIONS
             catch(const DBusException& e) {
