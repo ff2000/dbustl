@@ -30,9 +30,16 @@ try:
 except dbus.exceptions.DBusException, ex:
     assert str(ex) == "org.dbustl.CPPException: Unknown C++ exception"
 
-print "Ok"
+assert proxy.test_flexible_executor(1.0, 1.0) == 1
+
+try:
+    proxy.test_flexible_executor()
+except dbus.exceptions.DBusException, ex:
+    assert str(ex) == "org.mycompany.test: Division by 0"
 
 proxy.test_signal()
 proxy.test_signal2()
 
 proxy.stop()
+
+print "Ok"

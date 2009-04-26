@@ -50,6 +50,8 @@ public:
         exportMethod("test_callvoid3", this, &TestServiceClass::test_callvoid3);
         exportMethod("test_call3", this, &TestServiceClass::test_call3);        
 
+        exportMethod("test_flexible_executor", this, &TestServiceClass::test_flexible_executor);        
+
         exportMethod("test_ex1", this, &TestServiceClass::test_ex1);        
         exportMethod("test_ex2", this, &TestServiceClass::test_ex2);        
         exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
@@ -122,6 +124,21 @@ private:
     void test_ex3()
     {
       throw "Test";
+    }
+
+    void test_flexible_executor(dbustl::Message call)
+    {
+        double a, b;
+        call >> a >> b;
+        if(b == 0) {
+            dbustl::Message mreturn = call.createErrorMessage("org.mycompany.test", "Division by 0");
+            sendReply(mreturn);
+        }
+        else {
+            dbustl::Message mreturn = call.createMethodReturn();
+            mreturn << (a / b);
+            sendReply(mreturn);
+        }
     }
 
     void test_signal()

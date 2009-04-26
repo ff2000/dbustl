@@ -71,7 +71,7 @@ namespace dbustl {
 
         template<typename _Class>
         void exportMethod(const std::string& methodName, _Class *target, 
-            void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface = "");
+            void (_Class::*method)(Message method_call), const std::string& interface = "");
 
     #ifdef DBUSTL_CXX0X
         template<typename ... Args>
@@ -81,6 +81,8 @@ namespace dbustl {
         Message createSignal(const std::string& signalName, const std::string& interface = "");
 
         void emitSignal(Message& signal);
+        
+        void sendReply(Message& reply);
   
     private:
      
@@ -294,15 +296,15 @@ namespace dbustl {
         template<typename TargetClassType>
         class FlexibleMethodExecutor : public MethodExecutorBase {
         public:
-            typedef void (TargetClassType::*MethodType) (Message method_call, Message method_reply);
+            typedef void (TargetClassType::*MethodType) (Message method_call);
                 
             FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface)
              : MethodExecutorBase(interface), _target(target), _method(method) {};
 
         private:
-            virtual void processCall(Message* method_call, Message *method_reply)
+            virtual void processCall(Message* method_call, Message *)
             {
-                (_target->*_method)(*method_call, *method_reply);
+                (_target->*_method)(*method_call);
             }
                 
             TargetClassType *_target;            
@@ -373,7 +375,7 @@ namespace dbustl {
     }
 
     template<typename _Class>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call, Message method_reply), const std::string& interface)
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call), const std::string& interface)
     {
         exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
     }

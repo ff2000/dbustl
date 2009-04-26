@@ -146,25 +146,25 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
             if(reply.dbus()) {
                 try {
                     executor->processCall(&call, &reply);
-                    dbus_connection_send(object->_conn->dbus(), reply.dbus(), NULL);
+                    object->sendReply(reply);
                 }
             #ifndef DBUSTL_NO_EXCEPTIONS
                 catch(const DBusException& e) {
                     Message errorReply = call.createErrorMessage(e.name(), e.message());
                     if(errorReply.dbus()) {
-                        dbus_connection_send(object->_conn->dbus(), errorReply.dbus(), NULL);
+                        object->sendReply(errorReply);
                     }
                 }
                 catch(const std::exception& e) {
                     Message errorReply = call.createErrorMessage("org.dbustl.CPPException", e.what());
                     if(errorReply.dbus()) {
-                        dbus_connection_send(object->_conn->dbus(), errorReply.dbus(), NULL);
+                        object->sendReply(errorReply);
                     }
                 }
                 catch(...) {
                     Message errorReply = call.createErrorMessage("org.dbustl.CPPException", "Unknown C++ exception");
                     if(errorReply.dbus()) {
-                        dbus_connection_send(object->_conn->dbus(), errorReply.dbus(), NULL);
+                        object->sendReply(errorReply);
                     }
                 }
             #endif
@@ -173,6 +173,15 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         }
     }
   	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+void DBusObject::sendReply(Message& reply)
+{
+    assert(
+        (dbus_message_get_type(reply.dbus()) == DBUS_MESSAGE_TYPE_METHOD_RETURN) ||
+        (dbus_message_get_type(reply.dbus()) == DBUS_MESSAGE_TYPE_ERROR)
+        );
+    dbus_connection_send(_conn->dbus(), reply.dbus(), NULL);
 }
 
 Message DBusObject::createSignal(const std::string& signalName, const std::string& interface)
