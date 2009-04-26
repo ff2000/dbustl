@@ -56,8 +56,12 @@ public:
         exportMethod("test_ex2", this, &TestServiceClass::test_ex2);        
         exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
 
+        exportMethod("test_if", this, &TestServiceClass::test_if1, "com.example.Interface1");        
+        exportMethod("test_if", this, &TestServiceClass::test_if2, "com.example.Interface2");        
+
         exportMethod("test_signal", this, &TestServiceClass::test_signal);        
         exportMethod("test_signal2", this, &TestServiceClass::test_signal2);        
+        exportMethod("test_signal3", this, &TestServiceClass::test_signal3);        
 
         exportMethod("stop", this, &TestServiceClass::stop);        
     }
@@ -126,6 +130,16 @@ private:
       throw "Test";
     }
 
+    std::string test_if1()
+    {
+        return "com.example.Interface1";
+    }
+
+    std::string test_if2()
+    {
+        return "com.example.Interface2";
+    }
+
     bool test_flexible_executor(dbustl::Message call)
     {
         double a, b;
@@ -161,6 +175,17 @@ private:
         dbustl::Message signal = createSignal("TestSignal2");
         signal << "Signal 2 value";
         emitSignal(signal);
+    };
+
+    void test_signal3()
+    {
+#ifdef DBUSTL_CXX0X
+        emitSignal("TestSignal3", "Signal 3 value", dbustl::Interface("com.example.AlternateInterface"));
+#else
+        dbustl::Message signal = createSignal("TestSignal3", "com.example.AlternateInterface");
+        signal << "Signal 3 value";
+        emitSignal(signal);
+#endif
     };
 
     void stop()
