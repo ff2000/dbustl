@@ -17,23 +17,27 @@ assert proxy.test_call3(1, 1, 1) == 3
 
 try:
     proxy.test_ex1()
+    assert False
 except dbus.exceptions.DBusException, ex:
     assert str(ex) == "org.mycompany.test: This is a test exception"
 
 try:
     proxy.test_ex2()
+    assert False
 except dbus.exceptions.DBusException, ex:
     assert str(ex) == "org.dbustl.CPPException: Error"
 
 try:
     proxy.test_ex3()
+    assert False
 except dbus.exceptions.DBusException, ex:
     assert str(ex) == "org.dbustl.CPPException: Unknown C++ exception"
 
 assert proxy.test_flexible_executor(1.0, 1.0) == 1
 
 try:
-    proxy.test_flexible_executor()
+    proxy.test_flexible_executor(1.0, 0.0)
+    assert False
 except dbus.exceptions.DBusException, ex:
     assert str(ex) == "org.mycompany.test: Division by 0"
 

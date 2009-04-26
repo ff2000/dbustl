@@ -130,6 +130,7 @@ private:
     {
         double a, b;
         call >> a >> b;
+        assert(!call.error());
         if(b == 0) {
             dbustl::Message mreturn = call.createErrorMessage("org.mycompany.test", "Division by 0");
             sendReply(mreturn);

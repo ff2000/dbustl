@@ -142,33 +142,29 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         }
             
         if(executor) {
-            Message reply = call.createMethodReturn();
-            if(reply.dbus()) {
-                try {
-                    executor->processCall(&call, &reply);
-                    object->sendReply(reply);
-                }
-            #ifndef DBUSTL_NO_EXCEPTIONS
-                catch(const DBusException& e) {
-                    Message errorReply = call.createErrorMessage(e.name(), e.message());
-                    if(errorReply.dbus()) {
-                        object->sendReply(errorReply);
-                    }
-                }
-                catch(const std::exception& e) {
-                    Message errorReply = call.createErrorMessage("org.dbustl.CPPException", e.what());
-                    if(errorReply.dbus()) {
-                        object->sendReply(errorReply);
-                    }
-                }
-                catch(...) {
-                    Message errorReply = call.createErrorMessage("org.dbustl.CPPException", "Unknown C++ exception");
-                    if(errorReply.dbus()) {
-                        object->sendReply(errorReply);
-                    }
-                }
-            #endif
+            try {
+                executor->processCall(object, &call);
             }
+        #ifndef DBUSTL_NO_EXCEPTIONS
+            catch(const DBusException& e) {
+                Message errorReply = call.createErrorMessage(e.name(), e.message());
+                if(errorReply.dbus()) {
+                    object->sendReply(errorReply);
+                }
+            }
+            catch(const std::exception& e) {
+                Message errorReply = call.createErrorMessage("org.dbustl.CPPException", e.what());
+                if(errorReply.dbus()) {
+                    object->sendReply(errorReply);
+                }
+            }
+            catch(...) {
+                Message errorReply = call.createErrorMessage("org.dbustl.CPPException", "Unknown C++ exception");
+                if(errorReply.dbus()) {
+                    object->sendReply(errorReply);
+                }
+            }
+        #endif
       	    return DBUS_HANDLER_RESULT_HANDLED;
         }
     }
