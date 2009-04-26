@@ -56,7 +56,7 @@
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#5f8d17e59b3487ac895fe55ec2636f96">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2, T3 arg3), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class&gt; </td></tr>
-<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#1e30438445c725ad4c28abc143cbad6e">exportMethod</a> (const std::string &amp;methodName, _Class *target, bool(_Class::*method)(<a class="el" href="classdbustl_1_1Message.html">Message</a> method_call), const std::string &amp;interface=&quot;&quot;)</td></tr>
+<tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#f2345f87eacecb9727e5f2000df6eb53">exportMethod</a> (const std::string &amp;methodName, _Class *target, void(_Class::*method)(<a class="el" href="classdbustl_1_1Message.html">Message</a> method_call), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#e44b895ad31e08b1c9803aeedd08ff04">emitSignal</a> (const std::string &amp;signalName, const Args &amp;...args)</td></tr>
@@ -397,7 +397,7 @@ template&lt;typename _Class, typename R, typename T1, typename T2, typename T3&g
 
 </div>
 </div><p>
-<a class="anchor" name="1e30438445c725ad4c28abc143cbad6e"></a><!-- doxytag: member="dbustl::DBusObject::exportMethod" ref="1e30438445c725ad4c28abc143cbad6e" args="(const std::string &amp;methodName, _Class *target, bool(_Class::*method)(Message method_call), const std::string &amp;interface=&quot;&quot;)" -->
+<a class="anchor" name="f2345f87eacecb9727e5f2000df6eb53"></a><!-- doxytag: member="dbustl::DBusObject::exportMethod" ref="f2345f87eacecb9727e5f2000df6eb53" args="(const std::string &amp;methodName, _Class *target, void(_Class::*method)(Message method_call), const std::string &amp;interface=&quot;&quot;)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -418,7 +418,7 @@ template&lt;typename _Class&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool(_Class::*)(<a class="el" href="classdbustl_1_1Message.html">Message</a> method_call)&nbsp;</td>
+          <td class="paramtype">void(_Class::*)(<a class="el" href="classdbustl_1_1Message.html">Message</a> method_call)&nbsp;</td>
           <td class="paramname"> <em>method</em>, </td>
         </tr>
         <tr>
