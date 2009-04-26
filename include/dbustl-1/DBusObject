@@ -103,6 +103,7 @@ namespace dbustl {
         public:
             EasyMethodExecutorBase(const std::string& interface) : MethodExecutorBase(interface) {};
             virtual ~EasyMethodExecutorBase() {};
+        private:
             virtual void processCall(DBusObject *object, Message* method_call)
             {
                 Message mreturn(method_call->createMethodReturn());
@@ -113,7 +114,6 @@ namespace dbustl {
                     }
                 }
             }
-        private:
             virtual void processCall(Message* method_call, Message *method_return) = 0;
         };
 
