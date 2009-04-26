@@ -21,7 +21,7 @@ To build DBusTL the following dependancies are requires:<ul>
 <li>gcc: &gt;= 4.3</li><li>DBus development libraries (&gt;= 1.2): older versions may work but haven't been tested</li><li>glib: tested on 2.16, olders versions might work too</li><li>python-dbus: tested with 0.82.4</li></ul>
 <p>
 It is still possible to use DBusTL with an older compiler: refer to <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more information.<p>
-glib is only required if you intend to receive DBUS signals from remote objects.<p>
+glib is only required if you intend to receive D-Bus signals from remote objects.<p>
 python-dbus is only required if you intend to run the examples provided with this introduction.<h2><a class="anchor" name="build">
 Building</a></h2>
 That is as simple as running <div class="fragment"><pre class="fragment"> $tar -zxvf dbustl-x.y.tar.bz2
@@ -81,10 +81,10 @@ So let's try to compile the simplest.cpp program: <div class="fragment"><pre cla
     <span class="keywordflow">return</span> 0;
 }
 </pre></div><p>
-This program is the simplest program that can be imagined. First is the creation of a proxy, that will (as its name sugggests) proxy the calls on the underlying exposed DBUS object. Here we create a proxy on the /PythonServerObject exposed by the com.example.SampleService on the session bus. But the most important line of the program is the call to: <div class="fragment"><pre class="fragment"> remoteObject.call(<span class="stringliteral">"SimpleHello"</span>, <span class="stringliteral">"Hello world"</span>, &amp;reply); 
+This program is the simplest program that can be imagined. First is the creation of a proxy, that will (as its name sugggests) proxy the calls on the underlying exposed D-Bus object. Here we create a proxy on the /PythonServerObject exposed by the com.example.SampleService on the session bus. But the most important line of the program is the call to: <div class="fragment"><pre class="fragment"> remoteObject.call(<span class="stringliteral">"SimpleHello"</span>, <span class="stringliteral">"Hello world"</span>, &amp;reply); 
 </pre></div><p>
 This single line tells DBusTL to:<ol type=1>
-<li>Create a method call message for "SimpleHello" method</li><li>Converts the "Hello World" to a DBUS string</li><li>Send the message on the connection and receive the reply</li><li>Convert the DBUS string in the reply back to a std::string object.</li></ol>
+<li>Create a method call message for "SimpleHello" method</li><li>Converts the "Hello World" to a D-Bus string</li><li>Send the message on the connection and receive the reply</li><li>Convert the D-Bus string in the reply back to a std::string object.</li></ol>
 <p>
 But enough talking, let's try it out: here is the line required to build it by hand with gcc. <div class="fragment"><pre class="fragment"> $g++ -std=c++0x -Wall simplest.cpp `pkg-config --cflags --libs dbustl-1` -o simplest
 </pre></div><p>
