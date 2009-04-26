@@ -53,9 +53,15 @@ try:
 except dbus.exceptions.DBusException, ex:
     assert str(ex) == "org.mycompany.test: Division by 0"
 
+#Test interfaces
+proxy.test_if()
+assert proxy.test_if(dbus_interface='com.example.Interface1') == 'com.example.Interface1'
+assert proxy.test_if(dbus_interface='com.example.Interface2') == 'com.example.Interface2'
+
 #FIXME: check those signals are really received
 proxy.test_signal()
 proxy.test_signal2()
+proxy.test_signal3()
 
 proxy.stop()
 
