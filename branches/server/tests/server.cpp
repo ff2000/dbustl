@@ -140,23 +140,21 @@ private:
         return "com.example.Interface2";
     }
 
-    bool test_flexible_executor(dbustl::Message call)
+    void test_flexible_executor(dbustl::Message call)
     {
         double a, b;
         call >> a >> b;
-        if(call.error()){
-            return false;
+        if(!call.error()){
+            if(b == 0) {
+                dbustl::Message mreturn = call.createErrorMessage("org.mycompany.test", "Division by 0");
+                sendReply(mreturn);
+            }
+            else {
+                dbustl::Message mreturn = call.createMethodReturn();
+                mreturn << (a / b);
+                sendReply(mreturn);
+            }
         }
-        if(b == 0) {
-            dbustl::Message mreturn = call.createErrorMessage("org.mycompany.test", "Division by 0");
-            sendReply(mreturn);
-        }
-        else {
-            dbustl::Message mreturn = call.createMethodReturn();
-            mreturn << (a / b);
-            sendReply(mreturn);
-        }
-        return true;
     }
 
     void test_signal()

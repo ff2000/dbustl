@@ -143,10 +143,7 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
             
         if(executor) {
             try {
-                if(!executor->processCall(object, &call)) {
-                    //Wrong signature
-                  	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-                }
+                executor->processCall(object, &call);
             }
         #ifndef DBUSTL_NO_EXCEPTIONS
             catch(const DBusException& e) {
@@ -168,7 +165,13 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
                 }
             }
         #endif
-      	    return DBUS_HANDLER_RESULT_HANDLED;
+      	    //Call is in error state is there was a signature mismatch somewhere
+      	    if(!call.error()) {
+      	        return DBUS_HANDLER_RESULT_HANDLED;
+            }
+            else {
+      	        return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+            }
         }
     }
   	return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
