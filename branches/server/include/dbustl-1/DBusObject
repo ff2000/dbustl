@@ -92,13 +92,29 @@ namespace dbustl {
         public:
             MethodExecutorBase(const std::string& interface) : _interface(interface) {};
             virtual ~MethodExecutorBase() {};
-            virtual void processCall(Message* method_call, Message *method_reply) = 0;
+            virtual void processCall(DBusObject *object, Message* method_call) = 0;
             const std::string& interface() const { return _interface; };
             void setInterface(const std::string& interface) { _interface = interface; };
         private:
             std::string _interface;
         };
  
+        class EasyMethodExecutorBase : public MethodExecutorBase {
+        public:
+            EasyMethodExecutorBase(const std::string& interface) : MethodExecutorBase(interface) {};
+            virtual ~EasyMethodExecutorBase() {};
+            virtual void processCall(DBusObject *object, Message* method_call)
+            {
+                Message mreturn(method_call->createMethodReturn());
+                if(mreturn.dbus()) {
+                    processCall(method_call, &mreturn);
+                    object->sendReply(mreturn);
+                }
+            }
+        private:
+            virtual void processCall(Message* method_call, Message *method_return) = 0;
+        };
+
         template<typename T>
         struct remove_const_ref {
             typedef T type;
@@ -120,12 +136,12 @@ namespace dbustl {
         };
         
         template<typename TargetClassType, typename Result>
-        class MethodExecutor0 : public MethodExecutorBase {
+        class EasyMethodExecutor0 : public EasyMethodExecutorBase {
         public:   
             typedef Result (TargetClassType::*MethodType) (void);
                 
-            MethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *method_reply)
@@ -138,12 +154,12 @@ namespace dbustl {
         };
             
         template<typename TargetClassType>
-        class MethodExecutor0<TargetClassType, void> : public MethodExecutorBase {
+        class EasyMethodExecutor0<TargetClassType, void> : public EasyMethodExecutorBase {
         public:   
             typedef void (TargetClassType::*MethodType) (void);
                 
-            MethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *)
@@ -156,12 +172,12 @@ namespace dbustl {
         };
             
         template<typename TargetClassType, typename Result, typename T1>
-        class MethodExecutor1 : public MethodExecutorBase {
+        class EasyMethodExecutor1 : public EasyMethodExecutorBase {
         public:   
             typedef Result (TargetClassType::*MethodType) (T1);
                 
-            MethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -177,12 +193,12 @@ namespace dbustl {
         };
             
         template<typename TargetClassType, typename T1>
-        class MethodExecutor1<TargetClassType, void, T1> : public MethodExecutorBase {
+        class EasyMethodExecutor1<TargetClassType, void, T1> : public EasyMethodExecutorBase {
         public:   
             typedef void (TargetClassType::*MethodType) (T1);
                 
-            MethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -198,12 +214,12 @@ namespace dbustl {
         };
             
         template<typename TargetClassType, typename Result, typename T1, typename T2>
-        class MethodExecutor2 : public MethodExecutorBase {
+        class EasyMethodExecutor2 : public EasyMethodExecutorBase {
         public:   
             typedef Result (TargetClassType::*MethodType) (T1, T2);
                 
-            MethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -221,12 +237,12 @@ namespace dbustl {
         };
 
         template<typename TargetClassType, typename T1, typename T2>
-        class MethodExecutor2<TargetClassType, void, T1, T2> : public MethodExecutorBase {
+        class EasyMethodExecutor2<TargetClassType, void, T1, T2> : public EasyMethodExecutorBase {
         public:   
             typedef void (TargetClassType::*MethodType) (T1, T2);
                 
-            MethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -244,12 +260,12 @@ namespace dbustl {
         };
 
         template<typename TargetClassType, typename Result, typename T1, typename T2, typename T3>
-        class MethodExecutor3 : public MethodExecutorBase {
+        class EasyMethodExecutor3 : public EasyMethodExecutorBase {
         public:   
             typedef Result (TargetClassType::*MethodType) (T1, T2, T3);
                 
-            MethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -269,12 +285,12 @@ namespace dbustl {
         };
 
         template<typename TargetClassType, typename T1, typename T2, typename T3>
-        class MethodExecutor3<TargetClassType, void, T1, T2, T3> : public MethodExecutorBase {
+        class EasyMethodExecutor3<TargetClassType, void, T1, T2, T3> : public EasyMethodExecutorBase {
         public:   
             typedef void (TargetClassType::*MethodType) (T1, T2, T3);
                 
-            MethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+            EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -302,7 +318,7 @@ namespace dbustl {
              : MethodExecutorBase(interface), _target(target), _method(method) {};
 
         private:
-            virtual void processCall(Message* method_call, Message *)
+            virtual void processCall(DBusObject *, Message* method_call)
             {
                 (_target->*_method)(*method_call);
             }
@@ -353,25 +369,25 @@ namespace dbustl {
     template<typename _Class, typename R>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor0<_Class, R>(target, method, interface));
+        exportMethod(methodName, new EasyMethodExecutor0<_Class, R>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor1<_Class, R, T1>(target, method, interface));
+        exportMethod(methodName, new EasyMethodExecutor1<_Class, R, T1>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1, typename T2>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor2<_Class, R, T1, T2>(target, method, interface));
+        exportMethod(methodName, new EasyMethodExecutor2<_Class, R, T1, T2>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1, typename T2, typename T3>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string& interface)
     {
-        exportMethod(methodName, new MethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
+        exportMethod(methodName, new EasyMethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
     }
 
     template<typename _Class>
