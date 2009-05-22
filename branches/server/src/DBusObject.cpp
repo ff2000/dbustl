@@ -26,6 +26,9 @@
 #include <dbustl-1/DBusObject>
 #include <dbustl-1/Connection>
 #include <dbustl-1/Message>
+#include <dbustl-1/types/Basic> //Required for std::string serialization
+
+#include <set>
 
 #include <cassert>
 
@@ -43,6 +46,7 @@ DBusObjectPathVTable DBusObject::_vtable = {
 DBusObject::DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn) 
  : _conn(0), _objectPath(objectPath), _interface(interface)
 {
+    exportMethod("Introspect", this, &DBusObject::introspect, DBUS_INTERFACE_INTROSPECTABLE);
     if(conn) {
         enable(conn);
     }
@@ -218,6 +222,37 @@ void DBusObject::emitSignal(Message& signal)
     else {
         throw_or_set(*signal.error());
     }
+}
+
+std::string DBusObject::introspect()
+{
+    std::string xmlIntrospect = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE;
+    xmlIntrospect += "<node name=\"" + _objectPath + "\">\n";
+
+    MethodContainerType::iterator it;
+    //First lookup all available interfaces
+    std::set<std::string> interfaces;
+    for(it = _exportedMethods.begin(); it != _exportedMethods.end(); ++it) {
+        interfaces.insert(it->second->interface());
+    }
+    
+    std::set<std::string>::const_iterator interfacesIt;
+    for(interfacesIt = interfaces.begin(); interfacesIt != interfaces.end(); ++interfacesIt) {
+        const std::string curInterface = *interfacesIt;
+        xmlIntrospect += "\t<interface name=\"" + curInterface + "\">\n";
+        for(it = _exportedMethods.begin(); it != _exportedMethods.end(); ++it) {
+            MethodExecutorBase *method = it->second;
+            if(method->interface() == curInterface) {
+                xmlIntrospect += "\t\t<method name=\"" + it->first + "\">\n";
+                xmlIntrospect += "\t\t\t" + method->argsIntrospection();
+                xmlIntrospect += "\t\t</method>\n";
+            }
+        }
+        xmlIntrospect += "\t</interface>\n"; 
+    }
+    
+    xmlIntrospect += "</node>\n";
+    return xmlIntrospect;
 }
 
 }
