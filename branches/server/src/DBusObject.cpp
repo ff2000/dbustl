@@ -43,6 +43,8 @@ DBusObjectPathVTable DBusObject::_vtable = {
     0
 };
 
+std::map<const Connection*, std::set<const DBusObject*> > DBusObject::_objectTrees;
+
 DBusObject::DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn) 
  : _conn(0), _objectPath(objectPath), _interface(interface)
 {
@@ -77,6 +79,7 @@ void DBusObject::enable(Connection * conn)
     DBusException ex;
     if(dbus_connection_try_register_object_path(conn->dbus(), _objectPath.c_str(), &_vtable, this, ex.dbus())) {
         _conn = conn;
+        _objectTrees[_conn].insert(this);
     }
     else {
         throw_or_set(ex);
@@ -87,6 +90,7 @@ void DBusObject::disable()
 {
     errorReset();
     dbus_connection_unregister_object_path(_conn->dbus(), _objectPath.c_str());
+    _objectTrees[_conn].erase(this);
     _conn = 0;
 }
 
@@ -318,7 +322,27 @@ std::string DBusObject::introspect()
         xmlIntrospect += "\t</interface>\n"; 
     }
     
+    xmlIntrospect += introspectChildren();
     xmlIntrospect += "</node>\n";
+    return xmlIntrospect;
+}
+
+std::string DBusObject::introspectChildren()
+{
+    std::string xmlIntrospect;
+    std::set<const DBusObject*>::iterator it;
+    for(it = _objectTrees[_conn].begin(); it != _objectTrees[_conn].end(); ++it) {
+        //Check for substring match
+        const std::string& childPath = (*it)->_objectPath;
+        if(_objectPath.size() < childPath.size() && _objectPath == childPath.substr(0, _objectPath.size())) {
+            //Compute relative child name
+            std::string name = childPath.substr(_objectPath.size());
+            if(name[0] == '/') {
+                name = name.substr(1);
+            }
+            xmlIntrospect += "<node name=\"" + name + "\"/>\n";
+        }
+    }
     return xmlIntrospect;
 }
 
