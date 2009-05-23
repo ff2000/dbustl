@@ -150,10 +150,12 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         }
             
         if(executor) {
-            try {
-                executor->processCall(object, &call);
-            }
         #ifndef DBUSTL_NO_EXCEPTIONS
+            try {
+        #endif
+                executor->processCall(object, &call);
+        #ifndef DBUSTL_NO_EXCEPTIONS
+            }
             catch(const DBusException& e) {
                 Message errorReply = call.createErrorMessage(e.name(), e.message());
                 if(errorReply.dbus()) {
