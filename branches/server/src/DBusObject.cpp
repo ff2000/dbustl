@@ -281,7 +281,7 @@ void DBusObject::emitSignal(Message& signal)
 std::string DBusObject::introspect()
 {
     std::string xmlIntrospect = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE;
-    xmlIntrospect += "<node name=\"" + _objectPath + "\">\n";
+    xmlIntrospect += "<node name=\"" + _objectPath + "\">";
 
     MethodContainerType::iterator methodsIt;
     //First lookup all available interfaces
@@ -297,29 +297,29 @@ std::string DBusObject::introspect()
     std::set<std::string>::const_iterator interfacesIt;
     for(interfacesIt = interfaces.begin(); interfacesIt != interfaces.end(); ++interfacesIt) {
         const std::string curInterface = *interfacesIt;
-        xmlIntrospect += "\t<interface name=\"" + curInterface + "\">\n";
+        xmlIntrospect += "<interface name=\"" + curInterface + "\">";
         for(MethodContainerType::const_iterator it = _exportedMethods.begin(); 
                 it != _exportedMethods.end(); ++it) {
             MethodExecutorBase *method = it->second;
             if(method->interface() == curInterface) {
-                xmlIntrospect += "\t\t<method name=\"" + it->first + "\">\n";
-                xmlIntrospect += "\t\t\t" + method->argsIntrospection();
-                xmlIntrospect += "\t\t</method>\n";
+                xmlIntrospect += "<method name=\"" + it->first + "\">";
+                xmlIntrospect += "" + method->argsIntrospection();
+                xmlIntrospect += "</method>";
             }
         }
         for(ExportedSignalType::const_iterator it = _exportedSignals.begin(); 
                 it != _exportedSignals.end(); ++it) {
             const ExportedSignal& signal = it->second;
             if(signal.interface() == curInterface) {
-                xmlIntrospect += "\t\t<signal name=\"" + it->first + "\">\n";
+                xmlIntrospect += "<signal name=\"" + it->first + "\">";
                 std::list<std::string>::const_iterator it;
                 for(it = signal.signatures().begin(); it != signal.signatures().end(); ++it) {
-                    xmlIntrospect += "\t\t\t<arg type=\"" + *it + "\"/>\n";
+                    xmlIntrospect += "<arg type=\"" + *it + "\"/>";
                 }
-                xmlIntrospect += "\t\t</signal>\n";
+                xmlIntrospect += "</signal>";
             }
         }
-        xmlIntrospect += "\t</interface>\n"; 
+        xmlIntrospect += "</interface>"; 
     }
     
     xmlIntrospect += introspectChildren();
@@ -340,7 +340,7 @@ std::string DBusObject::introspectChildren()
             if(name[0] == '/') {
                 name = name.substr(1);
             }
-            xmlIntrospect += "<node name=\"" + name + "\"/>\n";
+            xmlIntrospect += "<node name=\"" + name + "\"/>";
         }
     }
     return xmlIntrospect;
