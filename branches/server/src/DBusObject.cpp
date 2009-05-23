@@ -96,9 +96,8 @@ void DBusObject::disable()
 
 void DBusObject::exportMethod(const std::string& methodName, MethodExecutorBase *executor)
 {
-    std::pair<MethodContainerType::iterator, MethodContainerType::iterator> its(_exportedMethods.equal_range(methodName));
-    MethodContainerType::iterator firstMatch = its.first;
-    MethodContainerType::iterator lastMatch = its.second;
+    MethodContainerType::iterator firstMatch = _exportedMethods.lower_bound(methodName);
+    MethodContainerType::iterator lastMatch = _exportedMethods.upper_bound(methodName);
     
     if(executor->interface().empty()) {
         executor->setInterface(_interface);
@@ -128,9 +127,8 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         std::string interface = call.interface();
         DBusObject* object = static_cast<DBusObject *>(user_data);
 
-        std::pair<MethodContainerType::iterator, MethodContainerType::iterator> its(object->_exportedMethods.equal_range(methodName));
-        MethodContainerType::iterator firstMatch = its.first;
-        MethodContainerType::iterator lastMatch = its.second;
+        MethodContainerType::iterator firstMatch = object->_exportedMethods.lower_bound(methodName);
+        MethodContainerType::iterator lastMatch = object->_exportedMethods.upper_bound(methodName);
         
         MethodExecutorBase* executor = 0;
         
