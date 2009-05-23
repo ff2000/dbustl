@@ -287,7 +287,7 @@ std::string DBusObject::introspect()
     }
     ExportedSignalType::iterator signalsIt;
     for(signalsIt = _exportedSignals.begin(); signalsIt != _exportedSignals.end(); ++signalsIt) {
-        interfaces.insert(signalsIt->first);
+        interfaces.insert(signalsIt->second.interface());
     }
     
     std::set<std::string>::const_iterator interfacesIt;
