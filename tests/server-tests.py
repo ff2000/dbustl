@@ -1,7 +1,22 @@
 #!/usr/bin/env python
 
+import sys
+
 import dbus
 bus = dbus.SessionBus()
+
+xml = bus.get_object('com.example.SampleService', '/ServerObject').Introspect()         
+xml += bus.get_object('com.example.SampleService', '/ServerObject/Child').Introspect()         
+xml += bus.get_object('com.example.SampleService', '/Not/A/Child/Class').Introspect()         
+
+if len(sys.argv) > 1 and sys.argv[1] == '-w':
+    f = open('introspection.txt', 'w')
+    f.write(xml)
+    f.close()
+else:
+    f = open('introspection.txt')
+    assert xml == f.read()
+
 proxy = bus.get_object('com.example.SampleService',
                        '/ServerObject')
                        
