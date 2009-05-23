@@ -30,4 +30,4 @@ server_SOURCES = server.cpp
 server_CPPFLAGS = @GLIB_CFLAGS@
 server_LDADD = @DBUS_LIBS@ ../libdbustl-1.la ../libdbustl-glib-1.la @GLIB_LIBS@
 
-EXTRA_DIST = test-service.py server-tests.py
+EXTRA_DIST = test-service.py server-tests.py introspection.txt
