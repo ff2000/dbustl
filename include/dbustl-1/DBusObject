@@ -180,7 +180,7 @@ namespace dbustl {
             {
                 std::string intro;
                 using namespace types;
-                intro = std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>\n";
+                intro = std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
                 return intro;
             }
 
@@ -228,7 +228,7 @@ namespace dbustl {
                 std::string intro;
                 using namespace types;
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>\n";
+                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
                 return intro;
             }
 
@@ -257,7 +257,7 @@ namespace dbustl {
             {
                 std::string intro;
                 using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>\n";
+                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
                 return intro;
             }
 
@@ -290,7 +290,7 @@ namespace dbustl {
                 using namespace types;
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>\n";
+                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
                 return intro;
             }
 
@@ -322,7 +322,7 @@ namespace dbustl {
                 std::string intro;
                 using namespace types;
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>\n";
+                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
                 return intro;
             }
 
@@ -358,7 +358,7 @@ namespace dbustl {
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T3>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>\n";
+                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
                 return intro;
             }
 
@@ -393,7 +393,7 @@ namespace dbustl {
                 using namespace types;
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
                 intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T3>::type>::value() + "\" direction=\"in\"/>\n";
+                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T3>::type>::value() + "\" direction=\"in\"/>";
                 return intro;
             }
 
