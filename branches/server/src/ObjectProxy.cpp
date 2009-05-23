@@ -59,12 +59,16 @@ ObjectProxy::~ObjectProxy()
         // need some bits of its (i.e. signal name), we have to make a copy
         std::string sigName = it->first;
         //C++ Destructors must not throw, so protect those calls
+    #ifndef DBUSTL_NO_EXCEPTIONS
         try {
+    #endif
             removeSignalHandler(sigName);
+    #ifndef DBUSTL_NO_EXCEPTIONS
         }
         catch(const DBusException&) {
             //Skip exception
         }
+    #endif
     }
 }
 
@@ -241,7 +245,9 @@ void ObjectProxy::setWatchSignal(const std::string& signalName, bool enable)
 void ObjectProxy::enableSignal(const std::string& signalName, SignalCallbackWrapperBase* signalCb)
 {
     if(!_signalsHandlers.count(signalName)) {
+#ifndef DBUSTL_NO_EXCEPTIONS
         try {
+#endif
             setWatchSignal(signalName, true);
 
             if(!DBUSTL_HAS_ERROR()) {
@@ -251,13 +257,13 @@ void ObjectProxy::enableSignal(const std::string& signalName, SignalCallbackWrap
                 delete signalCb;
             }
             return;
+#ifndef DBUSTL_NO_EXCEPTIONS
         }
         catch(...) {
             delete signalCb;
-#ifndef DBUSTL_NO_EXCEPTIONS
             throw;
-#endif
         }
+#endif
     }
     else {
         //Already there
