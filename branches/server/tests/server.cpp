@@ -27,6 +27,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <cstdlib>
 #include <stdexcept>
 
 GMainLoop *mainloop;
@@ -63,7 +64,25 @@ public:
         exportMethod("test_signal2", this, &TestServiceClass::test_signal2);        
         exportMethod("test_signal3", this, &TestServiceClass::test_signal3);        
 
-        exportMethod("stop", this, &TestServiceClass::stop);        
+        exportMethod("stop", this, &TestServiceClass::stop);
+        
+        exportSignal<std::string>("TestSignal");
+        exportSignal<std::string, int>("TestSignal2");
+        exportSignal<std::string>("TestSignal3", "com.example.AlternateInterface");
+
+        exportSignal("TestExportSignal0");
+        exportSignal<std::string>("TestExportSignal1");
+        exportSignal<std::string, std::string>("TestExportSignal2");
+        exportSignal<std::string, std::string, std::string>("TestExportSignal3");
+        exportSignal<std::string, std::string, std::string, std::string>("TestExportSignal4");
+        exportSignal<std::string, std::string, std::string, std::string, std::string>("TestExportSignal5");
+        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal6");
+        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal7");
+        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal8");
+        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal9");
+        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal10");
+
+        exportSignal("WrongSignatureSignal");
     }
 
 private:
@@ -171,7 +190,7 @@ private:
     void test_signal2()
     {
         dbustl::Message signal = createSignal("TestSignal2");
-        signal << "Signal 2 value";
+        signal << "Signal 2 string value" << -1;
         emitSignal(signal);
     };
 
@@ -190,6 +209,27 @@ private:
     {
         g_main_loop_quit(mainloop);
     };
+
+public:
+    void test_unexistingsignal()
+    {
+        dbustl::Message signal = createSignal("UnexistingSignal");
+        emitSignal(signal);
+    };
+
+    void test_wrongsignaturesignal()
+    {
+        dbustl::Message signal = createSignal("WrongSignatureSignal");
+        signal << "Value";
+        emitSignal(signal);
+    };
+};
+
+class ChildClass : private dbustl::DBusObject {
+public:
+    ChildClass(dbustl::Connection *conn) : DBusObject("/ServerObject/Child", "com.example.DontcareInterface", conn) {
+        exportSignal<int>("DontcareSignal");
+    }
 };
 
 int main()
@@ -203,8 +243,28 @@ int main()
     session->busRequestName("com.example.SampleService");
     
     TestServiceClass srv(session);
+    ChildClass child(session);
     
     mainloop = g_main_loop_new(NULL, FALSE);
+    
+    try {
+        srv.test_unexistingsignal();
+        abort();
+    }
+    catch(const dbustl::DBusException& e) {
+        assert(e.name() == "org.dbustl.UnknownSignal");
+        assert(e.message() == "Signal \"UnexistingSignal\" has not been registered with DBusTL");
+    }
+    
+    try {
+        srv.test_wrongsignaturesignal();
+        abort();
+    }
+    catch(const dbustl::DBusException& e) {
+        assert(e.name() == "org.dbustl.SignalSignatureMismatch");
+        assert(e.message() == "Signal \"WrongSignatureSignal\" has been exported with a different signature: '' vs 's'");
+    }
+    
     g_main_loop_run(mainloop);        
     session->busReleaseName("com.example.SampleService");
 

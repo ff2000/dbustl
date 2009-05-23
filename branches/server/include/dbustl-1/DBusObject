@@ -28,6 +28,7 @@
 
 #include <string>
 #include <map>
+#include <list>
 
 #include <dbustl-1/Config>
 #include <dbustl-1/DBusException>
@@ -44,8 +45,6 @@ namespace dbustl {
     public:
         DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
         virtual ~DBusObject();
-
-        void setInterface(const std::string& interface) { _interface = interface; };
 
         void setPath(const std::string);
         std::string path() const;
@@ -73,10 +72,31 @@ namespace dbustl {
         void exportMethod(const std::string& methodName, _Class *target, 
             void (_Class::*method)(Message method_call), const std::string& interface = "");
 
+        void exportSignal(const std::string& signalName, const std::string& interface = "");    
+        template<typename T1>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");    
+        template<typename T1, typename T2>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4, typename T5>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
+        void exportSignal(const std::string& signalName, const std::string& interface = "");
+
     #ifdef DBUSTL_CXX0X
         template<typename ... Args>
         void emitSignal(const std::string& signalName, const Args&... args);
-
     #endif
 
         Message createSignal(const std::string& signalName, const std::string& interface = "");
@@ -401,6 +421,51 @@ namespace dbustl {
         void exportMethod(const std::string& methodName, MethodExecutorBase *executor);
 
         // Signals handling - begin
+        class ExportedSignal {
+        public:
+            ExportedSignal(const std::string& interface) : _interface(interface) {};
+            
+            const std::string& interface() const
+            {
+                return _interface;
+            };
+            
+            void setInterface(const std::string& interface)
+            {
+                _interface = interface;
+            };
+            
+            void addArgument(const std::string& signature)
+            {
+                _signatures.push_back(signature);
+            };
+            
+            const std::list<std::string>& signatures() const
+            {
+                return _signatures;
+            };
+            
+            void computeMessageSignature()
+            {
+                std::list<std::string>::const_iterator it;
+                for(it = _signatures.begin(); it != _signatures.end(); ++it) {
+                    _messageSignature += *it;
+                }
+            }
+            
+            const std::string& messageSignature() const
+            {
+                return _messageSignature;
+            }
+            
+        private:
+            std::string _interface;
+            std::list<std::string> _signatures;
+            std::string _messageSignature;
+        };
+
+        void exportSignal(const std::string& name, ExportedSignal& sig);
+
     #ifdef DBUSTL_CXX0X
         template<typename T, typename ... Args>
         void processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args);
@@ -427,6 +492,8 @@ namespace dbustl {
         std::string _interface;
         typedef std::multimap<std::string, MethodExecutorBase*> MethodContainerType;
         MethodContainerType _exportedMethods;
+        typedef std::multimap<std::string, ExportedSignal> ExportedSignalType;
+        ExportedSignalType _exportedSignals;
     #ifdef DBUSTL_NO_EXCEPTIONS
         DBusException _error;
     #endif
@@ -500,6 +567,140 @@ namespace dbustl {
     }
 #endif
 
+    template<typename T1>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        exportSignal(signalName, s);
+    }
+    
+    template<typename T1, typename T2>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        exportSignal(signalName, s);
+    }
+
+    template<typename T1, typename T2, typename T3>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        exportSignal(signalName, s);
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        exportSignal(signalName, s);
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4, typename T5>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        s.addArgument(Signature<T5>::value());
+        exportSignal(signalName, s);
+    }
+    
+    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        s.addArgument(Signature<T5>::value());
+        s.addArgument(Signature<T6>::value());
+        exportSignal(signalName, s);
+    }
+    
+    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        s.addArgument(Signature<T5>::value());
+        s.addArgument(Signature<T6>::value());
+        s.addArgument(Signature<T7>::value());
+        exportSignal(signalName, s);
+    }
+    
+    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        s.addArgument(Signature<T5>::value());
+        s.addArgument(Signature<T6>::value());
+        s.addArgument(Signature<T7>::value());
+        s.addArgument(Signature<T8>::value());
+        exportSignal(signalName, s);
+    }
+    
+    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        s.addArgument(Signature<T5>::value());
+        s.addArgument(Signature<T6>::value());
+        s.addArgument(Signature<T7>::value());
+        s.addArgument(Signature<T8>::value());
+        s.addArgument(Signature<T9>::value());
+        exportSignal(signalName, s);
+    }
+    
+    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        using namespace types;
+        ExportedSignal s(interface);
+        s.addArgument(Signature<T1>::value());
+        s.addArgument(Signature<T2>::value());
+        s.addArgument(Signature<T3>::value());
+        s.addArgument(Signature<T4>::value());
+        s.addArgument(Signature<T5>::value());
+        s.addArgument(Signature<T6>::value());
+        s.addArgument(Signature<T7>::value());
+        s.addArgument(Signature<T8>::value());
+        s.addArgument(Signature<T9>::value());
+        s.addArgument(Signature<T10>::value());
+        exportSignal(signalName, s);
+    }
 }
 
 #endif /* DBUSTL_DBUSOBJECT */

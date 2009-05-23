@@ -190,6 +190,27 @@ void DBusObject::sendReply(Message& reply)
     dbus_connection_send(_conn->dbus(), reply.dbus(), NULL);
 }
 
+void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+{
+    ExportedSignal s(interface);
+    exportSignal(signalName, s);
+}
+
+void DBusObject::exportSignal(const std::string& name, 
+    ExportedSignal& sig)
+{
+    if(sig.interface().empty()) {
+        sig.setInterface(_interface);
+    }
+    
+    sig.computeMessageSignature();    
+    
+    _exportedSignals.insert(std::make_pair(
+        name, 
+        sig
+    ));
+}
+
 Message DBusObject::createSignal(const std::string& signalName, const std::string& interface)
 {
     const char *intf = 
@@ -217,7 +238,36 @@ Message DBusObject::createSignal(const std::string& signalName, const std::strin
 void DBusObject::emitSignal(Message& signal)
 {
     if(!signal.error()) {
-        dbus_connection_send(_conn->dbus(), signal.dbus(), NULL);
+        const std::string intf = signal.interface();
+        //Do signature sanity check
+        bool match_found = false;
+        ExportedSignalType::const_iterator begin, end, cur;
+        begin = _exportedSignals.lower_bound(signal.member());
+        end   = _exportedSignals.upper_bound(signal.member());
+        for(cur = begin; cur != end; ++cur) {
+            const ExportedSignal& signalInfo = cur->second;
+            if(signalInfo.interface() == intf) {
+                if(signalInfo.messageSignature() == dbus_message_get_signature(signal.dbus())) {
+                    match_found = true;
+                }
+                else {
+                    std::string msg = std::string("Signal \"") + signal.member() + 
+                        "\" has been exported with a different signature: '" + signalInfo.messageSignature()
+                        + "' vs '" + dbus_message_get_signature(signal.dbus()) + "'";
+                    throw_or_set("org.dbustl.SignalSignatureMismatch", msg.c_str());
+                    return;
+                }
+            }
+        }
+    
+        if(match_found) {    
+            dbus_connection_send(_conn->dbus(), signal.dbus(), NULL);
+        }
+        else {
+            std::string msg = std::string("Signal \"") + signal.member() + 
+                "\" has not been registered with DBusTL";
+            throw_or_set("org.dbustl.UnknownSignal", msg.c_str());
+        }
     }
     else {
         throw_or_set(*signal.error());
@@ -229,23 +279,40 @@ std::string DBusObject::introspect()
     std::string xmlIntrospect = DBUS_INTROSPECT_1_0_XML_DOCTYPE_DECL_NODE;
     xmlIntrospect += "<node name=\"" + _objectPath + "\">\n";
 
-    MethodContainerType::iterator it;
+    MethodContainerType::iterator methodsIt;
     //First lookup all available interfaces
     std::set<std::string> interfaces;
-    for(it = _exportedMethods.begin(); it != _exportedMethods.end(); ++it) {
-        interfaces.insert(it->second->interface());
+    for(methodsIt = _exportedMethods.begin(); methodsIt != _exportedMethods.end(); ++methodsIt) {
+        interfaces.insert(methodsIt->second->interface());
+    }
+    ExportedSignalType::iterator signalsIt;
+    for(signalsIt = _exportedSignals.begin(); signalsIt != _exportedSignals.end(); ++signalsIt) {
+        interfaces.insert(signalsIt->first);
     }
     
     std::set<std::string>::const_iterator interfacesIt;
     for(interfacesIt = interfaces.begin(); interfacesIt != interfaces.end(); ++interfacesIt) {
         const std::string curInterface = *interfacesIt;
         xmlIntrospect += "\t<interface name=\"" + curInterface + "\">\n";
-        for(it = _exportedMethods.begin(); it != _exportedMethods.end(); ++it) {
+        for(MethodContainerType::const_iterator it = _exportedMethods.begin(); 
+                it != _exportedMethods.end(); ++it) {
             MethodExecutorBase *method = it->second;
             if(method->interface() == curInterface) {
                 xmlIntrospect += "\t\t<method name=\"" + it->first + "\">\n";
                 xmlIntrospect += "\t\t\t" + method->argsIntrospection();
                 xmlIntrospect += "\t\t</method>\n";
+            }
+        }
+        for(ExportedSignalType::const_iterator it = _exportedSignals.begin(); 
+                it != _exportedSignals.end(); ++it) {
+            const ExportedSignal& signal = it->second;
+            if(signal.interface() == curInterface) {
+                xmlIntrospect += "\t\t<signal name=\"" + it->first + "\">\n";
+                std::list<std::string>::const_iterator it;
+                for(it = signal.signatures().begin(); it != signal.signatures().end(); ++it) {
+                    xmlIntrospect += "\t\t\t<arg type=\"" + *it + "\"/>\n";
+                }
+                xmlIntrospect += "\t\t</signal>\n";
             }
         }
         xmlIntrospect += "\t</interface>\n"; 
