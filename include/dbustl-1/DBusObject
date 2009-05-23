@@ -29,6 +29,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <set>
 
 #include <dbustl-1/Config>
 #include <dbustl-1/DBusException>
@@ -46,8 +47,8 @@ namespace dbustl {
         DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
         virtual ~DBusObject();
 
-        void setPath(const std::string);
-        std::string path() const;
+        void setPath(const std::string); //FIXME: To Implement, FIXME broken introspection when path ends with '/'
+        std::string path() const { return _objectPath; };
             
         void enable(Connection * conn);
         void disable();
@@ -107,6 +108,7 @@ namespace dbustl {
   
     private:
         std::string introspect();
+        std::string introspectChildren();
      
         /** @cond */
         //This does not show up in doxygen
@@ -501,6 +503,9 @@ namespace dbustl {
         static DBusHandlerResult incomingMessagesProcessing(DBusConnection *connection, 
             DBusMessage *dbusMessage, void *user_data);
         static DBusObjectPathVTable _vtable;
+        
+        // List of all objects exported on a connection, needed for introspection support
+        static std::map<const Connection*, std::set<const DBusObject*> > _objectTrees;
     };
    
     template<typename _Class, typename R>

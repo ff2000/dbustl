@@ -232,6 +232,13 @@ public:
     }
 };
 
+class NotChildClass : private dbustl::DBusObject {
+public:
+    NotChildClass(dbustl::Connection *conn) : DBusObject("/Not/A/Child/Class", "com.example.DontcareInterface", conn) {
+        exportSignal<int>("DontcareSignal");
+    }
+};
+
 int main()
 {    
     dbustl::GlibEventLoopIntegration mli;
@@ -244,6 +251,7 @@ int main()
     
     TestServiceClass srv(session);
     ChildClass child(session);
+    NotChildClass notchild(session);
     
     mainloop = g_main_loop_new(NULL, FALSE);
     
