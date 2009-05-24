@@ -1,4 +1,5 @@
 v0.4.0: Cleanup release
+ * Fixed building with gcc 4.4
  * Fixed deserialization of unsigned char type, that would abort.
  * Internal code refactoring and cleanup
  * Some minor API changes regarding custom structs and compat C++ mode
