@@ -27,16 +27,19 @@
 #include <dbustl-1/dbustl>
 #include <dbustl-1/GlibEventLoopIntegration>
 
-class Calculator : private dbustl::DBusObject {
+using namespace std;
+using namespace dbustl;
+
+class Calculator : private DBusObject {
 public:
-    Calculator(dbustl::Connection *conn);
+    Calculator(Connection *conn);
 private:
     int64_t add(int64_t a, int64_t b);
     int64_t div(int64_t a, int64_t b);
     void mul(int64_t a, int64_t b);
 };
 
-Calculator::Calculator(dbustl::Connection *conn)
+Calculator::Calculator(Connection *conn)
  : DBusObject("/Calculator", "com.CalculatorInterface", conn)
 {
     exportMethod("add", this, &Calculator::add);
@@ -54,7 +57,7 @@ int64_t Calculator::add(int64_t a, int64_t b)
 int64_t Calculator::div(int64_t a, int64_t b)
 {
     if(b == 0) {
-        throw dbustl::DBusException(
+        throw DBusException(
             "com.CalculatorInterface.ParameterError",
             "Division by 0");
     }
@@ -68,10 +71,10 @@ void Calculator::mul(int64_t a, int64_t b)
 
 int main(int, char **)
 {    
-    const std::string& serviceName = "com.myCalculator";
-    dbustl::GlibEventLoopIntegration mli;
-    dbustl::Connection::useEventLoop(mli);    
-    dbustl::Connection *session = dbustl::Connection::sessionBus();
+    const string& serviceName = "com.myCalculator";
+    GlibEventLoopIntegration mli;
+    Connection::useEventLoop(mli);    
+    Connection *session = Connection::sessionBus();
         
     if(!session->isConnected()) {
         return -1;
@@ -79,7 +82,7 @@ int main(int, char **)
     
     session->busRequestName(serviceName);
     
-    std::cout << "D-Bus Calculator service running on '" << serviceName << "'" << std::endl;
+    cout << "D-Bus Calculator service running on '" << serviceName << "'" << endl;
     
     Calculator calc(session);
     
