@@ -232,9 +232,9 @@ public:
     }
 };
 
-class NotChildClass : private dbustl::DBusObject {
+class NotChildClass : public dbustl::DBusObject {
 public:
-    NotChildClass(dbustl::Connection *conn) : DBusObject("/Not/A/Child/Class", "com.example.DontcareInterface", conn) {
+    NotChildClass(dbustl::Connection *conn) : DBusObject("/A/Bogus/Path", "com.example.DontcareInterface", conn) {
         exportSignal<int>("DontcareSignal");
     }
 };
@@ -252,6 +252,10 @@ int main()
     TestServiceClass srv(session);
     ChildClass child(session);
     NotChildClass notchild(session);
+    
+    /* Line below tests setPath() method, inclusing a bogus / at the end.
+     * Otherwise i would a have set directly the right path */
+    notchild.setPath("/Not/A/Child/Class/");
     
     mainloop = g_main_loop_new(NULL, FALSE);
     
