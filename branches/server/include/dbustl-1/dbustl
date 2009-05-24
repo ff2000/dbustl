@@ -418,6 +418,7 @@
 #include <dbustl-1/Message>
 #include <dbustl-1/Connection>
 #include <dbustl-1/ObjectProxy>
+#include <dbustl-1/DBusException>
 #include <dbustl-1/DBusObject>
 #include <dbustl-1/types/Basic>
 #include <dbustl-1/types/vector>
