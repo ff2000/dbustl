@@ -237,7 +237,7 @@ namespace dbustl {
         private:
             //Disallow the following constructs
             ObjectProxy(const ObjectProxy& con);
-            ObjectProxy& operator=(ObjectProxy&);
+            ObjectProxy& operator=(const ObjectProxy&);
             
         #ifdef DBUSTL_NO_EXCEPTIONS
             inline void throw_or_set(const DBusException& error) { _error = error; };
