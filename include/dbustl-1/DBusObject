@@ -47,7 +47,7 @@ namespace dbustl {
         DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
         virtual ~DBusObject();
 
-        void setPath(const std::string); //FIXME: To Implement, FIXME broken introspection when path ends with '/'
+        void setPath(const std::string& newPath);
         std::string path() const { return _objectPath; };
             
         void enable(Connection * conn);
@@ -105,6 +105,9 @@ namespace dbustl {
         void emitSignal(Message& signal);
         
         void sendReply(Message& reply);
+  
+        //Connection this object is exposed on, if any.
+        const Connection* connection() const { return _conn; };
   
     private:
         std::string introspect();
@@ -504,8 +507,8 @@ namespace dbustl {
             DBusMessage *dbusMessage, void *user_data);
         static DBusObjectPathVTable _vtable;
         
-        // List of all objects exported on a connection, needed for introspection support
-        static std::map<const Connection*, std::set<const DBusObject*> > _objectTrees;
+        // List of all objects exported needed for introspection support
+        static std::set<const DBusObject*> _objects;
     };
    
     template<typename _Class, typename R>
