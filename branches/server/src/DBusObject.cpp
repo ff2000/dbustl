@@ -113,7 +113,7 @@ void DBusObject::disable()
     }
 }
 
-void DBusObject::exportMethod(const std::string& methodName, MethodExecutorBase *executor)
+void DBusObject::exportMethodInternal(const std::string& methodName, MethodExecutorBase *executor)
 {
     MethodContainerType::iterator firstMatch = _exportedMethods.lower_bound(methodName);
     MethodContainerType::iterator lastMatch = _exportedMethods.upper_bound(methodName);
