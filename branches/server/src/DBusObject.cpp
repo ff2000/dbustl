@@ -43,7 +43,7 @@ DBusObjectPathVTable DBusObject::_vtable = {
     0
 };
 
-std::map<const Connection*, std::set<const DBusObject*> > DBusObject::_objectTrees;
+std::set<const DBusObject*> DBusObject::_objects;
 
 DBusObject::DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn) 
  : _conn(0), _objectPath(objectPath), _interface(interface)
@@ -52,13 +52,15 @@ DBusObject::DBusObject(const std::string& objectPath, const std::string& interfa
     if(conn) {
         enable(conn);
     }
+
+    _objects.insert(this);
 }
 
 DBusObject::~DBusObject() 
 {
-    if(_conn) {
-        disable();
-    }
+    _objects.erase(this);
+
+    disable();
 
     MethodContainerType::iterator it;
     while((it = _exportedMethods.begin()) != _exportedMethods.end()) {
@@ -67,19 +69,26 @@ DBusObject::~DBusObject()
         delete match;
     }
 }
+
+void DBusObject::setPath(const std::string& newPath)
+{
+    Connection *conn = _conn;
+    disable();
+    _objectPath = newPath;
+    if(conn) {
+        enable(conn);
+    }
+}
             
 void DBusObject::enable(Connection * conn)
 {
     assert(conn->isConnected());
     errorReset();
-    if(_conn) {
-        disable();
-    }
+    disable();
 
     DBusException ex;
     if(dbus_connection_try_register_object_path(conn->dbus(), _objectPath.c_str(), &_vtable, this, ex.dbus())) {
         _conn = conn;
-        _objectTrees[_conn].insert(this);
     }
     else {
         throw_or_set(ex);
@@ -88,10 +97,11 @@ void DBusObject::enable(Connection * conn)
 
 void DBusObject::disable()
 {
-    errorReset();
-    dbus_connection_unregister_object_path(_conn->dbus(), _objectPath.c_str());
-    _objectTrees[_conn].erase(this);
-    _conn = 0;
+    if(_conn) {
+        errorReset();
+        dbus_connection_unregister_object_path(_conn->dbus(), _objectPath.c_str());
+        _conn = 0;
+    }
 }
 
 void DBusObject::exportMethod(const std::string& methodName, MethodExecutorBase *executor)
@@ -331,16 +341,19 @@ std::string DBusObject::introspectChildren()
 {
     std::string xmlIntrospect;
     std::set<const DBusObject*>::iterator it;
-    for(it = _objectTrees[_conn].begin(); it != _objectTrees[_conn].end(); ++it) {
-        //Check for substring match
-        const std::string& childPath = (*it)->_objectPath;
-        if(_objectPath.size() < childPath.size() && _objectPath == childPath.substr(0, _objectPath.size())) {
-            //Compute relative child name
-            std::string name = childPath.substr(_objectPath.size());
-            if(name[0] == '/') {
-                name = name.substr(1);
+    for(it = _objects.begin(); it != _objects.end(); ++it) {
+        //check for connection match
+        if(_conn == (*it)->_conn) {
+            //Check for substring match
+            const std::string& childPath = (*it)->_objectPath;
+            if(_objectPath.size() < childPath.size() && _objectPath == childPath.substr(0, _objectPath.size())) {
+                //Compute relative child name
+                std::string name = childPath.substr(_objectPath.size());
+                if(name[0] == '/') {
+                    name = name.substr(1);
+                }
+                xmlIntrospect += "<node name=\"" + name + "\"/>";
             }
-            xmlIntrospect += "<node name=\"" + name + "\"/>";
         }
     }
     return xmlIntrospect;
