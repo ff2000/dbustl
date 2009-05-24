@@ -46,8 +46,11 @@ DBusObjectPathVTable DBusObject::_vtable = {
 std::set<const DBusObject*> DBusObject::_objects;
 
 DBusObject::DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn) 
- : _conn(0), _objectPath(objectPath), _interface(interface)
+ : _conn(0), _interface(interface)
 {
+    // We call setPath() here instead of a direct assignation because setPath() performs
+    // a trailing slash check
+    setPath(objectPath);
     exportMethod("Introspect", this, &DBusObject::introspect, DBUS_INTERFACE_INTROSPECTABLE);
     if(conn) {
         enable(conn);
@@ -72,9 +75,15 @@ DBusObject::~DBusObject()
 
 void DBusObject::setPath(const std::string& newPath)
 {
+    assert(!newPath.empty());
     Connection *conn = _conn;
     disable();
-    _objectPath = newPath;
+    if(newPath[newPath.size() - 1] != '/') {
+        _objectPath = newPath;
+    }
+    else {
+        _objectPath = newPath.substr(0, newPath.size() - 1);
+    }
     if(conn) {
         enable(conn);
     }
