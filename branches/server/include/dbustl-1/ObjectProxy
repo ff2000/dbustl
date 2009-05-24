@@ -1,5 +1,5 @@
 /*
- *  DBusTL - DBus Template Library
+ *  DBusTL - D-Bus Template Library
  *
  *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
  *  
@@ -219,7 +219,7 @@ namespace dbustl {
         private:
             //Disallow the following constructs
             ObjectProxy(const ObjectProxy& con);
-            ObjectProxy& operator=(ObjectProxy&);
+            ObjectProxy& operator=(const ObjectProxy&);
             
         #ifdef DBUSTL_NO_EXCEPTIONS
             inline void throw_or_set(const DBusException& error) { _error = error; };
