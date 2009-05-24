@@ -34,8 +34,10 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#09b45f889968f0402a4e72f14030babc">DBusObject</a> (const std::string &amp;objectPath, const std::string &amp;interface, <a class="el" href="classdbustl_1_1Connection.html">Connection</a> *conn=0)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#09b45f889968f0402a4e72f14030babc"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#203e946782b751fbd59e8932b3b7486a">~DBusObject</a> ()</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#203e946782b751fbd59e8932b3b7486a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#90b14fb67bded74b3ed413869025446e">setPath</a> (const std::string &amp;newPath)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#39a30ecba3452a63142b4e41ffbdc9d6">path</a> () const </td></tr>
@@ -113,7 +115,7 @@ In the section below we will use as example the MyClass class. <h2><a class="anc
 Choosing between derivation and composition</a></h2>
 Both ways share many similarities, and as far as DBusTL is concerned, both will work equally well.<p>
 To use derivation you will type: <div class="fragment"><pre class="fragment"> ...
- <span class="keyword">class </span>MyClass : <span class="keyword">public</span> dbustl::<a class="code" href="classdbustl_1_1DBusObject.html#09b45f889968f0402a4e72f14030babc">DBusObject</a> {
+ <span class="keyword">class </span>MyClass : <span class="keyword">public</span> dbustl::<a class="code" href="classdbustl_1_1DBusObject.html#09b45f889968f0402a4e72f14030babc" title="Constructor.">DBusObject</a> {
  ...
 </pre></div><p>
 To use composition you will type: <div class="fragment"><pre class="fragment"> ...
@@ -171,6 +173,15 @@ Now sending a signal is as simple as calling <a class="el" href="classdbustl_1_1
 <div class="memdoc">
 
 <p>
+Constructor. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>objectPath</em>&nbsp;</td><td>The D-Bus object path where the exported object will be found. Mandatory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>The default interface used when exporting signals and methods through this object. Mandatory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>conn</em>&nbsp;</td><td>The D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a DBus Connection.">Connection</a> used on which the object will be exported. If set to null the object is not visible on the bus until the <a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a">enable()</a> method is called. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -190,7 +201,9 @@ Now sending a signal is as simple as calling <a class="el" href="classdbustl_1_1
 <div class="memdoc">
 
 <p>
-
+Virtual destructor. 
+<p>
+Destructor being virtual means this class is safe to subclass. 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>

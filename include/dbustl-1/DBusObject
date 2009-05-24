@@ -109,7 +109,20 @@ namespace dbustl {
 
     class DBusObject {
     public:
+        /**
+         * Constructor.
+         * 
+         * @param objectPath The D-Bus object path where the exported object will be found. Mandatory.
+         * @param interface The default interface used when exporting signals and methods through this object. Mandatory.
+         * @param conn The D-Bus Connection used on which the object will be exported.
+         *  If set to null the object is not visible on the bus until the enable() method is called.
+         */
         DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
+        /**
+         * Virtual destructor.
+         * 
+         * Destructor being virtual means this class is safe to subclass.
+         */
         virtual ~DBusObject();
 
         void setPath(const std::string& newPath);
