@@ -26,7 +26,7 @@
 
 #include <dbus/dbus.h>
 
-#include <iostream>
+#include <string>
 
 #include <dbustl-1/types/Serialization>
 
@@ -238,4 +238,3 @@ namespace dbustl {
 }
 
 #endif /* DBUSTL_MESSAGE */
-
