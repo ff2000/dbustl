@@ -188,6 +188,10 @@ namespace dbustl {
         const Connection* connection() const { return _conn; };
   
     private:
+        //Disallow the following constructs
+        DBusObject(const DBusObject& con);
+        DBusObject& operator=(DBusObject&);
+
         std::string introspect();
         std::string introspectChildren();
      
