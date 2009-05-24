@@ -1,9 +1,30 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <node name="Not"/>
+  <node name="ServerObject"/>
+</node>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node name="/ServerObject"><interface name="com.example.AlternateInterface"><signal name="TestSignal3"><arg type="s"/></signal></interface><interface name="com.example.Interface1"><method name="test_if"><arg type="s" direction="out"/></method></interface><interface name="com.example.Interface2"><method name="test_if"><arg type="s" direction="out"/></method></interface><interface name="com.example.SampleInterface"><method name="stop"></method><method name="test_call0"><arg type="i" direction="out"/></method><method name="test_call1"><arg type="i" direction="in"/><arg type="i" direction="out"/></method><method name="test_call2"><arg type="i" direction="in"/><arg type="i" direction="in"/><arg type="i" direction="out"/></method><method name="test_call3"><arg type="i" direction="in"/><arg type="i" direction="in"/><arg type="i" direction="in"/><arg type="i" direction="out"/></method><method name="test_callvoid0"></method><method name="test_callvoid1"><arg type="i" direction="in"/></method><method name="test_callvoid2"><arg type="i" direction="in"/><arg type="i" direction="in"/></method><method name="test_callvoid3"><arg type="i" direction="in"/><arg type="i" direction="in"/><arg type="i" direction="in"/></method><method name="test_const"><arg type="s" direction="in"/></method><method name="test_const_2"><arg type="s" direction="in"/><arg type="s" direction="out"/></method><method name="test_const_ref"><arg type="s" direction="in"/></method><method name="test_const_ref_2"><arg type="s" direction="in"/><arg type="s" direction="out"/></method><method name="test_ex1"></method><method name="test_ex2"></method><method name="test_ex3"></method><method name="test_flexible_executor"></method><method name="test_ref"><arg type="s" direction="in"/></method><method name="test_ref_2"><arg type="s" direction="in"/><arg type="s" direction="out"/></method><method name="test_signal"></method><method name="test_signal2"></method><method name="test_signal3"></method><signal name="TestExportSignal0"></signal><signal name="TestExportSignal1"><arg type="s"/></signal><signal name="TestExportSignal10"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal2"><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal3"><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal4"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal5"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal6"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal7"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal8"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestExportSignal9"><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/><arg type="s"/></signal><signal name="TestSignal"><arg type="s"/></signal><signal name="TestSignal2"><arg type="s"/><arg type="i"/></signal><signal name="WrongSignatureSignal"></signal></interface><interface name="org.freedesktop.DBus.Introspectable"><method name="Introspect"><arg type="s" direction="out"/></method></interface><node name="Child"/></node>
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node name="/ServerObject/Child"><interface name="com.example.DontcareInterface"><signal name="DontcareSignal"><arg type="i"/></signal></interface><interface name="org.freedesktop.DBus.Introspectable"><method name="Introspect"><arg type="s" direction="out"/></method></interface></node>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <node name="A"/>
+</node>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <node name="Child"/>
+</node>
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <node name="Class"/>
+</node>
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
 "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node name="/Not/A/Child/Class"><interface name="com.example.DontcareInterface"><signal name="DontcareSignal"><arg type="i"/></signal></interface><interface name="org.freedesktop.DBus.Introspectable"><method name="Introspect"><arg type="s" direction="out"/></method></interface></node>

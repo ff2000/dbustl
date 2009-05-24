@@ -234,7 +234,7 @@ public:
 
 class NotChildClass : public dbustl::DBusObject {
 public:
-    NotChildClass(dbustl::Connection *conn) : DBusObject("/A/Bogus/Path", "com.example.DontcareInterface", conn) {
+    NotChildClass(dbustl::Connection *conn) : DBusObject("/ABogusPath", "com.example.DontcareInterface", conn) {
         exportSignal<int>("DontcareSignal");
     }
 };
