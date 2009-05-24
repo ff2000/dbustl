@@ -44,6 +44,67 @@ namespace dbustl {
 
     /** 
      * Base class used through derivation or composition to export C++ objects on the bus.
+     * 
+     * In the section below we will use as example the MyClass class.
+     * @section derivation_composition Choosing between derivation and composition
+     * 
+     * Both ways share many similarities, and as far as DBusTL is concerned,
+     * both will work equally well.
+     * 
+     * To use  derivation you will type:
+     * @code
+     * ...
+     * class MyClass : public dbustl::DBusObject {
+     * ...
+     * @endcode
+     * 
+     * To use composition you will type:
+     * @code
+     * ...
+     * class MyClass  {
+     * ...
+     * private:
+     *   dbustl::DBusObject _dbusObject;
+     * ...
+     * @endcode
+     * 
+     * @section export_method Exporting a method
+     * Suppose you have a method called sum, that adds two integers a and b, and returns the result:
+     * @code
+     * ...
+     * int MyClass::sum(int a, int b) { return a + b; };
+     * ...
+     * @endcode
+     * 
+     * To make this method visible on the bus you must call the exportMethod()
+     * in MyClass's constructor.
+     * 
+     * If you use derivation, to export a method you must call
+     * @code
+     * exportMethod("sum", this, &MyClass::sum);
+     * @endcode
+     * If you use composition, to export a method you must call
+     * @code
+     * _dbusObject->exportMethod("sum", this, &MyClass::sum);
+     * @endcode
+     * 
+     * @section sending_a_signal Sending a signal
+     * 
+     * Suppose you want to send a signal called mySignal containing a string.
+     * To do so you must call exportSignal() in MyClass's constructor.
+     * 
+     * If you use derivation, to export a signal you must call
+     * @code
+     * exportSignal<std::string>("mySignal");
+     * @endcode
+     * If you use composition, to export a signal a bus you must call
+     * @code
+     * _dbusObject->exportSignal<std::string>("mySignal");
+     * @endcode
+     * 
+     * @note You must type in the C++ type of each signal parameter beween < >.
+     * 
+     * Now sending a signal is as simple as calling emitSignal() when you need it.
      */
 
     class DBusObject {
@@ -52,7 +113,7 @@ namespace dbustl {
         virtual ~DBusObject();
 
         void setPath(const std::string& newPath);
-        std::string path() const { return _objectPath; };
+        const std::string& path() const { return _objectPath; };
             
         void enable(Connection * conn);
         void disable();

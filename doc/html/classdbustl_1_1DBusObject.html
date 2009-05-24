@@ -38,7 +38,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#90b14fb67bded74b3ed413869025446e">setPath</a> (const std::string &amp;newPath)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#49475d99dcadca256edc9b2accc3d56c">path</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#39a30ecba3452a63142b4e41ffbdc9d6">path</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a">enable</a> (<a class="el" href="classdbustl_1_1Connection.html">Connection</a> *conn)</td></tr>
 
@@ -107,7 +107,38 @@
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Base class used through derivation or composition to export C++ objects on the bus. <hr><h2>Constructor &amp; Destructor Documentation</h2>
+Base class used through derivation or composition to export C++ objects on the bus. 
+<p>
+In the section below we will use as example the MyClass class. <h2><a class="anchor" name="derivation_composition">
+Choosing between derivation and composition</a></h2>
+Both ways share many similarities, and as far as DBusTL is concerned, both will work equally well.<p>
+To use derivation you will type: <div class="fragment"><pre class="fragment"> ...
+ <span class="keyword">class </span>MyClass : <span class="keyword">public</span> dbustl::<a class="code" href="classdbustl_1_1DBusObject.html#09b45f889968f0402a4e72f14030babc">DBusObject</a> {
+ ...
+</pre></div><p>
+To use composition you will type: <div class="fragment"><pre class="fragment"> ...
+ <span class="keyword">class </span>MyClass  {
+ ...
+ <span class="keyword">private</span>:
+   <a class="code" href="classdbustl_1_1DBusObject.html" title="Base class used through derivation or composition to export C++ objects on the bus...">dbustl::DBusObject</a> _dbusObject;
+ ...
+</pre></div><h2><a class="anchor" name="export_method">
+Exporting a method</a></h2>
+Suppose you have a method called sum, that adds two integers a and b, and returns the result: <div class="fragment"><pre class="fragment"> ...
+ <span class="keywordtype">int</span> MyClass::sum(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; };
+ ...
+</pre></div><p>
+To make this method visible on the bus you must call the <a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811">exportMethod()</a> in MyClass's constructor.<p>
+If you use derivation, to export a method you must call <div class="fragment"><pre class="fragment"> <a class="code" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811">exportMethod</a>(<span class="stringliteral">"sum"</span>, <span class="keyword">this</span>, &amp;MyClass::sum);
+</pre></div> If you use composition, to export a method you must call <div class="fragment"><pre class="fragment"> _dbusObject-&gt;exportMethod(<span class="stringliteral">"sum"</span>, <span class="keyword">this</span>, &amp;MyClass::sum);
+</pre></div><h2><a class="anchor" name="sending_a_signal">
+Sending a signal</a></h2>
+Suppose you want to send a signal called mySignal containing a string. To do so you must call <a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal()</a> in MyClass's constructor.<p>
+If you use derivation, to export a signal you must call <div class="fragment"><pre class="fragment"> exportSignal&lt;std::string&gt;(<span class="stringliteral">"mySignal"</span>);
+</pre></div> If you use composition, to export a signal a bus you must call <div class="fragment"><pre class="fragment"> _dbusObject-&gt;exportSignal&lt;std::string&gt;(<span class="stringliteral">"mySignal"</span>);
+</pre></div><p>
+<dl class="note" compact><dt><b>Note:</b></dt><dd>You must type in the C++ type of each signal parameter beween &lt; &gt;.</dd></dl>
+Now sending a signal is as simple as calling <a class="el" href="classdbustl_1_1DBusObject.html#e44b895ad31e08b1c9803aeedd08ff04">emitSignal()</a> when you need it. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="09b45f889968f0402a4e72f14030babc"></a><!-- doxytag: member="dbustl::DBusObject::DBusObject" ref="09b45f889968f0402a4e72f14030babc" args="(const std::string &amp;objectPath, const std::string &amp;interface, Connection *conn=0)" -->
 <div class="memitem">
 <div class="memproto">
@@ -183,12 +214,12 @@ Base class used through derivation or composition to export C++ objects on the b
 
 </div>
 </div><p>
-<a class="anchor" name="49475d99dcadca256edc9b2accc3d56c"></a><!-- doxytag: member="dbustl::DBusObject::path" ref="49475d99dcadca256edc9b2accc3d56c" args="() const " -->
+<a class="anchor" name="39a30ecba3452a63142b4e41ffbdc9d6"></a><!-- doxytag: member="dbustl::DBusObject::path" ref="39a30ecba3452a63142b4e41ffbdc9d6" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string dbustl::DBusObject::path           </td>
+          <td class="memname">const std::string&amp; dbustl::DBusObject::path           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
