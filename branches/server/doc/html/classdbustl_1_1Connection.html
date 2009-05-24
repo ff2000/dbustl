@@ -47,10 +47,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#1ecb95e999960bff33c5d9db8869f168">isConnected</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells if we are currently connected to a remote party, either bus or private connection.  <a href="#1ecb95e999960bff33c5d9db8869f168"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#6d7661f5d8a4503c17274693387c02a1">busRequestName</a> (const std::string &amp;name, unsigned int flags=0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#e8438547385ced2c74740c2b71d8ef66">busRequestName</a> (const std::string &amp;name, unsigned int flags=0, <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> *error=0)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#41635468377ffc19dfcc78ca34506503">busReleaseName</a> (const std::string &amp;name)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Asks the bus to assign the given name to this connection by invoking the RequestName method on the bus.  <a href="#e8438547385ced2c74740c2b71d8ef66"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#c67e1627fac121c32e6a99ac1282e94c">busReleaseName</a> (const std::string &amp;name, <a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> *error=0)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Asks the bus to unassign the given name from this connection by invoking the ReleaseName method on the bus.  <a href="#c67e1627fac121c32e6a99ac1282e94c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">DBusConnection *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Connection.html#957fd7bb3c486aebfc7a32357c7518fd">dbus</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The D-Bus C api structure: don't use it!  <a href="#957fd7bb3c486aebfc7a32357c7518fd"></a><br></td></tr>
@@ -69,9 +71,9 @@
 Provides an abstraction of a D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a>. 
 <p>
 A D-Bus connection is a dedicated link between two applications that wish to exchange D-Bus messages. D-Bus connections can be either private (which is not supported at the moment), or be connections to a bus, which is in charge of routing messages to the right process.<p>
-A D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a> is needed to instantiate <a class="el" href="classdbustl_1_1ObjectProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ObjectProxy</a> objects.<p>
+A D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a> is needed to instantiate <a class="el" href="classdbustl_1_1ObjectProxy.html" title="Defines a proxy, used to call methods an receive signals on a remote D-Bus object...">ObjectProxy</a> or <a class="el" href="classdbustl_1_1DBusObject.html" title="Base class used through derivation or composition to export C++ objects on the bus...">DBusObject</a> objects.<p>
 The simplest way to have a connection to a bus is through a call to <a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f" title="Returns a singleton to the session bus.">Connection::sessionBus</a><p>
-To be able to process signals, the connection must be associated with an event loop. An event loop must be provided either:<ul>
+To be able to process signals, or if you intend to expose objects on the bus, the connection must be associated with an event loop. An event loop must be provided either:<ul>
 <li>before any call to <a class="el" href="classdbustl_1_1Connection.html#bf46f2bc2ee15152aefebba3ee8ba1a4" title="Creates a new dedicated connection on the given bus.">Connection::Connection</a>, <a class="el" href="classdbustl_1_1Connection.html#d596fa470f78e1152d234ee93dfd64e5" title="Returns a singleton to the system bus.">Connection::systemBus</a> or <a class="el" href="classdbustl_1_1Connection.html#5dd064d01bb7100810e51660443a825f" title="Returns a singleton to the session bus.">Connection::sessionBus</a>, using <a class="el" href="classdbustl_1_1Connection.html#11ce4ad1f70b793b1351909b01b07334" title="Specifies the Main Loop (Glib, Qt, any other) in which to integrate the newly created...">Connection::useEventLoop</a> static member.</li><li>during object construction, through the use of the alternate <a class="el" href="classdbustl_1_1Connection.html#6cc7bc14298f9164ce9423839fcd234d" title="Creates a new dedicated connection on the given bus, specifying in which main loop...">Connection(DBusBusType bustype, const EventLoopIntegration&amp; eventLoop)</a> constructor</li></ul>
 <p>
 If no signals are to be received, then event loop association remains optionnal. <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -289,7 +291,7 @@ Tells if we are currently connected to a remote party, either bus or private con
 
 </div>
 </div><p>
-<a class="anchor" name="6d7661f5d8a4503c17274693387c02a1"></a><!-- doxytag: member="dbustl::Connection::busRequestName" ref="6d7661f5d8a4503c17274693387c02a1" args="(const std::string &amp;name, unsigned int flags=0)" -->
+<a class="anchor" name="e8438547385ced2c74740c2b71d8ef66"></a><!-- doxytag: member="dbustl::Connection::busRequestName" ref="e8438547385ced2c74740c2b71d8ef66" args="(const std::string &amp;name, unsigned int flags=0, DBusException *error=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -303,7 +305,13 @@ Tells if we are currently connected to a remote party, either bus or private con
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">unsigned int&nbsp;</td>
-          <td class="paramname"> <em>flags</em> = <code>0</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>flags</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> *&nbsp;</td>
+          <td class="paramname"> <em>error</em> = <code>0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -315,10 +323,21 @@ Tells if we are currently connected to a remote party, either bus or private con
 <div class="memdoc">
 
 <p>
+Asks the bus to assign the given name to this connection by invoking the RequestName method on the bus. 
+<p>
+This is only needed when you intend to export some of your C++ objects on the bus. This method is just a thin lawer above the D-Bus C API. Extensive documentation on the parameters and their meaning can be found at <a href="http://dbus.freedesktop.org/doc/dbus/api/html/group__DBusBus.html">http://dbus.freedesktop.org/doc/dbus/api/html/group__DBusBus.html</a> .<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>A valid connection name </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>flags</em>&nbsp;</td><td>Some flags: see discution above for details. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>error</em>&nbsp;</td><td>Pointer to <a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a> object. If something goes wrong and it *is not* null, error is filled with meaningfull value. If something goes wrong and it *is* null, an exception is thrown. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Depends on flags given an requested name state on success. -1 on error. See discution above for details. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="41635468377ffc19dfcc78ca34506503"></a><!-- doxytag: member="dbustl::Connection::busReleaseName" ref="41635468377ffc19dfcc78ca34506503" args="(const std::string &amp;name)" -->
+<a class="anchor" name="c67e1627fac121c32e6a99ac1282e94c"></a><!-- doxytag: member="dbustl::Connection::busReleaseName" ref="c67e1627fac121c32e6a99ac1282e94c" args="(const std::string &amp;name, DBusException *error=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -326,15 +345,34 @@ Tells if we are currently connected to a remote party, either bus or private con
           <td class="memname">int dbustl::Connection::busReleaseName           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>name</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classdbustl_1_1DBusException.html">DBusException</a> *&nbsp;</td>
+          <td class="paramname"> <em>error</em> = <code>0</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
+Asks the bus to unassign the given name from this connection by invoking the ReleaseName method on the bus. 
+<p>
+This is only needed when you intend to export some of your C++ objects on the bus. This method is just a thin lawer above the D-Bus C API. Extensive documentation on the parameters and their meaning can be found at <a href="http://dbus.freedesktop.org/doc/dbus/api/html/group__DBusBus.html">http://dbus.freedesktop.org/doc/dbus/api/html/group__DBusBus.html</a> .<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>A valid connection name </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>error</em>&nbsp;</td><td>Pointer to <a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a> object. If something goes wrong and it *is not* null, error is filled with meaningfull value. If something goes wrong and it *is* null, an exception is thrown. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Depends on flags given an requested name state on success. -1 on error. See discution above for details. </dd></dl>
 
 </div>
 </div><p>
