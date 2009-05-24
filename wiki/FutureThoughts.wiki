@@ -1,6 +1,6 @@
 #summary What to expect in the future from DBusTL (aka Roadmap)
 
-This is some kind of a TODO list i have in mind at he moment:
+This is some kind of a TODO list i have in mind at the moment:
 
   * DONE: Don't depend on dbus-glib for main loop integration, by really implementing !GlibEventLoop
   * IN PROGRESS: Support for server side DBUS (i.e. expose C++ objects as DBUS objects)
