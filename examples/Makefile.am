@@ -19,3 +19,12 @@ endif
 signals_SOURCES = signals.cpp
 signals_CPPFLAGS = @GLIB_CFLAGS@
 signals_LDADD = $(LDADD) ../libdbustl-glib-1.la @GLIB_LIBS@
+
+if HAVE_STDCXX_0X
+if HAVE_GLIB
+noinst_PROGRAMS += service
+endif
+endif
+service_SOURCES = service.cpp
+service_CPPFLAGS = @GLIB_CFLAGS@
+service_LDADD = $(LDADD) ../libdbustl-glib-1.la @GLIB_LIBS@
