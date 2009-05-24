@@ -129,12 +129,16 @@ void ObjectProxy::callCompleted(DBusPendingCall *pending, void *user_data)
     dbus_set_error_from_message(e.dbus(), reply.dbus());
 
     //call user function
+#ifndef DBUSTL_NO_EXCEPTIONS
     try {
+#endif
         callback->execute(reply, e);
+#ifndef DBUSTL_NO_EXCEPTIONS
     }
     catch(...) {
         std::cerr << "DBusTL: exception thrown in method callback handler" << std::cerr;
     }
+#endif
 
     dbus_pending_call_unref(pending);
 }
@@ -199,12 +203,16 @@ DBusHandlerResult ObjectProxy::signalsProcessingMethod(DBusConnection *,
             return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
         }
         
+    #ifndef DBUSTL_NO_EXCEPTIONS
         try {
+    #endif
             proxy->_signalsHandlers[handlerName]->execute(msg);
+    #ifndef DBUSTL_NO_EXCEPTIONS
         }
         catch(...) {
             std::cerr << "DBusTL: exception thrown in signal handler" << std::cerr;
         }
+    #endif
         
     	return DBUS_HANDLER_RESULT_HANDLED;
     }
