@@ -165,7 +165,7 @@ private:
         call >> a >> b;
         if(!call.error()){
             if(b == 0) {
-                dbustl::Message mreturn = call.createErrorMessage("org.mycompany.test", "Division by 0");
+                dbustl::Message mreturn = call.createErrorReply("org.mycompany.test", "Division by 0");
                 sendReply(mreturn);
             }
             else {

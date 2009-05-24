@@ -125,55 +125,214 @@ namespace dbustl {
          */
         virtual ~DBusObject();
 
+        /**
+         * Moves the object in the path hierarchy.
+         * 
+         * Change is reflected immediately on the bus, including in introspection data.
+         * 
+         * @param newPath The new D-Bus object path where the exported object will be found
+         */
         void setPath(const std::string& newPath);
+
+        /**
+         * This object's D-Bus object path.
+         * 
+         * @return The D-Bus object path where the exported object is be found.
+         */
         const std::string& path() const { return _objectPath; };
             
+        /**
+         * Export the object on new connection.
+         * 
+         * If the object was created with a NULL Connection, or object was disabled (see disable() below),
+         * enables the object on a new connection.
+         * If the object was already enabled on a connection, this has for effect to remove the object
+         * from the old connection and add it to the new supplied connection.
+         * 
+         * @param conn The new Connection. Must not be NULL. Must be connected.
+         * @throw DBusException if something fails, such as if there is already an object at the given path.
+         */
         void enable(Connection * conn);
+
+        /**
+         * Unexport the object.
+         * 
+         * The object becomes unreachable from the bus. It can be reexported later on using
+         * enable() call.
+         */
         void disable();
 
+        /**
+         * Exports a method of the target object on the bus: No input parameter 1 output parameter version.
+         * 
+         * This is the version with no input parameter.
+         * 
+         * The method exported will be called by DBusTL transparently when a D-Bus method call request
+         * is received.
+         * If an exception of base class std::exception or DBusException is thrown by the method,
+         * it is translated on the fly and sent as a D-Bus error reply to the D-Bus method call.
+         * 
+         * @param methodName method name used to reach the C++ method from the D-Bus world.
+         * @param target the C++ object whose' methods are exported on the bus.
+         * @param method the C++ method pointer that will be exported.
+         * @param interface the alternate interface this method will be exposed on. If not supplied
+         * the interface provided to the constructor will be used.
+         */
         template<typename _Class, typename R>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), 
             const std::string& interface = "");
 
+        /**
+         * Exports a method of the target object on the bus: 1 input parameter 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 1 parameter.
+         */
         template<typename _Class, typename R, typename T1>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), 
             const std::string& interface = "");
 
+        /**
+         * Exports a method of the target object on the bus: 2 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 2 input parameters.
+         */
         template<typename _Class, typename R, typename T1, typename T2>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), 
             const std::string& interface = "");
 
+        /**
+         * Exports a method of the target object on the bus: 3 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 3 input parameters.
+         */
         template<typename _Class, typename R, typename T1, typename T2, typename T3>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg3), 
             const std::string& interface = "");
 
+        /**
+         * Exports a method of the target object on the bus: any number of input/output.
+         * 
+         * This is the most flexible method to handle D-Bus message, if you want to have a precise D-Bus signature.
+         * This is also the most complex to use. 
+         * The method must do the following:
+         *   - Deserialize method_call using Message::operator>>
+         *   - check deserialization status with Message::error()
+         *   - call Message::createMethodReturn()
+         *   - fill in return parameters with Message::operator<<.
+         *   - check serialization status with Message::error()
+         *   - if an error condition occured somewhere, it can throw an exception that will be sent over the wire as the D-Bus reply,
+         *  or it can choose to create the error reply manually using Message::createErrorReply()
+         *   - call sendReply()
+         * 
+         * TODO: reference tutorial once it is written
+         */
         template<typename _Class>
         void exportMethod(const std::string& methodName, _Class *target, 
             void (_Class::*method)(Message method_call), const std::string& interface = "");
 
+        /**
+         * Tells DBusTL the following signal can be thrown: no argument version
+         * 
+         * This is needed to provide correct introspection.
+         * 
+         * @param signalName should be clear enough
+         * @param interface the alternate interface this signal will be part of. If not supplied
+         * the interface provided to the constructor will be used.
+         */
         void exportSignal(const std::string& signalName, const std::string& interface = "");    
+        
+        /**
+         * Tells DBusTL a signal can be thrown: 1 argument version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1>
         void exportSignal(const std::string& signalName, const std::string& interface = "");    
+
+        /**
+         * Tells DBusTL a signal can be thrown: 2 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 3 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 4 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 5 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4, typename T5>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 6 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 7 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 8 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 9 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
+
+        /**
+         * Tells DBusTL a signal can be thrown: 10 arguments version
+         * 
+         * @see exportSignal() above
+         */
         template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
         void exportSignal(const std::string& signalName, const std::string& interface = "");
 
     #ifdef DBUSTL_CXX0X
+        /**
+         * Sends a signal on the Bus.
+         * 
+         * @param signalName D-Bus name for the signal.
+         * @param args A list of input parameters passed as reference. 
+         * The arg list can contain an Interface object,
+         * in which case it changes the interface used for this signal.
+         * @throw DBusException if the signal has not been previously exported, or if the signature
+         * does not match with the one supplied to exportSignal().
+         */
+
         template<typename ... Args>
         void emitSignal(const std::string& signalName, const Args&... args);
     #endif
@@ -184,7 +343,11 @@ namespace dbustl {
         
         void sendReply(Message& reply);
   
-        //Connection this object is exposed on, if any.
+        /**
+         * Connection this object is exposed on.
+         * 
+         * @see enable()
+         */
         const Connection* connection() const { return _conn; };
   
     private:

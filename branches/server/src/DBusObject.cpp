@@ -91,7 +91,7 @@ void DBusObject::setPath(const std::string& newPath)
             
 void DBusObject::enable(Connection * conn)
 {
-    assert(conn->isConnected());
+    assert(conn && conn->isConnected());
     errorReset();
     disable();
 
@@ -174,19 +174,22 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         #ifndef DBUSTL_NO_EXCEPTIONS
             }
             catch(const DBusException& e) {
-                Message errorReply = call.createErrorMessage(e.name(), e.message());
+                Message errorReply = 
+                    call.createErrorReply(e.name(), e.message());
                 if(errorReply.dbus()) {
                     object->sendReply(errorReply);
                 }
             }
             catch(const std::exception& e) {
-                Message errorReply = call.createErrorMessage("org.dbustl.CPPException", e.what());
+                Message errorReply = 
+                    call.createErrorReply("org.dbustl.CPPException", e.what());
                 if(errorReply.dbus()) {
                     object->sendReply(errorReply);
                 }
             }
             catch(...) {
-                Message errorReply = call.createErrorMessage("org.dbustl.CPPException", "Unknown C++ exception");
+                Message errorReply = 
+                    call.createErrorReply("org.dbustl.CPPException", "Unknown C++ exception");
                 if(errorReply.dbus()) {
                     object->sendReply(errorReply);
                 }
