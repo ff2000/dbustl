@@ -25,6 +25,7 @@
 
 #include "struct.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 using namespace dbustl;

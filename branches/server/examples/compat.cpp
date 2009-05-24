@@ -24,6 +24,7 @@
 #include <dbustl-1/dbustl>
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 using namespace dbustl;

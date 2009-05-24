@@ -26,6 +26,7 @@
 #include <dbustl-1/Connection>
 #include <dbustl-1/ObjectProxy>
 
+#include <iostream>
 #include <cassert>
 
 namespace dbustl {
@@ -136,7 +137,7 @@ void ObjectProxy::callCompleted(DBusPendingCall *pending, void *user_data)
 #ifndef DBUSTL_NO_EXCEPTIONS
     }
     catch(...) {
-        std::cerr << "DBusTL: exception thrown in method callback handler" << std::cerr;
+        std::cerr << "DBusTL: exception thrown in method callback handler" << std::endl;
     }
 #endif
 
@@ -210,7 +211,7 @@ DBusHandlerResult ObjectProxy::signalsProcessingMethod(DBusConnection *,
     #ifndef DBUSTL_NO_EXCEPTIONS
         }
         catch(...) {
-            std::cerr << "DBusTL: exception thrown in signal handler" << std::cerr;
+            std::cerr << "DBusTL: exception thrown in signal handler" << std::endl;
         }
     #endif
         
