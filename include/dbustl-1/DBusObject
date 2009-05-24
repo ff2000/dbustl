@@ -42,6 +42,10 @@ namespace dbustl {
 
     class Connection;
 
+    /** 
+     * Base class used through derivation or composition to export C++ objects on the bus.
+     */
+
     class DBusObject {
     public:
         DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
@@ -423,9 +427,11 @@ namespace dbustl {
         };
         /** @endcond */
 
-        void exportMethod(const std::string& methodName, MethodExecutorBase *executor);
+        void exportMethodInternal(const std::string& methodName, MethodExecutorBase *executor);
 
         // Signals handling - begin
+        /** @cond */
+        //This does not show up in doxygen
         class ExportedSignal {
         public:
             ExportedSignal(const std::string& interface) : _interface(interface) {};
@@ -468,6 +474,7 @@ namespace dbustl {
             std::list<std::string> _signatures;
             std::string _messageSignature;
         };
+        /** @endcond */
 
         void exportSignal(const std::string& name, ExportedSignal& sig);
 
@@ -514,31 +521,31 @@ namespace dbustl {
     template<typename _Class, typename R>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), const std::string& interface)
     {
-        exportMethod(methodName, new EasyMethodExecutor0<_Class, R>(target, method, interface));
+        exportMethodInternal(methodName, new EasyMethodExecutor0<_Class, R>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), const std::string& interface)
     {
-        exportMethod(methodName, new EasyMethodExecutor1<_Class, R, T1>(target, method, interface));
+        exportMethodInternal(methodName, new EasyMethodExecutor1<_Class, R, T1>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1, typename T2>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), const std::string& interface)
     {
-        exportMethod(methodName, new EasyMethodExecutor2<_Class, R, T1, T2>(target, method, interface));
+        exportMethodInternal(methodName, new EasyMethodExecutor2<_Class, R, T1, T2>(target, method, interface));
     }
 
     template<typename _Class, typename R, typename T1, typename T2, typename T3>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string& interface)
     {
-        exportMethod(methodName, new EasyMethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
+        exportMethodInternal(methodName, new EasyMethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
     }
 
     template<typename _Class>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call), const std::string& interface)
     {
-        exportMethod(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
+        exportMethodInternal(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
     }
 
 #ifdef DBUSTL_CXX0X

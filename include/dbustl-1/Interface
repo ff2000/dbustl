@@ -29,7 +29,7 @@
 namespace dbustl {
 
     /**
-     * This class is used in ObjectProxy::call() and DBusObject::emit() to specify
+     * This class is used in ObjectProxy::call() and DBusObject::emitSignal() to specify
      * an alternative Interface name for that particular call only.
      */
     
