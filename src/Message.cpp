@@ -113,7 +113,7 @@ Message Message::createMethodReturn() const
     return Message(dbus_message_new_method_return(_msg));
 }
 
-Message Message::createErrorMessage(const std::string& name, const std::string& message) const
+Message Message::createErrorReply(const std::string& name, const std::string& message) const
 {
     const char *msg = message.empty() ? NULL: message.c_str();
     assert(_msg);

@@ -40,62 +40,83 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor.  <a href="#203e946782b751fbd59e8932b3b7486a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#90b14fb67bded74b3ed413869025446e">setPath</a> (const std::string &amp;newPath)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Moves the object in the path hierarchy.  <a href="#90b14fb67bded74b3ed413869025446e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#39a30ecba3452a63142b4e41ffbdc9d6">path</a> () const </td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This object's D-Bus object path.  <a href="#39a30ecba3452a63142b4e41ffbdc9d6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a">enable</a> (<a class="el" href="classdbustl_1_1Connection.html">Connection</a> *conn)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Export the object on new connection.  <a href="#83f0043e26a42a89022bc00fa23b938a"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#5378cd17f84a82a410998d49aecf3e81">disable</a> ()</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unexport the object.  <a href="#5378cd17f84a82a410998d49aecf3e81"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename R&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(void), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Exports a method of the target object on the bus: No input parameter 1 output parameter version.  <a href="#fcad352da6f6de54b75da3e88a80c811"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename R, typename T1&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#ff6c40852b47066573c0be544d956ab7">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Exports a method of the target object on the bus: 1 input parameter 1 output parameter version.  <a href="#ff6c40852b47066573c0be544d956ab7"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename R, typename T1, typename T2&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#7d89634516ff93d42cb5129c3ab4cd1c">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Exports a method of the target object on the bus: 2 input parameters 1 output parameter version.  <a href="#7d89634516ff93d42cb5129c3ab4cd1c"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename R, typename T1, typename T2, typename T3&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#5f8d17e59b3487ac895fe55ec2636f96">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2, T3 arg3), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Exports a method of the target object on the bus: 3 input parameters 1 output parameter version.  <a href="#5f8d17e59b3487ac895fe55ec2636f96"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#f2345f87eacecb9727e5f2000df6eb53">exportMethod</a> (const std::string &amp;methodName, _Class *target, void(_Class::*method)(<a class="el" href="classdbustl_1_1Message.html">Message</a> method_call), const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Exports a method of the target object on the bus: any number of input/output.  <a href="#f2345f87eacecb9727e5f2000df6eb53"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL the following signal can be thrown: no argument version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 1 argument version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 2 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 3 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 4 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4, typename T5&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 5 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typename T6&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 6 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 7 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 8 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 9 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tells DBusTL a signal can be thrown: 10 arguments version.  <a href="#77fe296184f1153f8a49e4965cfb131f"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#e44b895ad31e08b1c9803aeedd08ff04">emitSignal</a> (const std::string &amp;signalName, const Args &amp;...args)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sends a signal on the Bus.  <a href="#e44b895ad31e08b1c9803aeedd08ff04"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#6191066d5e378a1864e1a5f03a409236">createSignal</a> (const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#bb3024d80c739ab3169f3fce32c62744">emitSignal</a> (<a class="el" href="classdbustl_1_1Message.html">Message</a> &amp;signal)</td></tr>
@@ -104,6 +125,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classdbustl_1_1Connection.html">Connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#75ffdbdde5e5f2f680b87bebdb2b4fe2">connection</a> () const </td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a> this object is exposed on.  <a href="#75ffdbdde5e5f2f680b87bebdb2b4fe2"></a><br></td></tr>
 <tr><td class="memTemplParams" nowrap colspan="2">template&lt;typename _Class, typename R, typename T1, typename T2, typename T3&gt; </td></tr>
 <tr><td class="memTemplItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classdbustl_1_1DBusObject.html#5c92995344d34ce11d6a443cff2e9b45">exportMethod</a> (const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string &amp;interface)</td></tr>
 
@@ -130,17 +152,17 @@ Suppose you have a method called sum, that adds two integers a and b, and return
  <span class="keywordtype">int</span> MyClass::sum(<span class="keywordtype">int</span> a, <span class="keywordtype">int</span> b) { <span class="keywordflow">return</span> a + b; };
  ...
 </pre></div><p>
-To make this method visible on the bus you must call the <a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811">exportMethod()</a> in MyClass's constructor.<p>
-If you use derivation, to export a method you must call <div class="fragment"><pre class="fragment"> <a class="code" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811">exportMethod</a>(<span class="stringliteral">"sum"</span>, <span class="keyword">this</span>, &amp;MyClass::sum);
+To make this method visible on the bus you must call the <a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811" title="Exports a method of the target object on the bus: No input parameter 1 output parameter...">exportMethod()</a> in MyClass's constructor.<p>
+If you use derivation, to export a method you must call <div class="fragment"><pre class="fragment"> <a class="code" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811" title="Exports a method of the target object on the bus: No input parameter 1 output parameter...">exportMethod</a>(<span class="stringliteral">"sum"</span>, <span class="keyword">this</span>, &amp;MyClass::sum);
 </pre></div> If you use composition, to export a method you must call <div class="fragment"><pre class="fragment"> _dbusObject-&gt;exportMethod(<span class="stringliteral">"sum"</span>, <span class="keyword">this</span>, &amp;MyClass::sum);
 </pre></div><h2><a class="anchor" name="sending_a_signal">
 Sending a signal</a></h2>
-Suppose you want to send a signal called mySignal containing a string. To do so you must call <a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f">exportSignal()</a> in MyClass's constructor.<p>
+Suppose you want to send a signal called mySignal containing a string. To do so you must call <a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> in MyClass's constructor.<p>
 If you use derivation, to export a signal you must call <div class="fragment"><pre class="fragment"> exportSignal&lt;std::string&gt;(<span class="stringliteral">"mySignal"</span>);
 </pre></div> If you use composition, to export a signal a bus you must call <div class="fragment"><pre class="fragment"> _dbusObject-&gt;exportSignal&lt;std::string&gt;(<span class="stringliteral">"mySignal"</span>);
 </pre></div><p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>You must type in the C++ type of each signal parameter beween &lt; &gt;.</dd></dl>
-Now sending a signal is as simple as calling <a class="el" href="classdbustl_1_1DBusObject.html#e44b895ad31e08b1c9803aeedd08ff04">emitSignal()</a> when you need it. <hr><h2>Constructor &amp; Destructor Documentation</h2>
+Now sending a signal is as simple as calling <a class="el" href="classdbustl_1_1DBusObject.html#e44b895ad31e08b1c9803aeedd08ff04" title="Sends a signal on the Bus.">emitSignal()</a> when you need it. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="09b45f889968f0402a4e72f14030babc"></a><!-- doxytag: member="dbustl::DBusObject::DBusObject" ref="09b45f889968f0402a4e72f14030babc" args="(const std::string &amp;objectPath, const std::string &amp;interface, Connection *conn=0)" -->
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +201,7 @@ Constructor.
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>objectPath</em>&nbsp;</td><td>The D-Bus object path where the exported object will be found. Mandatory. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>The default interface used when exporting signals and methods through this object. Mandatory. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>conn</em>&nbsp;</td><td>The D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a> used on which the object will be exported. If set to null the object is not visible on the bus until the <a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a">enable()</a> method is called. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>conn</em>&nbsp;</td><td>The D-Bus <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a> used on which the object will be exported. If set to null the object is not visible on the bus until the <a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a" title="Export the object on new connection.">enable()</a> method is called. </td></tr>
   </table>
 </dl>
 
@@ -224,6 +246,14 @@ Destructor being virtual means this class is safe to subclass.
 <div class="memdoc">
 
 <p>
+Moves the object in the path hierarchy. 
+<p>
+Change is reflected immediately on the bus, including in introspection data.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>newPath</em>&nbsp;</td><td>The new D-Bus object path where the exported object will be found </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -243,6 +273,9 @@ Destructor being virtual means this class is safe to subclass.
 <div class="memdoc">
 
 <p>
+This object's D-Bus object path. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The D-Bus object path where the exported object is be found. </dd></dl>
 
 </div>
 </div><p>
@@ -263,6 +296,19 @@ Destructor being virtual means this class is safe to subclass.
 <div class="memdoc">
 
 <p>
+Export the object on new connection. 
+<p>
+If the object was created with a NULL <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a>, or object was disabled (see <a class="el" href="classdbustl_1_1DBusObject.html#5378cd17f84a82a410998d49aecf3e81" title="Unexport the object.">disable()</a> below), enables the object on a new connection. If the object was already enabled on a connection, this has for effect to remove the object from the old connection and add it to the new supplied connection.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>conn</em>&nbsp;</td><td>The new <a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a>. Must not be NULL. Must be connected. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if something fails, such as if there is already an object at the given path. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -282,7 +328,9 @@ Destructor being virtual means this class is safe to subclass.
 <div class="memdoc">
 
 <p>
-
+Unexport the object. 
+<p>
+The object becomes unreachable from the bus. It can be reexported later on using <a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a" title="Export the object on new connection.">enable()</a> call. 
 </div>
 </div><p>
 <a class="anchor" name="fcad352da6f6de54b75da3e88a80c811"></a><!-- doxytag: member="dbustl::DBusObject::exportMethod" ref="fcad352da6f6de54b75da3e88a80c811" args="(const std::string &amp;methodName, _Class *target, R(_Class::*method)(void), const std::string &amp;interface=&quot;&quot;)" -->
@@ -325,6 +373,18 @@ template&lt;typename _Class, typename R&gt; </div>
 <div class="memdoc">
 
 <p>
+Exports a method of the target object on the bus: No input parameter 1 output parameter version. 
+<p>
+This is the version with no input parameter.<p>
+The method exported will be called by DBusTL transparently when a D-Bus method call request is received. If an exception of base class std::exception or <a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a> is thrown by the method, it is translated on the fly and sent as a D-Bus error reply to the D-Bus method call.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>methodName</em>&nbsp;</td><td>method name used to reach the C++ method from the D-Bus world. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>target</em>&nbsp;</td><td>the C++ object whose' methods are exported on the bus. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>method</em>&nbsp;</td><td>the C++ method pointer that will be exported. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>the alternate interface this method will be exposed on. If not supplied the interface provided to the constructor will be used. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -368,7 +428,9 @@ template&lt;typename _Class, typename R, typename T1&gt; </div>
 <div class="memdoc">
 
 <p>
-
+Exports a method of the target object on the bus: 1 input parameter 1 output parameter version. 
+<p>
+Identical to <a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811" title="Exports a method of the target object on the bus: No input parameter 1 output parameter...">exportMethod()</a> above, except this is for methods with 1 parameter. 
 </div>
 </div><p>
 <a class="anchor" name="7d89634516ff93d42cb5129c3ab4cd1c"></a><!-- doxytag: member="dbustl::DBusObject::exportMethod" ref="7d89634516ff93d42cb5129c3ab4cd1c" args="(const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2), const std::string &amp;interface=&quot;&quot;)" -->
@@ -411,7 +473,9 @@ template&lt;typename _Class, typename R, typename T1, typename T2&gt; </div>
 <div class="memdoc">
 
 <p>
-
+Exports a method of the target object on the bus: 2 input parameters 1 output parameter version. 
+<p>
+Identical to <a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811" title="Exports a method of the target object on the bus: No input parameter 1 output parameter...">exportMethod()</a> above, except this is for methods with 2 input parameters. 
 </div>
 </div><p>
 <a class="anchor" name="5f8d17e59b3487ac895fe55ec2636f96"></a><!-- doxytag: member="dbustl::DBusObject::exportMethod" ref="5f8d17e59b3487ac895fe55ec2636f96" args="(const std::string &amp;methodName, _Class *target, R(_Class::*method)(T1 arg1, T2 arg2, T3 arg3), const std::string &amp;interface=&quot;&quot;)" -->
@@ -454,7 +518,9 @@ template&lt;typename _Class, typename R, typename T1, typename T2, typename T3&g
 <div class="memdoc">
 
 <p>
-
+Exports a method of the target object on the bus: 3 input parameters 1 output parameter version. 
+<p>
+Identical to <a class="el" href="classdbustl_1_1DBusObject.html#fcad352da6f6de54b75da3e88a80c811" title="Exports a method of the target object on the bus: No input parameter 1 output parameter...">exportMethod()</a> above, except this is for methods with 3 input parameters. 
 </div>
 </div><p>
 <a class="anchor" name="f2345f87eacecb9727e5f2000df6eb53"></a><!-- doxytag: member="dbustl::DBusObject::exportMethod" ref="f2345f87eacecb9727e5f2000df6eb53" args="(const std::string &amp;methodName, _Class *target, void(_Class::*method)(Message method_call), const std::string &amp;interface=&quot;&quot;)" -->
@@ -497,7 +563,12 @@ template&lt;typename _Class&gt; </div>
 <div class="memdoc">
 
 <p>
-
+Exports a method of the target object on the bus: any number of input/output. 
+<p>
+This is the most flexible method to handle D-Bus message, if you want to have a precise D-Bus signature. This is also the most complex to use. The method must do the following:<ul>
+<li>Deserialize method_call using <a class="el" href="classdbustl_1_1Message.html#bddb99366cc6509e54b6919684d410f6" title="Reads an argument from the message.">Message::operator&gt;&gt;</a></li><li>check deserialization status with <a class="el" href="classdbustl_1_1Message.html#29ef828567e2988ad388c4884feaa142" title="Returns the error object raise during serialization or deserialization for this message...">Message::error()</a></li><li>call <a class="el" href="classdbustl_1_1Message.html#6799174903d5e7c57101f12ac36a4842" title="Returns a new message of type DBUS_MESSAGE_TYPE_METHOD_RETURN, that is a reply to...">Message::createMethodReturn()</a></li><li>fill in return parameters with <a class="el" href="classdbustl_1_1Message.html#b66b2ff042182138e47941d7420cd21b" title="Adds an argument to the message.">Message::operator&lt;&lt;</a>.</li><li>check serialization status with <a class="el" href="classdbustl_1_1Message.html#29ef828567e2988ad388c4884feaa142" title="Returns the error object raise during serialization or deserialization for this message...">Message::error()</a></li><li>if an error condition occured somewhere, it can throw an exception that will be sent over the wire as the D-Bus reply, or it can choose to create the error reply manually using <a class="el" href="classdbustl_1_1Message.html#826f964d9fe5f5dd892208e67b298f2e" title="Returns a new message of type DBUS_MESSAGE_TYPE_ERROR, that is a reply to this message...">Message::createErrorReply()</a></li><li>call <a class="el" href="classdbustl_1_1DBusObject.html#f213f576e5dc37f8852a47ef53d548f5">sendReply()</a></li></ul>
+<p>
+TODO: reference tutorial once it is written 
 </div>
 </div><p>
 <a class="anchor" name="77fe296184f1153f8a49e4965cfb131f"></a><!-- doxytag: member="dbustl::DBusObject::exportSignal" ref="77fe296184f1153f8a49e4965cfb131f" args="(const std::string &amp;signalName, const std::string &amp;interface=&quot;&quot;)" -->
@@ -526,6 +597,15 @@ template&lt;typename _Class&gt; </div>
 <div class="memdoc">
 
 <p>
+Tells DBusTL the following signal can be thrown: no argument version. 
+<p>
+This is needed to provide correct introspection.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>signalName</em>&nbsp;</td><td>should be clear enough </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>interface</em>&nbsp;</td><td>the alternate interface this signal will be part of. If not supplied the interface provided to the constructor will be used. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -557,6 +637,9 @@ template&lt;typename T1&gt; </div>
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 1 argument version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -588,6 +671,9 @@ template&lt;typename T1, typename T2&gt; </div>
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 2 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -619,6 +705,9 @@ template&lt;typename T1, typename T2, typename T3&gt; </div>
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 3 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -650,6 +739,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4&gt; </div>
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 4 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -681,6 +773,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4, typename T5&gt; 
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 5 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -712,6 +807,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typ
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 6 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -743,6 +841,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typ
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 7 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -774,6 +875,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typ
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 8 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -805,6 +909,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typ
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 9 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -836,6 +943,9 @@ template&lt;typename T1, typename T2, typename T3, typename T4, typename T5, typ
 <div class="memdoc">
 
 <p>
+Tells DBusTL a signal can be thrown: 10 arguments version. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a> above </dd></dl>
 
 </div>
 </div><p>
@@ -867,6 +977,19 @@ template&lt;typename... Args&gt; </div>
 <div class="memdoc">
 
 <p>
+Sends a signal on the Bus. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>signalName</em>&nbsp;</td><td>D-Bus name for the signal. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>A list of input parameters passed as reference. The arg list can contain an <a class="el" href="classdbustl_1_1Interface.html" title="This class is used in ObjectProxy::call() and DBusObject::emitSignal() to specify...">Interface</a> object, in which case it changes the interface used for this signal. </td></tr>
+  </table>
+</dl>
+<dl compact><dt><b>Exceptions:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="classdbustl_1_1DBusException.html" title="This class is used by DBusTL to report all of it internal errors.">DBusException</a></em>&nbsp;</td><td>if the signal has not been previously exported, or if the signature does not match with the one supplied to <a class="el" href="classdbustl_1_1DBusObject.html#77fe296184f1153f8a49e4965cfb131f" title="Tells DBusTL the following signal can be thrown: no argument version.">exportSignal()</a>. </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -955,6 +1078,9 @@ template&lt;typename... Args&gt; </div>
 <div class="memdoc">
 
 <p>
+<a class="el" href="classdbustl_1_1Connection.html" title="Provides an abstraction of a D-Bus Connection.">Connection</a> this object is exposed on. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="classdbustl_1_1DBusObject.html#83f0043e26a42a89022bc00fa23b938a" title="Export the object on new connection.">enable()</a> </dd></dl>
 
 </div>
 </div><p>

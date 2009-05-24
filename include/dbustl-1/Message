@@ -176,7 +176,7 @@ namespace dbustl {
              * @param message can be empty string (but you should really use it anyway)
              * @return a reply to this message.
              */
-            Message createErrorMessage(const std::string& name, const std::string& message) const;
+            Message createErrorReply(const std::string& name, const std::string& message) const;
 
             /**
              * The DBUS C api structure: don't use it!
