@@ -45,13 +45,13 @@ namespace dbustl {
      * at the moment), or be connections to a bus, which is in charge
      * of routing messages to the right process.
      * 
-     * A D-Bus Connection is needed to instantiate ObjectProxy objects.
+     * A D-Bus Connection is needed to instantiate ObjectProxy or DBusObject objects.
      * 
      * The simplest way to have a connection to a bus is through a call 
      * to Connection::systemBus or Connection::sessionBus
      * 
-     * To be able to process signals, the connection must be associated 
-     * with an event loop. An event loop must be provided either:
+     * To be able to process signals, or if you intend to expose objects on the bus, 
+     * the connection must be associated with an event loop. An event loop must be provided either:
      *   - before any call to Connection::Connection, Connection::systemBus or Connection::sessionBus, using
      *     Connection::useEventLoop static member.
      *   - during object construction, through the use of 
@@ -147,9 +147,40 @@ namespace dbustl {
              */
             bool isConnected() { return _llconn;};
 
-            int busRequestName(const std::string& name, unsigned int flags = 0);
-            int busReleaseName(const std::string& name);
-
+            /**
+             * Asks the bus to assign the given name to this connection by invoking the RequestName method on the bus.
+             * 
+             * This is only needed when you intend to export some of your C++ objects on
+             * the bus. This method is just a thin lawer above the D-Bus C API. 
+             * Extensive documentation on the parameters and their meaning can be found at
+             * http://dbus.freedesktop.org/doc/dbus/api/html/group__DBusBus.html .
+             * 
+             * @param name A valid connection name
+             * @param flags Some flags: see discution above for details.
+             * @param error Pointer to DBusException object. 
+             * If something goes wrong and it *is not* null, error is filled with meaningfull value.
+             * If something goes wrong and it *is* null, an exception is thrown.
+             * @return Depends on flags given an requested name state on success. -1 on error. 
+             * See discution above for details.
+             */
+            int busRequestName(const std::string& name, unsigned int flags = 0, DBusException *error = 0);
+            
+            /**
+             * Asks the bus to unassign the given name from this connection by invoking the ReleaseName method on the bus.
+             * 
+             * This is only needed when you intend to export some of your C++ objects on
+             * the bus. This method is just a thin lawer above the D-Bus C API. 
+             * Extensive documentation on the parameters and their meaning can be found at
+             * http://dbus.freedesktop.org/doc/dbus/api/html/group__DBusBus.html .
+             * 
+             * @param name A valid connection name
+             * @param error Pointer to DBusException object. 
+             * If something goes wrong and it *is not* null, error is filled with meaningfull value.
+             * If something goes wrong and it *is* null, an exception is thrown.
+             * @return Depends on flags given an requested name state on success. -1 on error. 
+             * See discution above for details.
+             */
+            int busReleaseName(const std::string& name, DBusException *error = 0);
 
             /**
              * The D-Bus C api structure: don't use it!

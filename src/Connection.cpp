@@ -106,7 +106,7 @@ void Connection::construct(DBusBusType busType)
 #endif
 }
 
-int Connection::busRequestName(const std::string& name, unsigned int flags)
+int Connection::busRequestName(const std::string& name, unsigned int flags, DBusException *error)
 {
     if(!isPrivate() && isConnected()) {
         DBusException e;
@@ -115,15 +115,20 @@ int Connection::busRequestName(const std::string& name, unsigned int flags)
             return ret;
         }
         else {
-        #ifndef DBUSTL_NO_EXCEPTIONS
-            throw e;
-        #endif
+            if(error) {
+                *error = e;
+            }
+            else {
+            #ifndef DBUSTL_NO_EXCEPTIONS
+                throw e;
+            #endif
+            }
         }
     }
     return -1;
 }
 
-int Connection::busReleaseName(const std::string& name)
+int Connection::busReleaseName(const std::string& name, DBusException *error)
 {
     if(!isPrivate() && isConnected()) {
         DBusException e;
@@ -132,9 +137,14 @@ int Connection::busReleaseName(const std::string& name)
             return ret;
         }
         else {
-        #ifndef DBUSTL_NO_EXCEPTIONS
-            throw e;
-        #endif
+            if(error) {
+                *error = e;
+            }
+            else {
+            #ifndef DBUSTL_NO_EXCEPTIONS
+                throw e;
+            #endif
+            }
         }
     }
     return -1;
