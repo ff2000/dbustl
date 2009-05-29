@@ -159,14 +159,18 @@ DBusHandlerResult DBusObject::incomingMessagesProcessing(DBusConnection *,
         }
         else {
             /* Look for exact match */
-            for(; (firstMatch != lastMatch) && firstMatch->second->interface() != interface; ++firstMatch) {};
+            for(; (firstMatch != lastMatch) && firstMatch->second->interface() != interface; 
+                ++firstMatch) {};
             if(firstMatch != lastMatch) {
                 //Match found
                 executor = firstMatch->second;
             }
         }
             
-        if(executor) {
+        if(executor && 
+            (convertSignature(executor->inSignatures()) 
+                == dbus_message_get_signature(call.dbus()))
+            ) {
         #ifndef DBUSTL_NO_EXCEPTIONS
             try {
         #endif

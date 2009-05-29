@@ -71,6 +71,13 @@ try:
 except dbus.exceptions.DBusException, ex:
     pass
 
+#We should complain if argument count does not match
+try:
+    proxy.test_call2(1, 1, 1)
+    assert False
+except dbus.exceptions.DBusException, ex:
+    pass
+
 #Exception test 1
 try:
     proxy.test_ex1()
