@@ -217,7 +217,7 @@ void DBusObject::sendReply(Message& reply)
 }
 
 void DBusObject::exportSignal(const std::string& name, 
-    const std::list<const char*>& signature, const std::string& interface)
+    const char* const * signature, const std::string& interface)
 {
     ExportedSignal sig((interface.empty() ? _interface : interface), signature);
         
@@ -325,10 +325,12 @@ std::string DBusObject::introspect()
                 it != _exportedSignals.end(); ++it) {
             const ExportedSignal& signal = it->second;
             if(signal.interface() == curInterface) {
+                int i = 0;
+                const char* const *signatures = signal.signatures();
                 xmlIntrospect += "<signal name=\"" + it->first + "\">";
-                std::list<const char*>::const_iterator it;
-                for(it = signal.signatures().begin(); it != signal.signatures().end(); ++it) {
-                    xmlIntrospect += "<arg type=\"" + std::string(*it) + "\"/>";
+                while(signatures[i]) {
+                    xmlIntrospect += "<arg type=\"" + std::string(signatures[i]) + "\"/>";
+                    ++i;
                 }
                 xmlIntrospect += "</signal>";
             }

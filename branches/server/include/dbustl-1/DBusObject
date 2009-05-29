@@ -28,7 +28,6 @@
 
 #include <string>
 #include <map>
-#include <list>
 #include <set>
 
 #include <dbustl-1/Config>
@@ -255,7 +254,7 @@ namespace dbustl {
          * @param interface the alternate interface this signal will be part of. If not supplied
          * the interface provided to the constructor will be used.
          */
-        void exportSignal(const std::string& name, const std::list<const char*>& signature, 
+        void exportSignal(const std::string& name, const char* const * signature, 
             const std::string& interface = "");
 
     #ifdef DBUSTL_CXX0X
@@ -612,7 +611,7 @@ namespace dbustl {
         //This does not show up in doxygen
         class ExportedSignal {
         public:
-            ExportedSignal(const std::string& interface, const std::list<const char*>& signatures)
+            ExportedSignal(const std::string& interface, const char* const * signatures)
              : _interface(interface), _signatures(signatures) {};
             
             const std::string& interface() const
@@ -620,16 +619,17 @@ namespace dbustl {
                 return _interface;
             };
             
-            const std::list<const char *>& signatures() const
+            const char* const * signatures() const
             {
                 return _signatures;
             };
             
             void computeMessageSignature()
             {
-                std::list<const char*>::const_iterator it;
-                for(it = _signatures.begin(); it != _signatures.end(); ++it) {
-                    _messageSignature += *it;
+                int i = 0;
+                while(_signatures[i]) {
+                    _messageSignature += _signatures[i];
+                    ++i;
                 }
             }
             
@@ -640,7 +640,7 @@ namespace dbustl {
             
         private:
             std::string _interface;
-            const std::list<const char*>& _signatures;
+            const char* const * _signatures;
             std::string _messageSignature;
         };
         /** @endcond */
