@@ -316,8 +316,16 @@ std::string DBusObject::introspect()
                 it != _exportedMethods.end(); ++it) {
             MethodExecutorBase *method = it->second;
             if(method->interface() == curInterface) {
+                int i;
+                const char* const *signatures = method->inSignatures();
                 xmlIntrospect += "<method name=\"" + it->first + "\">";
-                xmlIntrospect += "" + method->argsIntrospection();
+                for(i = 0; signatures[i]; ++i) {
+                    xmlIntrospect += argumentIntrospect(signatures[i], DirIn);
+                }
+                signatures = method->outSignatures();
+                for(i = 0; signatures[i]; ++i) {
+                    xmlIntrospect += argumentIntrospect(signatures[i], DirOut);
+                }
                 xmlIntrospect += "</method>";
             }
         }
@@ -329,7 +337,7 @@ std::string DBusObject::introspect()
                 const char* const *signatures = signal.signatures();
                 xmlIntrospect += "<signal name=\"" + it->first + "\">";
                 while(signatures[i]) {
-                    xmlIntrospect += "<arg type=\"" + std::string(signatures[i]) + "\"/>";
+                    xmlIntrospect += argumentIntrospect(signatures[i], DirNone);
                     ++i;
                 }
                 xmlIntrospect += "</signal>";
@@ -341,6 +349,13 @@ std::string DBusObject::introspect()
     xmlIntrospect += introspectChildren();
     xmlIntrospect += "</node>\n";
     return xmlIntrospect;
+}
+
+std::string DBusObject::argumentIntrospect(const char *sig, Direction dir)
+{
+    static std::string dirs[] = {"", " direction=\"in\"", " direction=\"out\""};
+    std::string xml = "<arg type=\"" + std::string(sig) + "\"" + dirs[dir] + "/>";
+    return xml;
 }
 
 std::string DBusObject::introspectChildren()
