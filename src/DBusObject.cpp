@@ -216,19 +216,11 @@ void DBusObject::sendReply(Message& reply)
     dbus_connection_send(_conn->dbus(), reply.dbus(), NULL);
 }
 
-void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
-{
-    ExportedSignal s(interface);
-    exportSignal(signalName, s);
-}
-
 void DBusObject::exportSignal(const std::string& name, 
-    ExportedSignal& sig)
+    const std::list<const char*>& signature, const std::string& interface)
 {
-    if(sig.interface().empty()) {
-        sig.setInterface(_interface);
-    }
-    
+    ExportedSignal sig((interface.empty() ? _interface : interface), signature);
+        
     sig.computeMessageSignature();    
     
     _exportedSignals.insert(std::make_pair(
@@ -334,9 +326,9 @@ std::string DBusObject::introspect()
             const ExportedSignal& signal = it->second;
             if(signal.interface() == curInterface) {
                 xmlIntrospect += "<signal name=\"" + it->first + "\">";
-                std::list<std::string>::const_iterator it;
+                std::list<const char*>::const_iterator it;
                 for(it = signal.signatures().begin(); it != signal.signatures().end(); ++it) {
-                    xmlIntrospect += "<arg type=\"" + *it + "\"/>";
+                    xmlIntrospect += "<arg type=\"" + std::string(*it) + "\"/>";
                 }
                 xmlIntrospect += "</signal>";
             }

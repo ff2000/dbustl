@@ -79,8 +79,6 @@ public:
         exportSignal<std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal6");
         exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal7");
         exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal8");
-        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal9");
-        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal10");
 
         exportSignal("WrongSignatureSignal");
     }

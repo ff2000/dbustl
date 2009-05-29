@@ -1,0 +1,204 @@
+/*
+ *  DBusTL - D-Bus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_SIGNATUREBUILDER
+#define DBUSTL_SIGNATUREBUILDER
+
+#include <dbustl-1/types/Tools>
+
+#include <list>
+
+namespace dbustl {
+
+#ifdef DBUSTL_CXX0X
+    template<typename... Args>
+    struct __SignatureBuilderImpl;
+
+    template<>
+    struct __SignatureBuilderImpl<> {
+        static void compute(std::list<const char*> *)
+        {
+        }
+    };
+    
+    template<typename T, typename... Args>
+    struct __SignatureBuilderImpl<T, Args... > {
+        static void compute(std::list<const char*> *sig)
+        {
+            using namespace types;
+            sig->push_back(Signature<T>::value());
+            __SignatureBuilderImpl<Args...>::compute(sig);
+        }
+    };
+
+    template<typename... Args>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            __SignatureBuilderImpl<Args...>::compute(&sig);
+        }
+        return sig;
+    }    
+#else
+    template<typename T1>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+            sig.push_back(Signature<T4>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4, typename T5>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+            sig.push_back(Signature<T4>::value());
+            sig.push_back(Signature<T5>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4, typename T5,
+        typename T6>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+            sig.push_back(Signature<T4>::value());
+            sig.push_back(Signature<T5>::value());
+            sig.push_back(Signature<T6>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4, typename T5,
+    typename T6, typename T7>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+            sig.push_back(Signature<T4>::value());
+            sig.push_back(Signature<T5>::value());
+            sig.push_back(Signature<T6>::value());
+            sig.push_back(Signature<T7>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4, typename T5,
+        typename T6, typename T7, typename T8>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+            sig.push_back(Signature<T4>::value());
+            sig.push_back(Signature<T5>::value());
+            sig.push_back(Signature<T6>::value());
+            sig.push_back(Signature<T7>::value());
+        }
+        return sig;
+    }
+
+    template<typename T1, typename T2, typename T3, typename T4, typename T5,
+        typename T6, typename T7, typename T8>
+    const std::list<const char*>& SignatureBuilder()
+    {
+        using namespace types;
+        static std::list<const char*> sig;
+        if(sig.empty()) {
+            sig.push_back(Signature<T1>::value());
+            sig.push_back(Signature<T2>::value());
+            sig.push_back(Signature<T3>::value());
+            sig.push_back(Signature<T4>::value());
+            sig.push_back(Signature<T5>::value());
+            sig.push_back(Signature<T6>::value());
+            sig.push_back(Signature<T7>::value());
+            sig.push_back(Signature<T8>::value());
+        }
+        return sig;
+    }
+#endif
+
+}
+
+#endif /* DBUSTL_SIGNATUREBUILDER */
