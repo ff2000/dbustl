@@ -294,23 +294,34 @@ namespace dbustl {
         std::string introspect();
         std::string introspectChildren();
      
+        enum Direction {DirNone = 0, DirIn = 1, DirOut = 2};
+        std::string argumentIntrospect(const char *sig, Direction dir);
+     
         /** @cond */
         //This does not show up in doxygen
         class MethodExecutorBase {
         public:
-            MethodExecutorBase(const std::string& interface) : _interface(interface) {};
+            MethodExecutorBase(const std::string& interface, 
+                const char* const * inSignature, const char* const * outSignature)
+                 : _interface(interface), _inSignature(inSignature), _outSignature(outSignature) {};
             virtual ~MethodExecutorBase() {};
             virtual void processCall(DBusObject *object, Message* method_call) = 0;
-            virtual std::string argsIntrospection() { return ""; };
+            const char* const * inSignatures() {return _inSignature; };
+            const char* const * outSignatures() {return _outSignature; };
             const std::string& interface() const { return _interface; };
             void setInterface(const std::string& interface) { _interface = interface; };
         private:
             std::string _interface;
+            const char* const *_inSignature;
+            const char* const *_outSignature;
         };
  
         class EasyMethodExecutorBase : public MethodExecutorBase {
         public:
-            EasyMethodExecutorBase(const std::string& interface) : MethodExecutorBase(interface) {};
+            EasyMethodExecutorBase(const std::string& interface, 
+                const char* const * inSignature, const char* const * outSignature)
+             : MethodExecutorBase(interface, inSignature, outSignature) {};
+
             virtual ~EasyMethodExecutorBase() {};
         private:
             virtual void processCall(DBusObject *object, Message* method_call)
@@ -352,20 +363,16 @@ namespace dbustl {
             typedef Result (TargetClassType::*MethodType) (void);
                 
             EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder(), 
+                SignatureBuilder<typename remove_const_ref<Result>::type>()
+                ),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *method_reply)
             {
                 *method_reply << (_target->*_method)();
-            }
-
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro = std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
-                return intro;
             }
 
             TargetClassType *_target;            
@@ -378,7 +385,11 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (void);
                 
             EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder(), 
+                SignatureBuilder()
+                ),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *)
@@ -396,7 +407,11 @@ namespace dbustl {
             typedef Result (TargetClassType::*MethodType) (T1);
                 
             EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder<typename remove_const_ref<T1>::type>(),
+                SignatureBuilder<typename remove_const_ref<Result>::type>()
+                ),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -405,15 +420,6 @@ namespace dbustl {
                 *method_call >> a1;
                 if(method_call->error()) return;
                 *method_reply << (_target->*_method)(a1);
-            }
-
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
-                return intro;
             }
 
             TargetClassType *_target;            
@@ -426,7 +432,11 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (T1);
                 
             EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder<typename remove_const_ref<T1>::type>(), 
+                SignatureBuilder()
+                ),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -435,14 +445,6 @@ namespace dbustl {
                 *method_call >> a1;
                 if(method_call->error()) return;
                 (_target->*_method)(a1);
-            }
-
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                return intro;
             }
 
             TargetClassType *_target;            
@@ -455,7 +457,13 @@ namespace dbustl {
             typedef Result (TargetClassType::*MethodType) (T1, T2);
                 
             EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(
+                interface, 
+                SignatureBuilder<typename remove_const_ref<T1>::type, 
+                                typename remove_const_ref<T2>::type>(), 
+                SignatureBuilder<typename remove_const_ref<Result>::type>()
+                ),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -468,16 +476,6 @@ namespace dbustl {
                 *method_reply << (_target->*_method)(a1, a2);
             }
 
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
-                return intro;
-            }
-
             TargetClassType *_target;            
             MethodType _method;                
         };
@@ -488,7 +486,12 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (T1, T2);
                 
             EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder<typename remove_const_ref<T1>::type, 
+                                typename remove_const_ref<T2>::type>(), 
+                SignatureBuilder()
+                ),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -501,15 +504,6 @@ namespace dbustl {
                 (_target->*_method)(a1, a2);
             }
 
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
-                return intro;
-            }
-
             TargetClassType *_target;            
             MethodType _method;                
         };
@@ -520,7 +514,12 @@ namespace dbustl {
             typedef Result (TargetClassType::*MethodType) (T1, T2, T3);
                 
             EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder<typename remove_const_ref<T1>::type, 
+                                typename remove_const_ref<T2>::type, 
+                                typename remove_const_ref<T3>::type>(), 
+                SignatureBuilder<typename remove_const_ref<Result>::type>()),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -535,17 +534,6 @@ namespace dbustl {
                 *method_reply << (_target->*_method)(a1, a2, a3);
             }
 
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T3>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<Result>::type>::value() + "\" direction=\"out\"/>";
-                return intro;
-            }
-
             TargetClassType *_target;            
             MethodType _method;                
         };
@@ -556,7 +544,12 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (T1, T2, T3);
                 
             EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface), _target(target), _method(method) {};
+             : EasyMethodExecutorBase(interface, 
+                SignatureBuilder<typename remove_const_ref<T1>::type, 
+                                typename remove_const_ref<T2>::type, 
+                                typename remove_const_ref<T3>::type>(), 
+                SignatureBuilder()),
+              _target(target), _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -571,16 +564,6 @@ namespace dbustl {
                 (_target->*_method)(a1, a2, a3);
             }
 
-            virtual std::string argsIntrospection()
-            {
-                std::string intro;
-                using namespace types;
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T1>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T2>::type>::value() + "\" direction=\"in\"/>";
-                intro += std::string("<arg type=\"") + Signature<typename remove_const_ref<T3>::type>::value() + "\" direction=\"in\"/>";
-                return intro;
-            }
-
             TargetClassType *_target;            
             MethodType _method;                
         };
@@ -591,7 +574,8 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (Message method_call);
                 
             FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface), _target(target), _method(method) {};
+             : MethodExecutorBase(interface, SignatureBuilder(), SignatureBuilder()),
+              _target(target), _method(method) {};
 
         private:
             virtual void processCall(DBusObject *, Message* method_call)
