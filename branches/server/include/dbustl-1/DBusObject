@@ -233,7 +233,8 @@ namespace dbustl {
         /**
          * Tells DBusTL the following signal can be raised
          * 
-         * This is needed to provide correct introspection.
+         * This is needed to provide correct introspection. This method requires C++0x support
+         * in the compiler.
          * 
          * @param signalName should be clear enough
          * @param interface the alternate interface this signal will be part of. If not supplied
@@ -244,6 +245,19 @@ namespace dbustl {
         void exportSignal(const std::string& signalName, const std::string& interface = "");
     #endif
         
+        /**
+         * Tells DBusTL the following signal can be raised (alternate version)
+         * 
+         * This is needed to provide correct introspection.
+         * 
+         * @param signalName should be clear enough
+         * @param signature a signal signature, to be generated with SignatureBuilder
+         * @param interface the alternate interface this signal will be part of. If not supplied
+         * the interface provided to the constructor will be used.
+         */
+        void exportSignal(const std::string& name, const std::list<const char*>& signature, 
+            const std::string& interface = "");
+
     #ifdef DBUSTL_CXX0X
         /**
          * Sends a signal on the Bus.
@@ -630,9 +644,6 @@ namespace dbustl {
             std::string _messageSignature;
         };
         /** @endcond */
-
-        void exportSignal(const std::string& name, const std::list<const char*>& signature, 
-            const std::string& interface = "");
 
     #ifdef DBUSTL_CXX0X
         template<typename T, typename ... Args>

@@ -61,6 +61,12 @@ namespace dbustl {
         return sig;
     }    
 #else
+    inline const std::list<const char*>& SignatureBuilder()
+    {
+        static std::list<const char*> sig;
+        return sig;
+    }
+
     template<typename T1>
     const std::list<const char*>& SignatureBuilder()
     {
@@ -145,24 +151,6 @@ namespace dbustl {
 
     template<typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7>
-    const std::list<const char*>& SignatureBuilder()
-    {
-        using namespace types;
-        static std::list<const char*> sig;
-        if(sig.empty()) {
-            sig.push_back(Signature<T1>::value());
-            sig.push_back(Signature<T2>::value());
-            sig.push_back(Signature<T3>::value());
-            sig.push_back(Signature<T4>::value());
-            sig.push_back(Signature<T5>::value());
-            sig.push_back(Signature<T6>::value());
-            sig.push_back(Signature<T7>::value());
-        }
-        return sig;
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4, typename T5,
-        typename T6, typename T7, typename T8>
     const std::list<const char*>& SignatureBuilder()
     {
         using namespace types;
