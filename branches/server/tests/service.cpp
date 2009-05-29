@@ -53,9 +53,11 @@ public:
 
         exportMethod("test_flexible_executor", this, &TestServiceClass::test_flexible_executor);        
 
+    #ifndef DBUSTL_NO_EXCEPTIONS
         exportMethod("test_ex1", this, &TestServiceClass::test_ex1);        
         exportMethod("test_ex2", this, &TestServiceClass::test_ex2);        
         exportMethod("test_ex3", this, &TestServiceClass::test_ex3);        
+    #endif
 
         exportMethod("test_if", this, &TestServiceClass::test_if1, "com.example.Interface1");        
         exportMethod("test_if", this, &TestServiceClass::test_if2, "com.example.Interface2");        
@@ -132,6 +134,7 @@ private:
         return p1 + p2 + p3;
     }
 
+#ifndef DBUSTL_NO_EXCEPTIONS
     void test_ex1()
     {
       throw dbustl::DBusException("org.mycompany.test", "This is a test exception");
@@ -146,6 +149,7 @@ private:
     {
       throw "Test";
     }
+#endif
 
     std::string test_if1()
     {
@@ -257,6 +261,7 @@ int main()
     
     mainloop = g_main_loop_new(NULL, FALSE);
     
+#ifndef DBUSTL_NO_EXCEPTIONS
     try {
         srv.test_unexistingsignal();
         abort();
@@ -274,6 +279,7 @@ int main()
         assert(e.name() == "org.dbustl.SignalSignatureMismatch");
         assert(e.message() == "Signal \"WrongSignatureSignal\" has been exported with a different signature: '' vs 's'");
     }
+#endif
     
     g_main_loop_run(mainloop);        
     session->busReleaseName("com.example.SampleService");
