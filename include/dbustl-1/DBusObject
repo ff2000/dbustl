@@ -296,7 +296,9 @@ namespace dbustl {
      
         enum Direction {DirNone = 0, DirIn = 1, DirOut = 2};
         std::string argumentIntrospect(const char *sig, Direction dir);
-     
+
+        static std::string convertSignature(const char *const *sig);
+
         /** @cond */
         //This does not show up in doxygen
         class MethodExecutorBase {
@@ -607,25 +609,10 @@ namespace dbustl {
             {
                 return _signatures;
             };
-            
-            void computeMessageSignature()
-            {
-                int i = 0;
-                while(_signatures[i]) {
-                    _messageSignature += _signatures[i];
-                    ++i;
-                }
-            }
-            
-            const std::string& messageSignature() const
-            {
-                return _messageSignature;
-            }
-            
+                        
         private:
             std::string _interface;
             const char* const * _signatures;
-            std::string _messageSignature;
         };
         /** @endcond */
 

@@ -221,8 +221,6 @@ void DBusObject::exportSignal(const std::string& name,
 {
     ExportedSignal sig((interface.empty() ? _interface : interface), signature);
         
-    sig.computeMessageSignature();    
-    
     _exportedSignals.insert(std::make_pair(
         name, 
         sig
@@ -265,12 +263,13 @@ void DBusObject::emitSignal(Message& signal)
         for(cur = begin; cur != end; ++cur) {
             const ExportedSignal& signalInfo = cur->second;
             if(signalInfo.interface() == intf) {
-                if(signalInfo.messageSignature() == dbus_message_get_signature(signal.dbus())) {
+                if(convertSignature(signalInfo.signatures()) == dbus_message_get_signature(signal.dbus())) {
                     match_found = true;
                 }
                 else {
-                    std::string msg = std::string("Signal \"") + signal.member() + 
-                        "\" has been exported with a different signature: '" + signalInfo.messageSignature()
+                    std::string msg = std::string("Signal \"") + signal.member()
+                        + "\" has been exported with a different signature: '" 
+                        + convertSignature(signalInfo.signatures())
                         + "' vs '" + dbus_message_get_signature(signal.dbus()) + "'";
                     throw_or_set("org.dbustl.SignalSignatureMismatch", msg.c_str());
                     return;
@@ -378,6 +377,17 @@ std::string DBusObject::introspectChildren()
         }
     }
     return xmlIntrospect;
+}
+
+std::string DBusObject::convertSignature(const char *const *sig)
+{
+    int i = 0;
+    std::string s;
+    while(sig[i]) {
+        s += sig[i];
+        ++i;
+    }
+    return s;
 }
 
 }
