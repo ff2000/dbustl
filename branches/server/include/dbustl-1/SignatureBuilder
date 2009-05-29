@@ -51,29 +51,29 @@ namespace dbustl {
 
     template<>
     struct __SignatureBuilderImpl<> {
-        static void compute(const char* sig[])
+        static void compute(const char* sig[], int i)
         {
-            sig[0] = 0;
+            sig[i] = 0;
         }
     };
     
     template<typename T, typename... Args>
     struct __SignatureBuilderImpl<T, Args... > {
-        static void compute(const char* sig[])
+        static void compute(const char* sig[], int i)
         {
             using namespace types;
-            sig[0] = Signature<T>::value();
-            __SignatureBuilderImpl<Args...>::compute(++sig);
+            sig[i] = Signature<T>::value();
+            __SignatureBuilderImpl<Args...>::compute(sig, ++i);
         }
     };
 
     template<typename... Args>
     const char* const * SignatureBuilder()
     {
-        static const char* signature[__SignatureCount<Args...>::value + 1];
-        const char* *sig = signature;
+        static const char* sig[__SignatureCount<Args...>::value + 1];
+        int i = 0;
         
-        __SignatureBuilderImpl<Args...>::compute(sig);
+        __SignatureBuilderImpl<Args...>::compute(sig, i);
         return sig;
     }    
 #else
