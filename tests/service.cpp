@@ -68,21 +68,27 @@ public:
 
         exportMethod("stop", this, &TestServiceClass::stop);
         
+   #ifdef DBUSTL_CXX0X
         exportSignal<std::string>("TestSignal");
         exportSignal<std::string, int>("TestSignal2");
         exportSignal<std::string>("TestSignal3", "com.example.AlternateInterface");
+   #else
+        exportSignal("TestSignal", dbustl::SignatureBuilder<std::string>());
+        exportSignal("TestSignal2", dbustl::SignatureBuilder<std::string, int>());
+        exportSignal("TestSignal3", dbustl::SignatureBuilder<std::string>(), "com.example.AlternateInterface");
+   #endif
 
-        exportSignal("TestExportSignal0");
-        exportSignal<std::string>("TestExportSignal1");
-        exportSignal<std::string, std::string>("TestExportSignal2");
-        exportSignal<std::string, std::string, std::string>("TestExportSignal3");
-        exportSignal<std::string, std::string, std::string, std::string>("TestExportSignal4");
-        exportSignal<std::string, std::string, std::string, std::string, std::string>("TestExportSignal5");
-        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal6");
-        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal7");
-        exportSignal<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>("TestExportSignal8");
+        exportSignal("TestExportSignal0", dbustl::SignatureBuilder());
+        exportSignal("TestExportSignal1", dbustl::SignatureBuilder<std::string>());
+        exportSignal("TestExportSignal2", dbustl::SignatureBuilder<std::string, std::string>());
+        exportSignal("TestExportSignal3", dbustl::SignatureBuilder<std::string, std::string, std::string>());
+        exportSignal("TestExportSignal4", dbustl::SignatureBuilder<std::string, std::string, std::string, std::string>());
+        exportSignal("TestExportSignal5", dbustl::SignatureBuilder<std::string, std::string, std::string, std::string, std::string>());
+        exportSignal("TestExportSignal6", dbustl::SignatureBuilder<std::string, std::string, std::string, std::string, std::string, std::string>());
+        exportSignal("TestExportSignal7", dbustl::SignatureBuilder<std::string, std::string, std::string, std::string, std::string, std::string, std::string>());
+        exportSignal("TestExportSignal8", dbustl::SignatureBuilder<std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string>());
 
-        exportSignal("WrongSignatureSignal");
+        exportSignal("WrongSignatureSignal", dbustl::SignatureBuilder());
     }
 
 private:
@@ -230,14 +236,14 @@ public:
 class ChildClass : private dbustl::DBusObject {
 public:
     ChildClass(dbustl::Connection *conn) : DBusObject("/ServerObject/Child", "com.example.DontcareInterface", conn) {
-        exportSignal<int>("DontcareSignal");
+        exportSignal("DontcareSignal", dbustl::SignatureBuilder<int>());
     }
 };
 
 class NotChildClass : public dbustl::DBusObject {
 public:
     NotChildClass(dbustl::Connection *conn) : DBusObject("/ABogusPath", "com.example.DontcareInterface", conn) {
-        exportSignal<int>("DontcareSignal");
+        exportSignal("DontcareSignal", dbustl::SignatureBuilder<int>());
     }
 };
 
