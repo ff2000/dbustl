@@ -51,7 +51,8 @@ public:
         exportMethod("test_callvoid3", this, &TestServiceClass::test_callvoid3);
         exportMethod("test_call3", this, &TestServiceClass::test_call3);        
 
-        exportMethod("test_flexible_executor", this, &TestServiceClass::test_flexible_executor);        
+        exportMethod("test_flexible_executor", this, &TestServiceClass::test_flexible_executor, 
+            dbustl::SignatureBuilder<double, double>(), dbustl::SignatureBuilder());        
 
     #ifndef DBUSTL_NO_EXCEPTIONS
         exportMethod("test_ex1", this, &TestServiceClass::test_ex1);        

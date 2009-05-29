@@ -227,7 +227,10 @@ namespace dbustl {
          */
         template<typename _Class>
         void exportMethod(const std::string& methodName, _Class *target, 
-            void (_Class::*method)(Message method_call), const std::string& interface = "");
+            void (_Class::*method)(Message method_call), 
+            const char *const * methodCallSignature,
+            const char *const * methodReplySignature,
+            const std::string& interface = "");
 
         /**
          * Tells DBusTL the following signal can be raised
@@ -575,8 +578,9 @@ namespace dbustl {
         public:
             typedef void (TargetClassType::*MethodType) (Message method_call);
                 
-            FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface)
-             : MethodExecutorBase(interface, SignatureBuilder(), SignatureBuilder()),
+            FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface,
+                const char *const * methodCallSignature, const char *const * methodReplySignature)
+             : MethodExecutorBase(interface, methodCallSignature, methodReplySignature),
               _target(target), _method(method) {};
 
         private:
@@ -681,9 +685,13 @@ namespace dbustl {
     }
 
     template<typename _Class>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, void (_Class::*method)(Message method_call), const std::string& interface)
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, 
+        void (_Class::*method)(Message method_call), 
+        const char *const * methodCallSignature, const char *const * methodReplySignature,
+        const std::string& interface)
     {
-        exportMethodInternal(methodName, new FlexibleMethodExecutor<_Class>(target, method, interface));
+        exportMethodInternal(methodName, 
+            new FlexibleMethodExecutor<_Class>(target, method, interface, methodCallSignature, methodReplySignature));
     }
 
 #ifdef DBUSTL_CXX0X
