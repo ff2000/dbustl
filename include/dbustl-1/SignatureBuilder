@@ -32,23 +32,6 @@ namespace dbustl {
     /** @cond */
     
     template<typename... Args>
-    struct __SignatureCount;
-    
-    template<typename... Args>
-    struct __SignatureCount;
-
-    template<>
-    struct __SignatureCount<> {
-        static const int value = 0;
-    };
-    
-    template<typename T, typename... Args>
-    struct __SignatureCount<T, Args... > {
-        static const int value = __SignatureCount<Args...>::value + 1;
-    };
-    
-    
-    template<typename... Args>
     struct __SignatureBuilderImpl;
 
     template<>
@@ -74,7 +57,7 @@ namespace dbustl {
     template<typename... Args>
     const char* const * SignatureBuilder()
     {
-        static const char* sig[__SignatureCount<Args...>::value + 1];
+        static const char* sig[sizeof...(Args) + 1];
         int i = 0;
         
         __SignatureBuilderImpl<Args...>::compute(sig, i);
