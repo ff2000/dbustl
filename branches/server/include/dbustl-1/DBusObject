@@ -238,13 +238,13 @@ namespace dbustl {
          * This is needed to provide correct introspection. This method requires C++0x support
          * in the compiler.
          * 
-         * @param signalName should be clear enough
+         * @param name the signal name
          * @param interface the alternate interface this signal will be part of. If not supplied
          * the interface provided to the constructor will be used.
          */
     #ifdef DBUSTL_CXX0X
         template<typename... Args>
-        void exportSignal(const std::string& signalName, const std::string& interface = "");
+        void exportSignal(const std::string& name, const std::string& interface = "");
     #endif
         
         /**
@@ -252,7 +252,7 @@ namespace dbustl {
          * 
          * This is needed to provide correct introspection.
          * 
-         * @param signalName should be clear enough
+         * @param name the signal name
          * @param signature a signal signature, to be generated with SignatureBuilder
          * @param interface the alternate interface this signal will be part of. If not supplied
          * the interface provided to the constructor will be used.

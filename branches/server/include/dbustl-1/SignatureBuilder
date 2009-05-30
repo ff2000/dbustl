@@ -29,6 +29,8 @@
 namespace dbustl {
 
 #ifdef DBUSTL_CXX0X
+    /** @cond */
+    
     template<typename... Args>
     struct __SignatureCount;
     
@@ -66,6 +68,8 @@ namespace dbustl {
             __SignatureBuilderImpl<Args...>::compute(sig, ++i);
         }
     };
+
+    /** @endcond */
 
     template<typename... Args>
     const char* const * SignatureBuilder()
