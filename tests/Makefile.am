@@ -34,4 +34,4 @@ service_noex_SOURCES = service.cpp
 service_noex_CPPFLAGS = @GLIB_CFLAGS@ -DDBUSTL_NO_EXCEPTIONS -fno-exceptions
 service_noex_LDADD = @DBUS_LIBS@ ../libdbustl-noex-1.la ../libdbustl-noex-glib-1.la @GLIB_LIBS@
 
-EXTRA_DIST = test-service.py server-tests.py introspection.txt
+EXTRA_DIST = test-service.py service-tests.py *.xml
