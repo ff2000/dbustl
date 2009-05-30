@@ -140,13 +140,18 @@ namespace dbustl {
              * If True, means the connection is not on a bus, 
              * but is private between two applications.
              */
-            bool isPrivate() { return _isPrivate;};
+            bool isPrivate() const { return _isPrivate;};
 
             /**
              * Tells if we are currently connected to a remote party, either bus or private connection
              */
-            bool isConnected() { return _llconn;};
+            bool isConnected() const { return _llconn;};
 
+            /**
+             * Blocks until the outgoing message queue is empty.
+             */
+            void flush();
+           
             /**
              * Asks the bus to assign the given name to this connection by invoking the RequestName method on the bus.
              * 
