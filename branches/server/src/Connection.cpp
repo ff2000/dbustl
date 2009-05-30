@@ -106,6 +106,13 @@ void Connection::construct(DBusBusType busType)
 #endif
 }
 
+void Connection::flush()
+{
+    if(_llconn) {
+        dbus_connection_flush(_llconn);
+    }
+}
+
 int Connection::busRequestName(const std::string& name, unsigned int flags, DBusException *error)
 {
     if(!isPrivate() && isConnected()) {
