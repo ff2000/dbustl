@@ -32,13 +32,13 @@
 namespace dbustl {
 namespace types {
 
-template <typename T>
-struct Signature<std::vector<T> > : public ArraySignature<T> {};
+template <typename T, typename X>
+struct Signature<std::vector<T, X> > : public ArraySignature<T> {};
 
-template<typename T>
-struct Serializer<std::vector<T> >: public ArraySerializer<std::vector<T> > {};
-template<typename T>
-struct Deserializer<std::vector<T> >: public ArrayDeserializer<std::vector<T> > {};
+template <typename T, typename X>
+struct Serializer<std::vector<T, X> >: public ArraySerializer<std::vector<T, X> > {};
+template <typename T, typename X>
+struct Deserializer<std::vector<T, X> >: public ArrayDeserializer<std::vector<T, X> > {};
 
 }
 }
