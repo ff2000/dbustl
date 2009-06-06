@@ -1,7 +1,10 @@
 #Common flags definitions
 AM_CXXFLAGS = @CXX0X_CFLAGS@  -I../include -W -Wall @DBUS_CFLAGS@
 
-noinst_PROGRAMS = link-test
+noinst_PROGRAMS = signatures-test
+signatures_test_SOURCES = signatures-test.cpp
+
+noinst_PROGRAMS += link-test
 link_test_SOURCES = link-test-1.cpp link-test-2.cpp
 link_test_LDADD = @DBUS_LIBS@ ../libdbustl-1.la
 

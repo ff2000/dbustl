@@ -27,7 +27,6 @@
 #include <dbus/dbus.h>
 
 #include <string>
-#include <cassert>
 
 namespace dbustl {
 namespace types {
@@ -38,15 +37,17 @@ namespace types {
 	
 // Generate a DBUS signature for a given C++ type
 template<int sig>
-struct PrimitiveSignature {
+struct PrimitiveSignatureImpl {
 	static const int constValue;
-    static inline const char* value() {
-        static const char signature[] = {(char)sig, 0};
-        return signature;
+	static const int size;
+    static inline void calcValue(char *signature, int *idx) {
+    	signature[*idx] = (char)sig;
+    	++(*idx);
     }
 };
 
-template<int sig> const int PrimitiveSignature<sig>::constValue = sig;
+template<int sig> const int PrimitiveSignatureImpl<sig>::constValue = sig;
+template<int sig> const int PrimitiveSignatureImpl<sig>::size = 1;
 	
 /* Implementation */
 	
@@ -88,55 +89,55 @@ struct __basicIntegralType<8, false> {
 };
 
 template<>
-struct Signature<bool> : public PrimitiveSignature<DBUS_TYPE_BOOLEAN> {};
+struct SignatureImpl<bool> : public PrimitiveSignatureImpl<DBUS_TYPE_BOOLEAN> {};
 
 template<>
-struct Signature<char> : public PrimitiveSignature<__basicIntegralType<sizeof(char), false>::value> {};
+struct SignatureImpl<char> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(char), false>::value> {};
 
 template<>
-struct Signature<signed char> : public PrimitiveSignature<__basicIntegralType<sizeof(signed char), true>::value> {};
+struct SignatureImpl<signed char> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(signed char), true>::value> {};
 
 template<>
-struct Signature<unsigned char> : public PrimitiveSignature<__basicIntegralType<sizeof(unsigned char), false>::value> {};
+struct SignatureImpl<unsigned char> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned char), false>::value> {};
 
 template<>
-struct Signature<short> : public PrimitiveSignature<__basicIntegralType<sizeof(short), true>::value> {};
+struct SignatureImpl<short> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(short), true>::value> {};
 
 template<>
-struct Signature<unsigned short> : public PrimitiveSignature<__basicIntegralType<sizeof(unsigned short), false>::value> {};
+struct SignatureImpl<unsigned short> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned short), false>::value> {};
 
 template<>
-struct Signature<int> : public PrimitiveSignature<__basicIntegralType<sizeof(int), true>::value> {};
+struct SignatureImpl<int> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(int), true>::value> {};
 
 template<>
-struct Signature<unsigned int> : public PrimitiveSignature<__basicIntegralType<sizeof(unsigned int), false>::value> {};
+struct SignatureImpl<unsigned int> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned int), false>::value> {};
 	
 template<>
-struct Signature<long> : public PrimitiveSignature<__basicIntegralType<sizeof(long), true>::value> {};
+struct SignatureImpl<long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(long), true>::value> {};
 
 template<>
-struct Signature<unsigned long> : public PrimitiveSignature<__basicIntegralType<sizeof(unsigned long), false>::value> {};
+struct SignatureImpl<unsigned long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned long), false>::value> {};
 	
 template<>
-struct Signature<long long> : public PrimitiveSignature<__basicIntegralType<sizeof(long long), true>::value> {};
+struct SignatureImpl<long long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(long long), true>::value> {};
 
 template<>
-struct Signature<unsigned long long> : public PrimitiveSignature<__basicIntegralType<sizeof(unsigned long long), false>::value> {};
+struct SignatureImpl<unsigned long long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned long long), false>::value> {};
 
 template<>
-struct Signature<float> : public PrimitiveSignature<DBUS_TYPE_DOUBLE> {};
+struct SignatureImpl<float> : public PrimitiveSignatureImpl<DBUS_TYPE_DOUBLE> {};
 	
 template<>
-struct Signature<double> : public PrimitiveSignature<DBUS_TYPE_DOUBLE> {};
+struct SignatureImpl<double> : public PrimitiveSignatureImpl<DBUS_TYPE_DOUBLE> {};
 	
 template<>
-struct Signature<const char *> : public PrimitiveSignature<DBUS_TYPE_STRING> {};
+struct SignatureImpl<const char *> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
 	
 template<>
-struct Signature<char *> : public PrimitiveSignature<DBUS_TYPE_STRING> {};
+struct SignatureImpl<char *> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
 
 template<>
-struct Signature<std::string> : public PrimitiveSignature<DBUS_TYPE_STRING> {};
+struct SignatureImpl<std::string> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
 
 }
 }

@@ -36,15 +36,18 @@ namespace types {
 
 // Generate a DBUS signature for a DBUS array of T
 template <typename T>
-struct ArraySignature {
-    static inline const char* value() {
-        static const std::string signature = std::string(DBUS_TYPE_ARRAY_AS_STRING) + 
-            Signature<T>::value();
-        return signature.c_str();
-    }
+struct ArraySignatureImpl {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx) {
+    	signature[*idx] = (char)DBUS_TYPE_ARRAY;
+    	++(*idx);
+    	SignatureImpl<T>::calcValue(signature, idx);
+    }    
 };
 
-// Generaic support for STL containers
+template<typename T> const int ArraySignatureImpl<T>::size = 1 + SignatureImpl<T>::size;
+
+// Generic support for STL containers
 template<typename Container>
 struct ArraySerializer {
     static dbus_bool_t run(DBusMessageIter* it, const Container& arg);
@@ -55,7 +58,7 @@ dbus_bool_t ArraySerializer<Container>::run(DBusMessageIter* it, const Container
     typename Container::const_iterator containerIter;
     DBusMessageIter subIterator;
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-      Signature<typename Container::value_type>::value(), 
+        Signature<typename Container::value_type>(), 
             &subIterator) == FALSE) {
         return FALSE;
     }
