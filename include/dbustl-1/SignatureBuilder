@@ -47,7 +47,7 @@ namespace dbustl {
         static void compute(const char* sig[], int i)
         {
             using namespace types;
-            sig[i] = Signature<T>::value();
+            sig[i] = Signature<T>();
             __SignatureBuilderImpl<Args...>::compute(sig, ++i);
         }
     };
@@ -75,7 +75,7 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
+            Signature<T1>(),
             0
             };
         return sig;
@@ -86,8 +86,8 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
             0
             };
         return sig;
@@ -98,9 +98,9 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
-            Signature<T3>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
+            Signature<T3>(),
             0
             };
         return sig;
@@ -111,10 +111,10 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
-            Signature<T3>::value(),
-            Signature<T4>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
+            Signature<T3>(),
+            Signature<T4>(),
             0
             };
         return sig;
@@ -125,11 +125,11 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
-            Signature<T3>::value(),
-            Signature<T4>::value(),
-            Signature<T5>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
+            Signature<T3>(),
+            Signature<T4>(),
+            Signature<T5>(),
             0
             };
         return sig;
@@ -141,12 +141,12 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
-            Signature<T3>::value(),
-            Signature<T4>::value(),
-            Signature<T5>::value(),
-            Signature<T6>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
+            Signature<T3>(),
+            Signature<T4>(),
+            Signature<T5>(),
+            Signature<T6>(),
             0
             };
         return sig;
@@ -158,13 +158,13 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
-            Signature<T3>::value(),
-            Signature<T4>::value(),
-            Signature<T5>::value(),
-            Signature<T6>::value(),
-            Signature<T7>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
+            Signature<T3>(),
+            Signature<T4>(),
+            Signature<T5>(),
+            Signature<T6>(),
+            Signature<T7>(),
             0
             };
         return sig;
@@ -176,14 +176,14 @@ namespace dbustl {
     {
         using namespace types;
         static const char* sig[] = {
-            Signature<T1>::value(),
-            Signature<T2>::value(),
-            Signature<T3>::value(),
-            Signature<T4>::value(),
-            Signature<T5>::value(),
-            Signature<T6>::value(),
-            Signature<T7>::value(),
-            Signature<T8>::value(),
+            Signature<T1>(),
+            Signature<T2>(),
+            Signature<T3>(),
+            Signature<T4>(),
+            Signature<T5>(),
+            Signature<T6>(),
+            Signature<T7>(),
+            Signature<T8>(),
             0
             };
         return sig;

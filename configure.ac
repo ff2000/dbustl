@@ -1,6 +1,6 @@
 AC_PREREQ(2.59)
 
-AC_INIT([dbustl], [0.4.0-pre], [dbustl-devel@googlegroups.com])
+AC_INIT([dbustl], [0.4.0], [dbustl-devel@googlegroups.com])
 AC_CONFIG_AUX_DIR([config])
 
 AM_INIT_AUTOMAKE([1.9 foreign])
