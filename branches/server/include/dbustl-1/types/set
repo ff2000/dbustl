@@ -33,11 +33,11 @@ namespace dbustl {
 namespace types {
 
 /* set support */
-template <typename T>
-struct Signature<std::set<T> > : public ArraySignature<T> {};
+template<typename T, typename X, typename Y>
+struct SignatureImpl<std::set<T, X, Y> > : public ArraySignatureImpl<T> {};
 
-template<typename T>
-struct Serializer<std::set<T> >: public ArraySerializer<std::set<T> > {};
+template<typename T, typename X, typename Y>
+struct Serializer<std::set<T, X, Y> >: public ArraySerializer<std::set<T, X, Y> > {};
 
 template<typename Container>
 struct SetDeserializer {
@@ -63,18 +63,18 @@ dbus_bool_t SetDeserializer<Container>::run(DBusMessageIter* it, Container* arg)
     
     return TRUE;
 }
-template<typename T>
-struct Deserializer<std::set<T> >: public SetDeserializer<std::set<T> > {};
+template<typename T, typename X, typename Y>
+struct Deserializer<std::set<T, X, Y> >: public SetDeserializer<std::set<T, X, Y> > {};
 
 /* multiset support */
-template <typename T>
-struct Signature<std::multiset<T> > : public ArraySignature<T> {};
+template<typename T, typename X, typename Y>
+struct SignatureImpl<std::multiset<T, X, Y> > : public ArraySignatureImpl<T> {};
 
-template<typename T>
-struct Serializer<std::multiset<T> >: public ArraySerializer<std::multiset<T> > {};
+template<typename T, typename X, typename Y>
+struct Serializer<std::multiset<T, X, Y> >: public ArraySerializer<std::multiset<T, X, Y> > {};
 
-template<typename T>
-struct Deserializer<std::multiset<T> >: public SetDeserializer<std::multiset<T> > {};
+template<typename T, typename X, typename Y>
+struct Deserializer<std::multiset<T, X, Y> >: public SetDeserializer<std::multiset<T, X, Y> > {};
 
 }
 }

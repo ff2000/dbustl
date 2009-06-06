@@ -30,15 +30,19 @@
 namespace dbustl { \
 namespace types { \
 template <> \
-struct Signature<structname> { \
-    static inline const char* value() { \
-        static const std::string signature = std::string(DBUS_STRUCT_BEGIN_CHAR_AS_STRING) \
+struct SignatureImpl<structname> { \
+    static const int size; \
+    static inline void calcValue(char *signature, int *idx) \
+    { \
+    	signature[*idx] = (char)DBUS_STRUCT_BEGIN_CHAR; \
+    	++(*idx);
 
 #define DBUSTL_STRUCT_SIGNATURE_END(structname) \
-            + DBUS_STRUCT_END_CHAR_AS_STRING; \
-        return signature.c_str(); \
+    	signature[*idx] = (char)DBUS_STRUCT_END_CHAR; \
+    	++(*idx); \
     } \
 }; \
+const int SignatureImpl<structname>::size = 31; \
 } \
 }
 
@@ -92,7 +96,7 @@ dbus_bool_t Deserializer<structname>::run(DBusMessageIter* it, structname* arg) 
 name1 \
 ) \
 DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
-            + StructFieldSignature(&((structname*)(1))->name1) \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name1); \
 DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
     ret = ret && StructRunSerializer(&subIterator, arg.name1); \
@@ -102,13 +106,14 @@ DBUSTL_STRUCT_DESERIALIZE_BEGIN(structname) \
     dbus_message_iter_next(&subIterator); \
 DBUSTL_STRUCT_DESERIALIZE_END(structname)
 
+
 #define DBUSTL_REGISTER_STRUCT_2(structname, \
 name1, \
 name2 \
 ) \
 DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
-            + StructFieldSignature(&((structname*)(1))->name1) \
-            + StructFieldSignature(&((structname*)(1))->name2) \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name1); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name2); \
 DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
     ret = ret && StructRunSerializer(&subIterator, arg.name1); \
@@ -126,9 +131,9 @@ name2, \
 name3 \
 ) \
 DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
-            + StructFieldSignature(&((structname*)(1))->name1) \
-            + StructFieldSignature(&((structname*)(1))->name2) \
-            + StructFieldSignature(&((structname*)(1))->name3) \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name1); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name2); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name3); \
 DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
     ret = ret && StructRunSerializer(&subIterator, arg.name1); \
@@ -150,10 +155,10 @@ name3, \
 name4 \
 ) \
 DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
-            + StructFieldSignature(&((structname*)(1))->name1) \
-            + StructFieldSignature(&((structname*)(1))->name2) \
-            + StructFieldSignature(&((structname*)(1))->name3) \
-            + StructFieldSignature(&((structname*)(1))->name4) \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name1); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name2); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name3); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name4); \
 DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
     ret = ret && StructRunSerializer(&subIterator, arg.name1); \
@@ -179,11 +184,11 @@ name4, \
 name5 \
 ) \
 DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
-            + StructFieldSignature(&((structname*)(1))->name1) \
-            + StructFieldSignature(&((structname*)(1))->name2) \
-            + StructFieldSignature(&((structname*)(1))->name3) \
-            + StructFieldSignature(&((structname*)(1))->name4) \
-            + StructFieldSignature(&((structname*)(1))->name5) \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name1); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name2); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name3); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name4); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name5); \
 DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
     ret = ret && StructRunSerializer(&subIterator, arg.name1); \
@@ -213,12 +218,12 @@ name5, \
 name6 \
 ) \
 DBUSTL_STRUCT_SIGNATURE_BEGIN(structname) \
-            + StructFieldSignature(&((structname*)(1))->name1) \
-            + StructFieldSignature(&((structname*)(1))->name2) \
-            + StructFieldSignature(&((structname*)(1))->name3) \
-            + StructFieldSignature(&((structname*)(1))->name4) \
-            + StructFieldSignature(&((structname*)(1))->name5) \
-            + StructFieldSignature(&((structname*)(1))->name6) \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name1); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name2); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name3); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name4); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name5); \
+            StructFieldComputeSignature(signature, idx, &((structname*)(1))->name6); \
 DBUSTL_STRUCT_SIGNATURE_END(structname) \
 DBUSTL_STRUCT_SERIALIZE_BEGIN(structname) \
     ret = ret && StructRunSerializer(&subIterator, arg.name1); \
@@ -254,8 +259,8 @@ inline dbus_bool_t StructRunDeserializer(DBusMessageIter* it, T* arg) {
 	return Deserializer<T>::run(it, arg);
 }
 template<typename T>
-inline const char* StructFieldSignature(const T*) {
-	return Signature<T>::value();
+inline void StructFieldComputeSignature(char *signature, int *idx, const T*) {
+	SignatureImpl<T>::calcValue(signature, idx);
 }
 
 }
