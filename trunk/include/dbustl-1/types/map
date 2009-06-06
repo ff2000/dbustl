@@ -35,15 +35,20 @@ namespace types {
 
 /* map & multimap shared support */
 template <typename K, typename V>
-struct Signature<std::pair<const K, V> > {
-    static inline const char* value() {
-        static const std::string signature = std::string(DBUS_DICT_ENTRY_BEGIN_CHAR_AS_STRING) + 
-            Signature<K>::value() +
-            Signature<V>::value() +
-            DBUS_DICT_ENTRY_END_CHAR_AS_STRING;
-        return signature.c_str();
-    }
+struct SignatureImpl<std::pair<const K, V> > {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx)
+    {
+    	signature[*idx] = DBUS_DICT_ENTRY_BEGIN_CHAR;
+    	++(*idx);
+    	SignatureImpl<K>::calcValue(signature, idx);
+    	SignatureImpl<V>::calcValue(signature, idx);
+    	signature[*idx] = DBUS_DICT_ENTRY_END_CHAR;
+    	++(*idx);
+    }    
 };
+
+template<typename K, typename V> const int SignatureImpl<std::pair<const K, V> >::size = 2 + SignatureImpl<K>::size + SignatureImpl<V>::size;
 
 /* map support */
 
@@ -58,7 +63,7 @@ dbus_bool_t Serializer<std::map<K, V, X, Y> >::run(DBusMessageIter* it, const st
     DBusMessageIter arrayIterator;
 
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-        Signature<typename std::map<K, V, X, Y>::value_type>::value(), 
+        Signature<typename std::map<K, V, X, Y>::value_type>(), 
         &arrayIterator) == FALSE) {
         return FALSE;
     }

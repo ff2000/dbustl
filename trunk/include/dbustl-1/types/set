@@ -34,7 +34,7 @@ namespace types {
 
 /* set support */
 template<typename T, typename X, typename Y>
-struct Signature<std::set<T, X, Y> > : public ArraySignature<T> {};
+struct SignatureImpl<std::set<T, X, Y> > : public ArraySignatureImpl<T> {};
 
 template<typename T, typename X, typename Y>
 struct Serializer<std::set<T, X, Y> >: public ArraySerializer<std::set<T, X, Y> > {};
@@ -68,7 +68,7 @@ struct Deserializer<std::set<T, X, Y> >: public SetDeserializer<std::set<T, X, Y
 
 /* multiset support */
 template<typename T, typename X, typename Y>
-struct Signature<std::multiset<T, X, Y> > : public ArraySignature<T> {};
+struct SignatureImpl<std::multiset<T, X, Y> > : public ArraySignatureImpl<T> {};
 
 template<typename T, typename X, typename Y>
 struct Serializer<std::multiset<T, X, Y> >: public ArraySerializer<std::multiset<T, X, Y> > {};

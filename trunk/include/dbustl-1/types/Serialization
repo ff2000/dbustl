@@ -34,12 +34,28 @@
 namespace dbustl {
 namespace types {
 
-    // Generate a DBUS signature for a given C++ type
+    // Generate a D-Bus signature for a given C++ type
     template <typename T>
-    struct Signature {
-        
-        static inline const char* value();
-    };
+    struct SignatureImpl;
+
+    template <typename T>
+    const char * Signature()
+    {
+        static char* signature = new char[SignatureImpl<T>::size + 1];
+        int idx = 0;
+    #ifdef DBUSTL_NO_EXCEPTIONS
+        if(signature) {
+    #endif
+            SignatureImpl<T>::calcValue(signature, &idx);
+            signature[idx] = 0;
+    #ifdef DBUSTL_NO_EXCEPTIONS
+        }
+        else {
+            signature = (char *)"";
+        }
+    #endif
+        return signature;
+    }
         
     template<typename T>
     struct Serializer {
