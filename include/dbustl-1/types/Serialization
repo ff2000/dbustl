@@ -34,6 +34,13 @@
 namespace dbustl {
 namespace types {
 
+    // Generate a DBUS signature for a given C++ type
+    template <typename T>
+    struct Signature {
+        
+        static inline const char* value();
+    };
+        
     template<typename T>
     struct Serializer {
         static dbus_bool_t run(DBusMessageIter* it, const T& arg);
