@@ -1,0 +1,185 @@
+/*
+ *  DBusTL - D-Bus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the D-Bus Template Library.
+ *
+ *  The D-Bus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  D-Bus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with D-Bus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_CONNECTION
+#define DBUSTL_CONNECTION
+
+#include <dbus/dbus.h>
+
+namespace dbustl {
+
+    class ConnectionInitializer;
+   
+    class EventLoopIntegration;
+    
+    class DBusException;
+
+    /**
+     * Provides an abstraction of a D-Bus Connection. 
+     * 
+     * A D-Bus connection is a dedicated link between two applications
+     * that wish to exchange D-Bus messages.
+     * D-Bus connections can be either private (which is not supported
+     * at the moment), or be connections to a bus, which is in charge
+     * of routing messages to the right process.
+     * 
+     * A D-Bus Connection is needed to instantiate ObjectProxy objects.
+     * 
+     * The simplest way to have a connection to a bus is through a call 
+     * to Connection::systemBus or Connection::sessionBus
+     * 
+     * To be able to process signals, the connection must be associated 
+     * with an event loop. An event loop must be provided either:
+     *   - before any call to Connection::Connection, Connection::systemBus or Connection::sessionBus, using
+     *     Connection::useEventLoop static member.
+     *   - during object construction, through the use of 
+     *     the alternate Connection(DBusBusType bustype, const EventLoopIntegration& eventLoop) constructor
+     * 
+     * If no signals are to be received, then event loop association 
+     * remains optionnal.
+     */
+    class Connection {
+        public:
+            /**
+             * Returns a singleton to the system bus.
+             * 
+             * If Connection::useMainLoop has been called beforehand, this connection
+             * is associated with the provided mainloop. Otherwise
+             * this connection is not associated with any main loop.
+             * 
+             * Do not destroy it, it will be automatically freed at
+             * program shutdown.
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * 
+             * @throw DBusException if something prevents us from getting on the system bus
+             */
+            static Connection * systemBus();
+
+            /**
+             * Returns a singleton to the session bus.
+             * 
+             * If Connection::useMainLoop has been called beforehand, this connection
+             * is associated with the provided mainloop. Otherwise
+             * this connection is not associated with any main loop.
+             * 
+             * Do not destroy it, it will be automatically freed at
+             * program shutdown.
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * 
+             * @throw DBusException if something prevents us from getting on the session bus
+             */
+            static Connection * sessionBus();
+
+            /**
+             * Specifies the Main Loop (Glib, Qt, any other) in which to integrate
+             * the newly created connections.
+             * It is safe to call it more than once.
+             */
+            static void useEventLoop(const EventLoopIntegration& eventloop);
+
+            /** Creates a new dedicated connection on the given bus.
+             * 
+             * If Connection::useMainLoop has been called beforehand, this connection
+             * is associated with the provided mainloop. Otherwise
+             * this connection is not associated with any main loop.
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * 
+             * @param busType one of {DBUS_BUS_SYSTEM, DBUS_BUS_SESSION}
+             * @throw DBusException if something prevents us from getting on the bus
+             */
+            explicit Connection(DBusBusType busType);
+            
+            /**
+             * Creates a new dedicated connection on the given bus, specifying in which main loop
+             * to process received messages
+             * 
+             * In case exceptions are not enabled, check if the connection creation has 
+             * succeeded by calling isConnected().
+             * @throw DBusException if something prevents us from getting on the bus
+             */
+            Connection(DBusBusType busType, 
+              const EventLoopIntegration& eventLoop);
+            
+            /**
+             * Destructor
+             * 
+             * The destructor is non virtual on purpose, this class is not
+             * designed for inheritance.
+             */
+            ~Connection();
+
+            /**
+             * If True, means the connection is not on a bus, 
+             * but is private between two applications.
+             */
+            bool isPrivate() { return _isPrivate;};
+
+            /**
+             * Tells if we are currently connected to a remote party, either bus or private connection
+             */
+            bool isConnected() { return _llconn;};
+
+            /**
+             * The D-Bus C api structure: don't use it!
+             * 
+             * You should only use it if you <strong>really</strong> know
+             * what you are doing.
+             */
+            DBusConnection * dbus();
+
+        private:
+            //Disallow construct that would bypass the static initializers
+            Connection(const Connection&);
+            Connection& operator=(Connection&);
+        
+            void construct(DBusBusType busType);
+        
+            //Low level connection
+            DBusConnection *_llconn;
+            //Event loop used for this connection
+            EventLoopIntegration* _eventLoop;
+            bool _isPrivate;
+            
+            //globally shared System bus connection
+            static Connection *_system;
+            //globally shared Session bus connection
+            static Connection *_session;
+            //default main loop
+            static EventLoopIntegration* _defaultEventLoop;
+                        
+            /** @cond */
+            friend class ConnectionInitializer;
+            /** @endcond */
+            //To be called by ConnectionInitializer only
+            static void cleanup();
+    };
+
+}
+
+#endif /* DBUSTL_CONNECTION */
