@@ -13,7 +13,8 @@ nobase_include_HEADERS = \
     dbustl-1/types/list \
     dbustl-1/types/vector \
     dbustl-1/types/set \
-    dbustl-1/types/map
+    dbustl-1/types/map \
+    dbustl-1/types/tuple
 
 if HAVE_GLIB
 nobase_include_HEADERS += \

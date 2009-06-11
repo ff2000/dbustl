@@ -5,6 +5,7 @@
 #include <dbustl-1/types/vector>
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
+#include <dbustl-1/types/tuple>
 
 #include <cstdlib>
 
@@ -226,6 +227,11 @@ void testMessage2(dbustl::Message& m)
 	}
 	{
 		std::multimap<double, std::string> v;
+		m >> v;
+	}
+	{
+		std::tuple<int, int> v;
+		m << v;
 		m >> v;
 	}
 	/* Now test standard containers with non standard comparison operations

@@ -60,7 +60,7 @@
  * It is still possible to use DBusTL with an older compiler: refer to
  * @ref compat_syntax for more information.
  * 
- * glib is only required if you intend to receive DBUS signals
+ * glib is only required if you intend to receive D-Bus signals
  * from remote objects.
  * 
  * python-dbus is only required if you intend to run the examples provided with
@@ -91,7 +91,7 @@
  * 
  * This program is the simplest program that can be imagined.
  * First is the creation of a proxy, that will (as its name sugggests)
- * proxy the calls on the underlying exposed DBUS object.
+ * proxy the calls on the underlying exposed D-Bus object.
  * Here we create a proxy on the /PythonServerObject exposed by the
  * com.example.SampleService on the session bus.
  * But the most important line of the program is the call to:
@@ -101,9 +101,9 @@
  * 
  * This single line tells DBusTL to:
  *   -# Create a method call message for "SimpleHello" method
- *   -# Converts the "Hello World" to a DBUS string
+ *   -# Converts the "Hello World" to a D-Bus string
  *   -# Send the message on the connection and receive the reply
- *   -# Convert the DBUS string in the reply back to a std::string object.
+ *   -# Convert the D-Bus string in the reply back to a std::string object.
  * 
  * But enough talking, let's try it out: here is the line required to build it by hand with gcc.
  * @code
@@ -233,11 +233,19 @@
  *     <td>no</td>
  *     <td>yes</td>
  *  </tr>
+ *  <tr>
+ *     <td>std::tuple</td>
+ *     <td>STRUCT</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
  *  </table> 
  *  
  * @note std::set: Duplicate array elements are merged during deserialization
- * @note std::multimap: Serialization is not supported as there is no
- * DBUS container able to store the content of a multimap.
+ * @note std::multimap: Serialization is not supported as there is no D-Bus container able to store the content of a multimap.
+ * @note std::tuple: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable tuple support
+ *
+ * 
  *
  * So let's see how simple this is:
  * 
@@ -344,7 +352,7 @@
  * their own data structures into DBus structs.
  * 
  * The second way(and more complex way) allows to map any user defined
- * data type onto any DBUS message. This is allows for complete customization,
+ * data type onto any D-Bus message. This is allows for complete customization,
  * with no limitation.
  * 
  * @section custom_struct Structs
@@ -424,4 +432,5 @@
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
 #include <dbustl-1/types/Struct>
+#include <dbustl-1/types/tuple>
 

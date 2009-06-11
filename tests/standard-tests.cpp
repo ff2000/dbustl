@@ -555,6 +555,22 @@ int run_vt_tests()
     }
     
     {
+        std::cout << ">Tuple with 6 parameters" << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::map<uint32_t, std::tuple<std::vector<std::string>, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> > in, out;
+            std::get<0>(in[0]).push_back("String");
+            pythonObjectProxy.call("test_struct6", in, &out); 
+            assert(in == out);            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
         std::cout << ">Struct with 1 parameter" << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
@@ -730,7 +746,6 @@ int run_vt_tests()
     return 0;
 }
 #endif /* DBUSTL_CXX0X */
-
 
 int main()
 {    

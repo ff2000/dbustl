@@ -34,10 +34,13 @@ Currently DBusTL comes with builting support for the following STL containers.<p
 <td>std::map </td><td>DICT </td><td>yes </td><td>yes </td></tr>
 <tr>
 <td>std::multimap </td><td>DICT </td><td>no </td><td>yes  </td></tr>
+<tr>
+<td>std::tuple </td><td>STRUCT </td><td>yes </td><td>yes  </td></tr>
 </table>
 <p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>std::set: Duplicate array elements are merged during deserialization <p>
-std::multimap: Serialization is not supported as there is no DBUS container able to store the content of a multimap.</dd></dl>
+std::multimap: Serialization is not supported as there is no D-Bus container able to store the content of a multimap. <p>
+std::tuple: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable tuple support</dd></dl>
 So let's see how simple this is:<p>
 <div class="fragment"><pre class="fragment">
 <span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>

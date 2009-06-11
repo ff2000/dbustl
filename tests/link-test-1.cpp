@@ -222,6 +222,11 @@ void testMessage1(dbustl::Message& m)
 		std::multimap<double, std::string> v;
 		m >> v;
 	}
+	{
+		std::tuple<int, int> v;
+		m << v;
+		m >> v;
+	}
 	
 	/* Now test standard containers with non standard comparison operations
 	 * and allocators - we test with map to also instantiate the Signature */
