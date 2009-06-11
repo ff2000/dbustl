@@ -8,7 +8,6 @@ nobase_include_HEADERS = \
     dbustl-1/Message \
     dbustl-1/types/Serialization \
     dbustl-1/types/Basic \
-    dbustl-1/types/Tools \
     dbustl-1/types/StdTools \
     dbustl-1/types/Struct \
     dbustl-1/types/list \

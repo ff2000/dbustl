@@ -31,12 +31,115 @@
 #define DBUSTL_TYPES_BASIC
 
 #include <dbustl-1/types/Serialization>
-#include <dbustl-1/types/Tools>
 
 #include <stdint.h> //Note : this should be changed as <cstdint> once compilers supports it
 
 namespace dbustl {
 namespace types {
+
+// Signatures handling - BEGIN
+template<int sig>
+struct PrimitiveSignatureImpl {
+	static const int constValue;
+	static const int size;
+    static inline void calcValue(char *signature, int *idx) {
+    	signature[*idx] = (char)sig;
+    	++(*idx);
+    }
+};
+
+template<int sig> const int PrimitiveSignatureImpl<sig>::constValue = sig;
+template<int sig> const int PrimitiveSignatureImpl<sig>::size = 1;
+		
+template<int size, bool sign>
+struct __basicIntegralType;
+
+template<>
+struct __basicIntegralType<1, true> {
+	static const int value = DBUS_TYPE_INT16;
+};
+template<>
+struct __basicIntegralType<2, true> {
+	static const int value = DBUS_TYPE_INT16;
+};
+template<>
+struct __basicIntegralType<4, true> {
+	static const int value = DBUS_TYPE_INT32;
+};
+template<>
+struct __basicIntegralType<8, true> {
+	static const int value = DBUS_TYPE_INT64;
+};
+
+template<>
+struct __basicIntegralType<1, false> {
+	static const int value = DBUS_TYPE_BYTE;
+};
+template<>
+struct __basicIntegralType<2, false> {
+	static const int value = DBUS_TYPE_UINT16;
+};
+template<>
+struct __basicIntegralType<4, false> {
+	static const int value = DBUS_TYPE_UINT32;
+};
+template<>
+struct __basicIntegralType<8, false> {
+	static const int value = DBUS_TYPE_UINT64;
+};
+
+template<>
+struct SignatureImpl<bool> : public PrimitiveSignatureImpl<DBUS_TYPE_BOOLEAN> {};
+
+template<>
+struct SignatureImpl<char> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(char), false>::value> {};
+
+template<>
+struct SignatureImpl<signed char> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(signed char), true>::value> {};
+
+template<>
+struct SignatureImpl<unsigned char> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned char), false>::value> {};
+
+template<>
+struct SignatureImpl<short> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(short), true>::value> {};
+
+template<>
+struct SignatureImpl<unsigned short> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned short), false>::value> {};
+
+template<>
+struct SignatureImpl<int> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(int), true>::value> {};
+
+template<>
+struct SignatureImpl<unsigned int> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned int), false>::value> {};
+	
+template<>
+struct SignatureImpl<long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(long), true>::value> {};
+
+template<>
+struct SignatureImpl<unsigned long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned long), false>::value> {};
+	
+template<>
+struct SignatureImpl<long long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(long long), true>::value> {};
+
+template<>
+struct SignatureImpl<unsigned long long> : public PrimitiveSignatureImpl<__basicIntegralType<sizeof(unsigned long long), false>::value> {};
+
+template<>
+struct SignatureImpl<float> : public PrimitiveSignatureImpl<DBUS_TYPE_DOUBLE> {};
+	
+template<>
+struct SignatureImpl<double> : public PrimitiveSignatureImpl<DBUS_TYPE_DOUBLE> {};
+	
+template<>
+struct SignatureImpl<const char *> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
+	
+template<>
+struct SignatureImpl<char *> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
+
+template<>
+struct SignatureImpl<std::string> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
+// Signatures handling - END
+
     
 template<typename T> 
 dbus_bool_t __deserializeSignedIntegral(DBusMessageIter* it, T* arg)

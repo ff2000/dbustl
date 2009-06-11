@@ -25,7 +25,6 @@
 #define DBUSTL_TYPES_STDTOOLS
 
 #include <dbustl-1/types/Serialization>
-#include <dbustl-1/types/Tools>
 
 namespace dbustl {
 namespace types {
