@@ -23,8 +23,12 @@
 
 // STL map & multimap support
 
-#ifndef DBUSTL_TYPES_MULTIMAP
-#define DBUSTL_TYPES_MULTIMAP
+#ifndef DBUSTL_TYPES_UNORDERED_MAP
+#define DBUSTL_TYPES_UNORDERED_MAP
+
+#include <dbustl-1/Config> // For DBUSTL_CXX0X
+
+#ifdef DBUSTL_CXX0X
 
 #include <unordered_map>
 #include <dbustl-1/types/StdTools>
@@ -48,4 +52,6 @@ struct Deserializer<std::unordered_multimap<K, V, X, Y> > : public MultiMapDeser
 }
 }
 
-#endif /* DBUSTL_TYPES_MULTIMAP */
+#endif /* DBUSTL_CXX0X */
+
+#endif /* DBUSTL_TYPES_UNORDERED_MAP */
