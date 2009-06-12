@@ -8,6 +8,7 @@
 #include <dbustl-1/types/array>
 #include <dbustl-1/types/tuple>
 #include <dbustl-1/types/unordered_set>
+#include <dbustl-1/types/unordered_map>
 
 #include <cstdlib>
 
@@ -251,6 +252,15 @@ void testMessage2(dbustl::Message& m)
 		std::unordered_multiset<std::string> v;
 		m >> v;
 		m << v;
+	}
+	{
+		std::unordered_map<double, std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::unordered_multimap<double, std::string> v;
+		m >> v;
 	}
 #endif
 	/* Now test standard containers with non standard comparison operations
