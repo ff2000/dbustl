@@ -539,6 +539,43 @@ int run_vt_tests()
     }
     
     {
+        std::cout << ">unordered_map of int->string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_map<int32_t, std::string> in, out;
+            in[0] = "EnTRY 0";
+            in[1] = "EnTRY 1";
+            in[2] = "EnTRY 2";
+            pythonObjectProxy.call("test_dict_of_integer_string", in, &out); 
+            assert(in.size() == out.size());            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
+        std::cout << ">unordered_multimap of int->string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_map<int32_t, std::string> in;
+            std::unordered_multimap<int32_t, std::string> out;
+            in[0] = "EnTRY 0";
+            in[1] = "EnTRY 1";
+            in[2] = "EnTRY 2";
+            pythonObjectProxy.call("test_dict_of_integer_string", in, &out); 
+            assert(out.size() == 3);            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+    
+    {
         std::cout << ">list of list of integers" << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
