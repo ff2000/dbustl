@@ -571,6 +571,25 @@ int run_vt_tests()
     }
 
     {
+        std::cout << ">array of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::array<std::string, 3> in;
+            std::array<std::string, 2> out;
+            in[0]  = "String 1";
+            in[1]  = "String 2";
+            in[2]  = "String 3";
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in[0] == out[0] && in[1] == out[1]);
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
         std::cout << ">Struct with 1 parameter" << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {

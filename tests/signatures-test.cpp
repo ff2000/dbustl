@@ -12,6 +12,7 @@ int main()
 	assert((std::string("{ds}") == dbustl::types::Signature<std::pair<const double, std::string> >()));
 	assert((std::string("{sad}") == dbustl::types::Signature<std::pair<const std::string, std::list<double> > >()));
 #ifdef DBUSTL_CXX0X
+	assert((std::string("as") == dbustl::types::Signature<std::array<std::string, 5> >()));
 	assert((std::string("(iidii)") == dbustl::types::Signature<std::tuple<int, int, double, int, int> >()));
 #endif
 	std::cout << "Ok" << std::endl;

@@ -1,0 +1,73 @@
+/*
+ *  DBusTL - D-Bus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_TYPES_ARRAY
+#define DBUSTL_TYPES_ARRAY
+
+#include <dbustl-1/Config> // For DBUSTL_CXX0X
+
+#ifdef DBUSTL_CXX0X
+
+#include <dbustl-1/types/Serialization>
+#include <array>
+
+namespace dbustl {
+namespace types {
+
+template <typename T, std::size_t N>
+struct SignatureImpl<std::array<T, N> > : public ArraySignatureImpl<T> {};
+
+template <typename T, std::size_t N>
+struct Serializer<std::array<T, N> >: public ArraySerializer<std::array<T, N> > {};
+
+template <typename T, std::size_t N>
+struct Deserializer<std::array<T, N> > {
+    static dbus_bool_t run(DBusMessageIter* it, std::array<T, N>* arg);
+};
+template <typename T, std::size_t N>
+dbus_bool_t Deserializer<std::array<T, N> >::run(DBusMessageIter* it, std::array<T, N>* arg)
+{
+    DBusMessageIter subIterator;
+    unsigned int i = 0;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &subIterator);
+    while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID && i < N) {
+        if(Deserializer<T>::run(&subIterator, &(*arg)[i]) == FALSE) {
+            return FALSE;
+        }
+        dbus_message_iter_next(&subIterator);
+        i++;
+    }
+    
+    return TRUE;
+}
+
+}
+}
+
+#endif /* DBUSTL_CXX0X */
+
+#endif /* DBUSTL_TYPES_ARRAY */
