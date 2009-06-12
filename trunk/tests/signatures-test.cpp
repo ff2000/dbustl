@@ -14,6 +14,8 @@ int main()
 #ifdef DBUSTL_CXX0X
 	assert((std::string("as") == dbustl::types::Signature<std::array<std::string, 5> >()));
 	assert((std::string("(iidii)") == dbustl::types::Signature<std::tuple<int, int, double, int, int> >()));
+	assert(std::string("as") == dbustl::types::Signature<std::unordered_set<std::string> >());
+	assert(std::string("as") == dbustl::types::Signature<std::unordered_multiset<std::string> >());
 #endif
 	std::cout << "Ok" << std::endl;
 	return 0;

@@ -233,6 +233,16 @@ void testMessage1(dbustl::Message& m)
 		m << v;
 		m >> v;
 	}
+	{
+		std::unordered_set<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::unordered_multiset<std::string> v;
+		m >> v;
+		m << v;
+	}
 #endif
 	
 	/* Now test standard containers with non standard comparison operations

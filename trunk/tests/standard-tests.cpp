@@ -429,6 +429,42 @@ int run_vt_tests()
     }
 
     {
+        std::cout << ">unordered_set of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_set<std::string> in, out;
+            in.insert("String 1");
+            in.insert("String 2");
+            in.insert("String 3");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in.size() == out.size());            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
+        std::cout << ">unordered_multiset of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_multiset<std::string> in, out;
+            in.insert("String 1");
+            in.insert("String 1");
+            in.insert("String 2");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in.size() == out.size());            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
         std::cout << ">set collision " << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
