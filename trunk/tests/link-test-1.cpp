@@ -222,11 +222,18 @@ void testMessage1(dbustl::Message& m)
 		std::multimap<double, std::string> v;
 		m >> v;
 	}
+#ifdef DBUSTL_CXX0X
 	{
 		std::tuple<int, int> v;
 		m << v;
 		m >> v;
 	}
+	{
+		std::array<int, 5> v;
+		m << v;
+		m >> v;
+	}
+#endif
 	
 	/* Now test standard containers with non standard comparison operations
 	 * and allocators - we test with map to also instantiate the Signature */

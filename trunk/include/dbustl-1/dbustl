@@ -239,11 +239,17 @@
  *     <td>yes</td>
  *     <td>yes</td>
  *  </tr>
+ *  <tr>
+ *     <td>std::array</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
  *  </table> 
  *  
  * @note std::set: Duplicate array elements are merged during deserialization
  * @note std::multimap: Serialization is not supported as there is no D-Bus container able to store the content of a multimap.
- * @note std::tuple: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable tuple support
+ * @note std::tuple, std::array: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable those containers support
  *
  * 
  *
@@ -433,4 +439,5 @@
 #include <dbustl-1/types/map>
 #include <dbustl-1/types/Struct>
 #include <dbustl-1/types/tuple>
+#include <dbustl-1/types/array>
 
