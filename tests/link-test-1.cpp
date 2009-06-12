@@ -243,6 +243,15 @@ void testMessage1(dbustl::Message& m)
 		m >> v;
 		m << v;
 	}
+	{
+		std::unordered_map<double, std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::unordered_multimap<double, std::string> v;
+		m >> v;
+	}
 #endif
 	
 	/* Now test standard containers with non standard comparison operations
