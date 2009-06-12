@@ -42,7 +42,8 @@ Currently DBusTL comes with builting support for the following STL containers.<p
 <p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>std::set: Duplicate array elements are merged during deserialization <p>
 std::multimap: Serialization is not supported as there is no D-Bus container able to store the content of a multimap. <p>
-std::tuple, std::array: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable those containers support</dd></dl>
+std::tuple, std::array: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable those containers support <p>
+std::array: Due to the fact that D-Bus arrays are variable sized while std::array are fixed sized, extra elements are lost during deserialization</dd></dl>
 So let's see how simple this is:<p>
 <div class="fragment"><pre class="fragment">
 <span class="preprocessor">#include &lt;dbustl-1/dbustl&gt;</span>
