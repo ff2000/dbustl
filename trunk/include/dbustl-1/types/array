@@ -28,7 +28,7 @@
 
 #ifdef DBUSTL_CXX0X
 
-#include <dbustl-1/types/Serialization>
+#include <dbustl-1/types/StdTools>
 #include <array>
 
 namespace dbustl {
