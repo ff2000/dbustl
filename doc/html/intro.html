@@ -18,7 +18,7 @@
 <h1><a class="anchor" name="intro">The 5 minutes introduction </a></h1>This pages gets you up and running with a DBusTL installation and shows you how to build a simple program.<h2><a class="anchor" name="requirements">
 Build requirements</a></h2>
 To build DBusTL the following dependancies are requires:<ul>
-<li>gcc: &gt;= 4.3</li><li>DBus development libraries (&gt;= 1.2): older versions may work but haven't been tested</li><li>glib: tested on 2.16, olders versions might work too</li><li>python-dbus: tested with 0.82.4</li></ul>
+<li>gcc: &gt;= 4.3</li><li>D-Bus development libraries (&gt;= 1.2): older versions may work but haven't been tested</li><li>glib: tested on 2.16, olders versions might work too</li><li>python-dbus: tested with 0.82.4</li></ul>
 <p>
 It is still possible to use DBusTL with an older compiler: refer to <a class="el" href="compat_syntax.html">Compatibility syntax</a> for more information.<p>
 glib is only required if you intend to receive D-Bus signals from remote objects.<p>
@@ -103,14 +103,14 @@ If something bad happens (such as if you forgot to launch test-service.py), then
 Some explanations</a></h2>
 <h3><a class="anchor" name="parameters">
 Parameters passing</a></h3>
-By now you may be wondering: how the hell does DBusTL make the difference between input and output parameters ? The answer is quite simple: input parameters start after the first one, which is always the DBus method name, until a pointer is found. Attempts to mix pointers with non pointers will result in failure at compile time. This means all the method calls having a similar looks and feel: <div class="fragment"><pre class="fragment"> proxy.call(<span class="stringliteral">"MyMethod"</span>, inparam1, inparam2, ..., inparamN, &amp;outparam1, &amp;outparam2, ..., &amp;outparamY)
+By now you may be wondering: how the hell does DBusTL make the difference between input and output parameters ? The answer is quite simple: input parameters start after the first one, which is always the D-Bus method name, until a pointer is found. Attempts to mix pointers with non pointers will result in failure at compile time. This means all the method calls having a similar looks and feel: <div class="fragment"><pre class="fragment"> proxy.call(<span class="stringliteral">"MyMethod"</span>, inparam1, inparam2, ..., inparamN, &amp;outparam1, &amp;outparam2, ..., &amp;outparamY)
 </pre></div><p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>There is no hard limit on the number of input/output parameters that can be passed. <p>
 As an exception to the rule above, special support is provided for C strings, which means that the following code will work too: <div class="fragment"><pre class="fragment"> proxy.call(<span class="stringliteral">"MyMethod"</span>, inparam1,... , <span class="stringliteral">"a C string as input parameter"</span>,..., inparam2, ..., inparamN, &amp;outparam1, ...)
 </pre></div></dd></dl>
 <h3><a class="anchor" name="interface_choosing">
 Choosing the right interface</a></h3>
-The DBus specification allows to target messages calls to a specific object's interface. Specifying the interface is optionnal from the DBus protocol perspective, so it is for DBusTL.<p>
+The D-Bus specification allows to target messages calls to a specific object's interface. Specifying the interface is optionnal from the D-Bus protocol perspective, so it is for DBusTL.<p>
 Here is how we can do that with DBusTL: <h4><a class="anchor" name="interface_setinterface">
 ServerProxy::setInterface() method.</a></h4>
 This is the easiest way to target a given interface. Calling this method sets the interface to use for all the subsequent method calls of the given proxy object.<h4><a class="anchor" name="interface_modifiers">
