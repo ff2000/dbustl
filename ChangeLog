@@ -1,6 +1,7 @@
 v0.5.0: Feature release
+ * Support for exposing C++ objects on the bus (aka service side support)
  * Renamed dbustl::ObjectProxy::Interface to dbustl::Interface
- * Added support for C++ dequeue type
+ * Added support for C++ deque type
  * Support for C++0x tuple, array, unordered_set, unordered_map,
    unordered_multimap data type
 
