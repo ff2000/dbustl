@@ -1,0 +1,163 @@
+/*
+ *  DBusTL - D-Bus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_TYPES_TUPLE
+#define DBUSTL_TYPES_TUPLE
+
+#include <dbustl-1/Config> // For DBUSTL_CXX0X
+
+#ifdef DBUSTL_CXX0X
+
+#include <dbustl-1/types/Serialization>
+#include <tuple>
+
+namespace dbustl {
+namespace types {
+
+// Generate a D-Bus signature for Cxx0x tuple
+template <typename ...Args>
+struct __TupleSignatureImpl;
+
+template <typename T, typename ...Args>
+struct __TupleSignatureImpl<T, Args... > {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx)
+    {
+        SignatureImpl<T>::calcValue(signature, idx);
+    	__TupleSignatureImpl<Args...>::calcValue(signature, idx);
+    }    
+};
+
+template<typename T, typename ...Args> 
+const int __TupleSignatureImpl<T, Args...>::size 
+    = SignatureImpl<T>::size + __TupleSignatureImpl<Args...>::size;
+
+template <typename T>
+struct __TupleSignatureImpl<T> {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx)
+    {
+        SignatureImpl<T>::calcValue(signature, idx);
+        signature[*idx] = (char)DBUS_STRUCT_END_CHAR;
+        ++(*idx);
+    }
+};
+
+template <typename T>
+const int __TupleSignatureImpl<T>::size = 2 + SignatureImpl<T>::size;
+
+template <typename ...Args>
+struct SignatureImpl<std::tuple<Args...> > {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx)
+    {
+        signature[*idx] = (char)DBUS_STRUCT_BEGIN_CHAR;
+        ++(*idx);
+    	__TupleSignatureImpl<Args...>::calcValue(signature, idx);
+    }
+};
+
+template<typename ...Args> 
+const int SignatureImpl<std::tuple<Args...> >::size 
+    = __TupleSignatureImpl<Args...>::size;
+
+template<typename T>
+inline dbus_bool_t __TupleRunSerializer(DBusMessageIter* it, const T& arg) {
+	return Serializer<T>::run(it, arg);
+}
+
+template<int i, typename ...Args>
+struct __TupleSerializer {
+    static inline dbus_bool_t run(DBusMessageIter* it, const std::tuple<Args...>& tuple)
+    {
+	    return __TupleRunSerializer(it, std::get<sizeof...(Args) - i>(tuple)) 
+            && __TupleSerializer<i - 1, Args...>::run(it, tuple);
+    }
+};
+
+template<typename ...Args>
+struct __TupleSerializer<0, Args...> {
+    static inline dbus_bool_t run(DBusMessageIter*, const std::tuple<Args...>&)
+    {
+	    return TRUE;
+    }
+};
+
+template<typename T>
+inline dbus_bool_t __TupleRunDeserializer(DBusMessageIter* it, T* arg) {
+	return Deserializer<T>::run(it, arg);
+}
+
+template<int i, typename ...Args>
+struct __TupleDeserializer {
+    static inline dbus_bool_t run(DBusMessageIter* it, std::tuple<Args...>* tuple) {
+	    dbus_bool_t ret = __TupleRunDeserializer(it, &std::get<sizeof...(Args) - i>(*tuple));
+        dbus_message_iter_next(it);
+	    return ret && __TupleDeserializer<i - 1, Args...>::run(it, tuple);
+    }
+};
+
+template<typename ...Args>
+struct __TupleDeserializer<0, Args...> {
+    static inline dbus_bool_t run(DBusMessageIter*, std::tuple<Args...>*) {
+	    return TRUE;
+    }
+};
+
+template<typename ...Args>
+struct Serializer<std::tuple<Args...> > {
+    static dbus_bool_t run(DBusMessageIter* it, const std::tuple<Args...>& arg);
+};
+template<typename ...Args>
+dbus_bool_t Serializer<std::tuple<Args...> >::run(DBusMessageIter* it, const std::tuple<Args...>& tuple)
+{
+    DBusMessageIter subIterator;
+    if(dbus_message_iter_open_container(it, DBUS_TYPE_STRUCT,
+      NULL, &subIterator) == FALSE) {
+        return FALSE;
+    }
+    return __TupleSerializer<sizeof...(Args), Args...>::run(&subIterator, tuple) 
+        && dbus_message_iter_close_container(it, &subIterator);
+}
+
+template<typename ...Args>
+struct Deserializer<std::tuple<Args...> > {
+    static dbus_bool_t run(DBusMessageIter* it, std::tuple<Args...>* arg);
+};
+template<typename ...Args>
+dbus_bool_t Deserializer<std::tuple<Args...> >::run(DBusMessageIter* it, std::tuple<Args...>* tuple)
+{
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_STRUCT) {
+        return FALSE;
+    }
+    DBusMessageIter subIterator;
+    dbus_message_iter_recurse(it, &subIterator);
+    return __TupleDeserializer<sizeof...(Args), Args...>::run(&subIterator, tuple);
+}
+
+}
+}
+
+#endif /* DBUSTL_CXX0X */
+
+#endif /* DBUSTL_TYPES_TUPLE */

@@ -25,16 +25,14 @@
 #define DBUSTL_TYPES_STDTOOLS
 
 #include <dbustl-1/types/Serialization>
-#include <dbustl-1/types/Tools>
 
 namespace dbustl {
 namespace types {
 
-//Tools for STL
+/* Tools for STL */
 
-/* Containers helpers */
+// Generic support for Array type containers
 
-// Generate a DBUS signature for a DBUS array of T
 template <typename T>
 struct ArraySignatureImpl {
     static const int size;
@@ -47,36 +45,35 @@ struct ArraySignatureImpl {
 
 template<typename T> const int ArraySignatureImpl<T>::size = 1 + SignatureImpl<T>::size;
 
-// Generic support for STL containers
-template<typename Container>
+template<typename T>
 struct ArraySerializer {
-    static dbus_bool_t run(DBusMessageIter* it, const Container& arg);
+    static dbus_bool_t run(DBusMessageIter* it, const T& arg);
 };
-template<typename Container>
-dbus_bool_t ArraySerializer<Container>::run(DBusMessageIter* it, const Container& arg)
+template<typename T>
+dbus_bool_t ArraySerializer<T>::run(DBusMessageIter* it, const T& arg)
 {
-    typename Container::const_iterator containerIter;
+    typename T::const_iterator containerIter;
     DBusMessageIter subIterator;
     if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
-        Signature<typename Container::value_type>(), 
+        Signature<typename T::value_type>(), 
             &subIterator) == FALSE) {
         return FALSE;
     }
     
     for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
-        if(Serializer<typename Container::value_type>::run(&subIterator, *containerIter) == FALSE) {
+        if(Serializer<typename T::value_type>::run(&subIterator, *containerIter) == FALSE) {
             return FALSE;
         }
     }
     
     return dbus_message_iter_close_container(it, &subIterator);
 }
-template<typename Container>
+template<typename T>
 struct ArrayDeserializer {
-    static dbus_bool_t run(DBusMessageIter* it, Container* arg);
+    static dbus_bool_t run(DBusMessageIter* it, T* arg);
 };
-template<typename Container>
-dbus_bool_t ArrayDeserializer<Container>::run(DBusMessageIter* it, Container* arg)
+template<typename T>
+dbus_bool_t ArrayDeserializer<T>::run(DBusMessageIter* it, T* arg)
 {
     DBusMessageIter subIterator;
     if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
@@ -85,11 +82,158 @@ dbus_bool_t ArrayDeserializer<Container>::run(DBusMessageIter* it, Container* ar
     
     dbus_message_iter_recurse(it, &subIterator);
     while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
-        arg->push_back(typename Container::value_type());
-        if(Deserializer<typename Container::value_type>::run(&subIterator, &arg->back()) == FALSE) {
+        arg->push_back(typename T::value_type());
+        if(Deserializer<typename T::value_type>::run(&subIterator, &arg->back()) == FALSE) {
             return FALSE;
         }
         dbus_message_iter_next(&subIterator);
+    }
+    
+    return TRUE;
+}
+
+// Generic support for set type containers
+template<typename T>
+struct SetDeserializer {
+    static dbus_bool_t run(DBusMessageIter* it, T* arg);
+};
+template<typename T>
+dbus_bool_t SetDeserializer<T>::run(DBusMessageIter* it, T* arg)
+{
+    DBusMessageIter subIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &subIterator);
+    while (dbus_message_iter_get_arg_type(&subIterator) != DBUS_TYPE_INVALID) {
+        typename T::value_type element;
+        if(Deserializer<typename T::value_type>::run(&subIterator, &element) == FALSE) {
+            return FALSE;
+        }
+        arg->insert(element);
+        dbus_message_iter_next(&subIterator);
+    }
+    
+    return TRUE;
+}
+
+// Generic support for map type containers
+template <typename K, typename V>
+struct SignatureImpl<std::pair<const K, V> > {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx)
+    {
+    	signature[*idx] = DBUS_DICT_ENTRY_BEGIN_CHAR;
+    	++(*idx);
+    	SignatureImpl<K>::calcValue(signature, idx);
+    	SignatureImpl<V>::calcValue(signature, idx);
+    	signature[*idx] = DBUS_DICT_ENTRY_END_CHAR;
+    	++(*idx);
+    }    
+};
+
+template<typename K, typename V> 
+const int SignatureImpl<std::pair<const K, V> >::size = 2 + SignatureImpl<K>::size + SignatureImpl<V>::size;
+
+template<typename T>
+struct MapSerializer {
+    static dbus_bool_t run(DBusMessageIter* it, const T& arg);
+};
+template<typename T>
+dbus_bool_t MapSerializer<T>::run(DBusMessageIter* it, const T& arg)
+{
+    typename T::const_iterator containerIter;
+    DBusMessageIter arrayIterator;
+
+    if(dbus_message_iter_open_container(it, DBUS_TYPE_ARRAY, 
+        Signature<typename T::value_type>(), 
+        &arrayIterator) == FALSE) {
+        return FALSE;
+    }
+    
+    for(containerIter = arg.begin(); containerIter != arg.end(); ++containerIter) {
+        DBusMessageIter dictEntryIterator;
+        if(dbus_message_iter_open_container(&arrayIterator, DBUS_TYPE_DICT_ENTRY, NULL, &dictEntryIterator) == FALSE) {
+            return FALSE;
+        }
+        if(Serializer<typename T::key_type>::run(&dictEntryIterator, containerIter->first) == FALSE) return FALSE;
+        if(Serializer<typename T::mapped_type>::run(&dictEntryIterator, containerIter->second) == FALSE) return FALSE;
+        if(dbus_message_iter_close_container(&arrayIterator, &dictEntryIterator) == FALSE) return FALSE;
+    }
+    
+    return dbus_message_iter_close_container(it, &arrayIterator);
+}
+
+template<typename T>
+struct MapDeserializer {
+    static dbus_bool_t run(DBusMessageIter* it, T* arg);
+};
+template<typename T>
+dbus_bool_t MapDeserializer<T>::run(DBusMessageIter* it, T* arg)
+{
+    DBusMessageIter arrayIterator;
+    DBusMessageIter dictEntryIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &arrayIterator);
+    while (dbus_message_iter_get_arg_type(&arrayIterator) == DBUS_TYPE_DICT_ENTRY) {
+        dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
+        std::pair<typename T::key_type, typename T::mapped_type> v;
+        
+        if(Deserializer<typename T::key_type>::run(&dictEntryIterator, &v.first) == FALSE) {
+            return FALSE;
+        }
+        
+        std::pair<typename T::iterator, bool> ins = arg->insert(v);
+        //Insert should always succeed, otherwiser other side has sent us crap
+        //If not (which we have to deal with due to security issues), we bail out
+        if(!ins.second) return FALSE;
+        
+        dbus_message_iter_next(&dictEntryIterator);
+        if(Deserializer<typename T::mapped_type>::run(&dictEntryIterator, &(ins.first->second)) == FALSE) {
+            return FALSE;
+        }
+
+        dbus_message_iter_next(&arrayIterator);
+    }
+    
+    return TRUE;
+}
+    
+// Generic support for multimap type containers
+template<typename T>
+struct MultiMapDeserializer {
+    static dbus_bool_t run(DBusMessageIter* it, T* arg);
+};
+template<typename T>
+dbus_bool_t MultiMapDeserializer<T>::run(DBusMessageIter* it, T* arg)
+{
+    DBusMessageIter arrayIterator;
+    DBusMessageIter dictEntryIterator;
+    if(dbus_message_iter_get_arg_type(it) != DBUS_TYPE_ARRAY) {
+        return FALSE;
+    }
+    
+    dbus_message_iter_recurse(it, &arrayIterator);
+    while (dbus_message_iter_get_arg_type(&arrayIterator) == DBUS_TYPE_DICT_ENTRY) {
+        dbus_message_iter_recurse(&arrayIterator, &dictEntryIterator);
+        std::pair<typename T::key_type, typename T::mapped_type> v;
+        
+        if(Deserializer<typename T::key_type>::run(&dictEntryIterator, &v.first) == FALSE) {
+            return FALSE;
+        }
+        
+        typename T::iterator it = arg->insert(v);
+        
+        dbus_message_iter_next(&dictEntryIterator);
+        if(Deserializer<typename T::mapped_type>::run(&dictEntryIterator, &(it->second)) == FALSE) {
+            return FALSE;
+        }
+
+        dbus_message_iter_next(&arrayIterator);
     }
     
     return TRUE;

@@ -233,11 +233,50 @@
  *     <td>no</td>
  *     <td>yes</td>
  *  </tr>
+ *  <tr>
+ *     <td>std::tuple</td>
+ *     <td>STRUCT</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::array</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::unordered_set</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::unordered_multiset</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::unordered_map</td>
+ *     <td>DICT</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::unordered_multimap</td>
+ *     <td>DICT</td>
+ *     <td>no</td>
+ *     <td>yes</td>
+ *  </tr>
  *  </table> 
  *  
- * @note std::set: Duplicate array elements are merged during deserialization
- * @note std::multimap: Serialization is not supported as there is no
- * D-Bus container able to store the content of a multimap.
+ * @note std::set, std::unordered_set: Duplicate array elements are merged during deserialization
+ * @note std::multimap, std::unordered_multimap: Serialization is not supported as there is no D-Bus container able to store the content of a multimap.
+ * @note std::tuple, std::array, std::unordered_set, std::unordered_multiset, std::unordered_map, std::unordered_multimap: You need to activate C++0x mode with -std=c++0x or -std=g++0x with gcc 4.3 or upper to enable those containers support
+ * @note std::array: Due to the fact that D-Bus arrays are variable sized while std::array are fixed sized, extra elements are lost during deserialization
+ *
+ * 
  *
  * So let's see how simple this is:
  * 
@@ -418,7 +457,6 @@
 #include <dbustl-1/Message>
 #include <dbustl-1/Connection>
 #include <dbustl-1/ObjectProxy>
-#include <dbustl-1/DBusException>
 #include <dbustl-1/DBusObject>
 #include <dbustl-1/types/Basic>
 #include <dbustl-1/types/vector>
@@ -426,4 +464,8 @@
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
 #include <dbustl-1/types/Struct>
+#include <dbustl-1/types/tuple>
+#include <dbustl-1/types/array>
+#include <dbustl-1/types/unordered_set>
+#include <dbustl-1/types/unordered_map>
 

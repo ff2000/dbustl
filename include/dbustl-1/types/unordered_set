@@ -23,36 +23,42 @@
 
 // STL set & multiset support
 
-#ifndef DBUSTL_TYPES_SET
-#define DBUSTL_TYPES_SET
+#ifndef DBUSTL_TYPES_UNORDERED_SET
+#define DBUSTL_TYPES_UNORDERED_SET
 
-#include <set>
+#include <dbustl-1/Config> // For DBUSTL_CXX0X
+
+#ifdef DBUSTL_CXX0X
+
+#include <unordered_set>
 #include <dbustl-1/types/StdTools>
 
 namespace dbustl {
 namespace types {
 
-/* set support */
+/* unordered set support */
 template<typename T, typename X, typename Y>
-struct SignatureImpl<std::set<T, X, Y> > : public ArraySignatureImpl<T> {};
+struct SignatureImpl<std::unordered_set<T, X, Y> > : public ArraySignatureImpl<T> {};
 
 template<typename T, typename X, typename Y>
-struct Serializer<std::set<T, X, Y> >: public ArraySerializer<std::set<T, X, Y> > {};
+struct Serializer<std::unordered_set<T, X, Y> >: public ArraySerializer<std::unordered_set<T, X, Y> > {};
 
 template<typename T, typename X, typename Y>
-struct Deserializer<std::set<T, X, Y> >: public SetDeserializer<std::set<T, X, Y> > {};
+struct Deserializer<std::unordered_set<T, X, Y> >: public SetDeserializer<std::unordered_set<T, X, Y> > {};
 
-/* multiset support */
+/* unordered multiset support */
 template<typename T, typename X, typename Y>
-struct SignatureImpl<std::multiset<T, X, Y> > : public ArraySignatureImpl<T> {};
-
-template<typename T, typename X, typename Y>
-struct Serializer<std::multiset<T, X, Y> >: public ArraySerializer<std::multiset<T, X, Y> > {};
+struct SignatureImpl<std::unordered_multiset<T, X, Y> > : public ArraySignatureImpl<T> {};
 
 template<typename T, typename X, typename Y>
-struct Deserializer<std::multiset<T, X, Y> >: public SetDeserializer<std::multiset<T, X, Y> > {};
+struct Serializer<std::unordered_multiset<T, X, Y> >: public ArraySerializer<std::unordered_multiset<T, X, Y> > {};
+
+template<typename T, typename X, typename Y>
+struct Deserializer<std::unordered_multiset<T, X, Y> >: public SetDeserializer<std::unordered_multiset<T, X, Y> > {};
 
 }
 }
 
-#endif /* DBUSTL_TYPES_SET */
+#endif /* DBUSTL_CXX0X */
+
+#endif /* DBUSTL_TYPES_UNORDERED_SET */
