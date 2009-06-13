@@ -11,11 +11,13 @@ LDADD = @DBUS_LIBS@
 lib_LTLIBRARIES = libdbustl-1.la \
 		  libdbustl-noex-1.la
 libdbustl_1_la_SOURCES = src/ObjectProxy.cpp \
+                   src/DBusObject.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp \
                    src/EventLoopIntegration.cpp 
 libdbustl_noex_1_la_SOURCES = src/ObjectProxy.cpp \
+                   src/DBusObject.cpp \
                    src/Connection.cpp \
                    src/DBusException.cpp \
                    src/Message.cpp \

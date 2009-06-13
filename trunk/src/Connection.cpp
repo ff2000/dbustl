@@ -106,6 +106,57 @@ void Connection::construct(DBusBusType busType)
 #endif
 }
 
+void Connection::flush()
+{
+    if(_llconn) {
+        dbus_connection_flush(_llconn);
+    }
+}
+
+int Connection::busRequestName(const std::string& name, unsigned int flags, DBusException *error)
+{
+    if(!isPrivate() && isConnected()) {
+        DBusException e;
+        int ret = dbus_bus_request_name(_llconn, name.c_str(), flags, e.dbus());
+        if(ret != -1) {
+            return ret;
+        }
+        else {
+            if(error) {
+                *error = e;
+            }
+            else {
+            #ifndef DBUSTL_NO_EXCEPTIONS
+                throw e;
+            #endif
+            }
+        }
+    }
+    return -1;
+}
+
+int Connection::busReleaseName(const std::string& name, DBusException *error)
+{
+    if(!isPrivate() && isConnected()) {
+        DBusException e;
+        int ret = dbus_bus_release_name(_llconn, name.c_str(), e.dbus());
+        if(ret != -1) {
+            return ret;
+        }
+        else {
+            if(error) {
+                *error = e;
+            }
+            else {
+            #ifndef DBUSTL_NO_EXCEPTIONS
+                throw e;
+            #endif
+            }
+        }
+    }
+    return -1;
+}
+
 Connection::~Connection()
 {
     delete _eventLoop;

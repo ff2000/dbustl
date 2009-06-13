@@ -1,0 +1,727 @@
+/*
+ *  DBusTL - D-Bus Template Library
+ *
+ *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
+ *  
+ *
+ *  This file is part of the DBus Template Library.
+ *
+ *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 2.1 of the License, or
+ *  (at your option) any later version.
+ *
+ *  DBus Template Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+#ifndef DBUSTL_DBUSOBJECT
+#define DBUSTL_DBUSOBJECT
+
+#include <dbus/dbus.h>
+
+#include <string>
+#include <map>
+#include <set>
+
+#include <dbustl-1/Config>
+#include <dbustl-1/DBusException>
+
+#include <dbustl-1/Message>
+#include <dbustl-1/Interface>
+#include <dbustl-1/SignatureBuilder>
+
+namespace dbustl {
+
+    class Connection;
+
+    /** 
+     * Base class used through derivation or composition to export C++ objects on the bus.
+     * 
+     * In the section below we will use as example the MyClass class.
+     * @section derivation_composition Choosing between derivation and composition
+     * 
+     * Both ways share many similarities, and as far as DBusTL is concerned,
+     * both will work equally well.
+     * 
+     * To use  derivation you will type:
+     * @code
+     * ...
+     * class MyClass : public dbustl::DBusObject {
+     * ...
+     * @endcode
+     * 
+     * To use composition you will type:
+     * @code
+     * ...
+     * class MyClass  {
+     * ...
+     * private:
+     *   dbustl::DBusObject _dbusObject;
+     * ...
+     * @endcode
+     * 
+     * @section export_method Exporting a method
+     * Suppose you have a method called sum, that adds two integers a and b, and returns the result:
+     * @code
+     * ...
+     * int MyClass::sum(int a, int b) { return a + b; };
+     * ...
+     * @endcode
+     * 
+     * To make this method visible on the bus you must call the exportMethod()
+     * in MyClass's constructor.
+     * 
+     * If you use derivation, to export a method you must call
+     * @code
+     * exportMethod("sum", this, &MyClass::sum);
+     * @endcode
+     * If you use composition, to export a method you must call
+     * @code
+     * _dbusObject->exportMethod("sum", this, &MyClass::sum);
+     * @endcode
+     * 
+     * @section sending_a_signal Sending a signal
+     * 
+     * Suppose you want to send a signal called mySignal containing a string.
+     * To do so you must call exportSignal() in MyClass's constructor.
+     * 
+     * If you use derivation, to export a signal you must call
+     * @code
+     * exportSignal<std::string>("mySignal");
+     * @endcode
+     * If you use composition, to export a signal a bus you must call
+     * @code
+     * _dbusObject->exportSignal<std::string>("mySignal");
+     * @endcode
+     * 
+     * @note You must type in the C++ type of each signal parameter beween < >.
+     * 
+     * Now sending a signal is as simple as calling emitSignal() when you need it.
+     */
+
+    class DBusObject {
+    public:
+        /**
+         * Constructor.
+         * 
+         * @param objectPath The D-Bus object path where the exported object will be found. Mandatory.
+         * @param interface The default interface used when exporting signals and methods through this object. Mandatory.
+         * @param conn The D-Bus Connection used on which the object will be exported.
+         *  If set to null the object is not visible on the bus until the enable() method is called.
+         */
+        DBusObject(const std::string& objectPath, const std::string& interface, Connection *conn = 0);
+        /**
+         * Virtual destructor.
+         * 
+         * Destructor being virtual means this class is safe to subclass.
+         */
+        virtual ~DBusObject();
+
+        /**
+         * Moves the object in the path hierarchy.
+         * 
+         * Change is reflected immediately on the bus, including in introspection data.
+         * 
+         * @param newPath The new D-Bus object path where the exported object will be found
+         */
+        void setPath(const std::string& newPath);
+
+        /**
+         * This object's D-Bus object path.
+         * 
+         * @return The D-Bus object path where the exported object is be found.
+         */
+        const std::string& path() const { return _objectPath; };
+            
+        /**
+         * Export the object on new connection.
+         * 
+         * If the object was created with a NULL Connection, or object was disabled (see disable() below),
+         * enables the object on a new connection.
+         * If the object was already enabled on a connection, this has for effect to remove the object
+         * from the old connection and add it to the new supplied connection.
+         * 
+         * @param conn The new Connection. Must not be NULL. Must be connected.
+         * @throw DBusException if something fails, such as if there is already an object at the given path.
+         */
+        void enable(Connection * conn);
+
+        /**
+         * Unexport the object.
+         * 
+         * The object becomes unreachable from the bus. It can be reexported later on using
+         * enable() call.
+         */
+        void disable();
+
+        /**
+         * Exports a method of the target object on the bus: No input parameter 1 output parameter version.
+         * 
+         * This is the version with no input parameter.
+         * 
+         * The method exported will be called by DBusTL transparently when a D-Bus method call request
+         * is received.
+         * If an exception of base class std::exception or DBusException is thrown by the method,
+         * it is translated on the fly and sent as a D-Bus error reply to the D-Bus method call.
+         * 
+         * @param methodName method name used to reach the C++ method from the D-Bus world.
+         * @param target the C++ object whose' methods are exported on the bus.
+         * @param method the C++ method pointer that will be exported.
+         * @param interface the alternate interface this method will be exposed on. If not supplied
+         * the interface provided to the constructor will be used.
+         */
+        template<typename _Class, typename R>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), 
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 1 input parameter 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 1 parameter.
+         */
+        template<typename _Class, typename R, typename T1>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), 
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 2 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 2 input parameters.
+         */
+        template<typename _Class, typename R, typename T1, typename T2>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), 
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 3 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 3 input parameters.
+         */
+        template<typename _Class, typename R, typename T1, typename T2, typename T3>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg3), 
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: any number of input/output.
+         * 
+         * This is the most flexible method to handle D-Bus message, if you want to have a precise D-Bus signature.
+         * This is also the most complex to use. 
+         * The method must do the following:
+         *   - Deserialize method_call using Message::operator>>
+         *   - check deserialization status with Message::error()
+         *   - call Message::createMethodReturn()
+         *   - fill in return parameters with Message::operator<<.
+         *   - check serialization status with Message::error()
+         *   - if an error condition occured somewhere, it can throw an exception that will be sent over the wire as the D-Bus reply,
+         *  or it can choose to create the error reply manually using Message::createErrorReply()
+         *   - call sendReply()
+         * 
+         * TODO: reference tutorial once it is written
+         */
+        template<typename _Class>
+        void exportMethod(const std::string& methodName, _Class *target, 
+            void (_Class::*method)(Message method_call), 
+            const char *const * methodCallSignature,
+            const char *const * methodReplySignature,
+            const std::string& interface = "");
+
+        /**
+         * Tells DBusTL the following signal can be raised
+         * 
+         * This is needed to provide correct introspection. This method requires C++0x support
+         * in the compiler.
+         * 
+         * @param name the signal name
+         * @param interface the alternate interface this signal will be part of. If not supplied
+         * the interface provided to the constructor will be used.
+         */
+    #ifdef DBUSTL_CXX0X
+        template<typename... Args>
+        void exportSignal(const std::string& name, const std::string& interface = "");
+    #endif
+        
+        /**
+         * Tells DBusTL the following signal can be raised (alternate version)
+         * 
+         * This is needed to provide correct introspection.
+         * 
+         * @param name the signal name
+         * @param signature a signal signature, to be generated with SignatureBuilder
+         * @param interface the alternate interface this signal will be part of. If not supplied
+         * the interface provided to the constructor will be used.
+         */
+        void exportSignal(const std::string& name, const char* const * signature, 
+            const std::string& interface = "");
+
+    #ifdef DBUSTL_CXX0X
+        /**
+         * Sends a signal on the Bus.
+         * 
+         * @param signalName D-Bus name for the signal.
+         * @param args A list of input parameters passed as reference. 
+         * The arg list can contain an Interface object,
+         * in which case it changes the interface used for this signal.
+         * @throw DBusException if the signal has not been previously exported, or if the signature
+         * does not match with the one supplied to exportSignal().
+         */
+
+        template<typename ... Args>
+        void emitSignal(const std::string& signalName, const Args&... args);
+    #endif
+
+        Message createSignal(const std::string& signalName, const std::string& interface = "");
+
+        void emitSignal(Message& signal);
+        
+        void sendReply(Message& reply);
+  
+        /**
+         * Connection this object is exposed on.
+         * 
+         * @see enable()
+         */
+        const Connection* connection() const { return _conn; };
+  
+    private:
+        //Disallow the following constructs
+        DBusObject(const DBusObject& con);
+        DBusObject& operator=(DBusObject&);
+
+        std::string introspect();
+        std::string introspectChildren();
+     
+        enum Direction {DirNone = 0, DirIn = 1, DirOut = 2};
+        std::string argumentIntrospect(const char *sig, Direction dir);
+
+        static std::string convertSignature(const char *const *sig);
+
+        /** @cond */
+        //This does not show up in doxygen
+        class MethodExecutorBase {
+        public:
+            MethodExecutorBase(const std::string& interface, 
+                const char* const * inSignature, const char* const * outSignature)
+                 : _interface(interface), _inSignature(inSignature), _outSignature(outSignature) {};
+            virtual ~MethodExecutorBase() {};
+            virtual void processCall(DBusObject *object, Message* method_call) = 0;
+            const char* const * inSignatures() {return _inSignature; };
+            const char* const * outSignatures() {return _outSignature; };
+            const std::string& interface() const { return _interface; };
+            void setInterface(const std::string& interface) { _interface = interface; };
+        private:
+            std::string _interface;
+            const char* const *_inSignature;
+            const char* const *_outSignature;
+        };
+ 
+        class EasyMethodExecutorBase : public MethodExecutorBase {
+        public:
+            EasyMethodExecutorBase(const std::string& interface, 
+                const char* const * inSignature, const char* const * outSignature)
+             : MethodExecutorBase(interface, inSignature, outSignature) {};
+
+            virtual ~EasyMethodExecutorBase() {};
+        private:
+            virtual void processCall(DBusObject *object, Message* method_call)
+            {
+                Message mreturn(method_call->createMethodReturn());
+                if(mreturn.dbus()) {
+                    processCall(method_call, &mreturn);
+                    if(!method_call->error()) {
+                        object->sendReply(mreturn);
+                    }
+                }
+            }
+            virtual void processCall(Message* method_call, Message *method_return) = 0;
+        };
+
+        template<typename T>
+        struct remove_const_ref {
+            typedef T type;
+        };
+        
+        template<typename T>
+        struct remove_const_ref<const T> {
+            typedef T type;
+        };
+        
+        template<typename T>
+        struct remove_const_ref<T&> {
+            typedef T type;
+        };
+        
+        template<typename T>
+        struct remove_const_ref<const T&> {
+            typedef T type;
+        };
+        
+        template<typename TargetClassType, typename Result>
+        class EasyMethodExecutor0 : public EasyMethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (void);
+            typedef typename remove_const_ref<Result>::type _Result;
+                
+            EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder(), SignatureBuilder<Result>()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message*, Message *method_reply)
+            {
+                *method_reply << (_target->*_method)();
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType>
+        class EasyMethodExecutor0<TargetClassType, void> : public EasyMethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (void);
+                
+            EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder(), SignatureBuilder()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message*, Message *)
+            {
+                (_target->*_method)();
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType, typename Result, typename T1>
+        class EasyMethodExecutor1 : public EasyMethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (T1);
+            typedef typename remove_const_ref<Result>::type _Result;
+            typedef typename remove_const_ref<T1>::type _T1;
+                
+            EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1>(), SignatureBuilder<_Result>()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                _T1 a1;
+                *method_call >> a1;
+                if(method_call->error()) return;
+                *method_reply << (_target->*_method)(a1);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType, typename T1>
+        class EasyMethodExecutor1<TargetClassType, void, T1> : public EasyMethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (T1);
+            typedef typename remove_const_ref<T1>::type _T1;
+                
+            EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1>(), SignatureBuilder()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *)
+            {
+                _T1 a1;
+                *method_call >> a1;
+                if(method_call->error()) return;
+                (_target->*_method)(a1);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+            
+        template<typename TargetClassType, typename Result, typename T1, typename T2>
+        class EasyMethodExecutor2 : public EasyMethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (T1, T2);
+            typedef typename remove_const_ref<Result>::type _Result;
+            typedef typename remove_const_ref<T1>::type _T1;
+            typedef typename remove_const_ref<T2>::type _T2;
+                
+            EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2>(), SignatureBuilder<Result>()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                _T1 a1;
+                _T2 a2;
+                *method_call >> a1;
+                *method_call >> a2;
+                if(method_call->error()) return;
+                *method_reply << (_target->*_method)(a1, a2);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType, typename T1, typename T2>
+        class EasyMethodExecutor2<TargetClassType, void, T1, T2> : public EasyMethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (T1, T2);
+            typedef typename remove_const_ref<T1>::type _T1;
+            typedef typename remove_const_ref<T2>::type _T2;
+                
+            EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2>(), SignatureBuilder()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *)
+            {
+                _T1 a1;
+                _T2 a2;
+                *method_call >> a1;
+                *method_call >> a2;
+                if(method_call->error()) return;
+                (_target->*_method)(a1, a2);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType, typename Result, typename T1, typename T2, typename T3>
+        class EasyMethodExecutor3 : public EasyMethodExecutorBase {
+        public:   
+            typedef Result (TargetClassType::*MethodType) (T1, T2, T3);
+            typedef typename remove_const_ref<Result>::type _Result;
+            typedef typename remove_const_ref<T1>::type _T1;
+            typedef typename remove_const_ref<T2>::type _T2;
+            typedef typename remove_const_ref<T3>::type _T3;
+                
+            EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2, _T3>(), SignatureBuilder<Result>()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *method_reply)
+            {
+                _T1 a1;
+                _T2 a2;
+                _T3 a3;
+                *method_call >> a1;
+                *method_call >> a2;
+                *method_call >> a3;
+                if(method_call->error()) return;
+                *method_reply << (_target->*_method)(a1, a2, a3);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType, typename T1, typename T2, typename T3>
+        class EasyMethodExecutor3<TargetClassType, void, T1, T2, T3> : public EasyMethodExecutorBase {
+        public:   
+            typedef void (TargetClassType::*MethodType) (T1, T2, T3);
+            typedef typename remove_const_ref<T1>::type _T1;
+            typedef typename remove_const_ref<T2>::type _T2;
+            typedef typename remove_const_ref<T3>::type _T3;
+                
+            EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
+             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2, _T3>(), SignatureBuilder()),
+              _target(target), _method(method) {};
+                
+        private:
+            virtual void processCall(Message* method_call, Message *)
+            {
+                _T1 a1;
+                _T2 a2;
+                _T3 a3;
+                *method_call >> a1;
+                *method_call >> a2;
+                *method_call >> a3;
+                if(method_call->error()) return;
+                (_target->*_method)(a1, a2, a3);
+            }
+
+            TargetClassType *_target;            
+            MethodType _method;                
+        };
+
+        template<typename TargetClassType>
+        class FlexibleMethodExecutor : public MethodExecutorBase {
+        public:
+            typedef void (TargetClassType::*MethodType) (Message method_call);
+                
+            FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface,
+                const char *const * methodCallSignature, const char *const * methodReplySignature)
+             : MethodExecutorBase(interface, methodCallSignature, methodReplySignature),
+              _target(target), _method(method) {};
+
+        private:
+            virtual void processCall(DBusObject *, Message* method_call)
+            {
+                (_target->*_method)(*method_call);
+            }
+                
+            TargetClassType *_target;            
+            MethodType _method;
+        };
+        /** @endcond */
+
+        void exportMethodInternal(const std::string& methodName, MethodExecutorBase *executor);
+
+        // Signals handling - begin
+        /** @cond */
+        //This does not show up in doxygen
+        class ExportedSignal {
+        public:
+            ExportedSignal(const std::string& interface, const char* const * signatures)
+             : _interface(interface), _signatures(signatures) {};
+            
+            const std::string& interface() const
+            {
+                return _interface;
+            };
+            
+            const char* const * signatures() const
+            {
+                return _signatures;
+            };
+                        
+        private:
+            std::string _interface;
+            const char* const * _signatures;
+        };
+        /** @endcond */
+
+    #ifdef DBUSTL_CXX0X
+        template<typename T, typename ... Args>
+        void processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args);
+        
+        template<typename ... Args>
+        void processEmitSignalArgs(Message& signal, const Interface& intf, const Args&... args);
+        
+        inline void processEmitSignalArgs(Message& signal);
+    #endif
+        // Signals handling - end
+
+    #ifdef DBUSTL_NO_EXCEPTIONS
+        inline void throw_or_set(const DBusException& error) { _error = error; };
+        inline void throw_or_set(const char *name, const char *message) { _error = DBusException(name, message); };
+        inline void errorReset() { _error = DBusException(); };
+    #else
+        static inline void throw_or_set(const DBusException& error) { throw error; };
+        static inline void throw_or_set(const char *name, const char *message) { throw DBusException(name, message); };
+        static inline void errorReset() {};
+    #endif
+
+        Connection *_conn;
+        std::string _objectPath;
+        std::string _interface;
+        typedef std::multimap<std::string, MethodExecutorBase*> MethodContainerType;
+        MethodContainerType _exportedMethods;
+        typedef std::multimap<std::string, ExportedSignal> ExportedSignalType;
+        ExportedSignalType _exportedSignals;
+    #ifdef DBUSTL_NO_EXCEPTIONS
+        DBusException _error;
+    #endif
+        
+        static DBusHandlerResult incomingMessagesProcessing(DBusConnection *connection, 
+            DBusMessage *dbusMessage, void *user_data);
+        static DBusObjectPathVTable _vtable;
+        
+        // List of all objects exported needed for introspection support
+        static std::set<const DBusObject*> _objects;
+    };
+   
+    template<typename _Class, typename R>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(void), const std::string& interface)
+    {
+        exportMethodInternal(methodName, new EasyMethodExecutor0<_Class, R>(target, method, interface));
+    }
+
+    template<typename _Class, typename R, typename T1>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1), const std::string& interface)
+    {
+        exportMethodInternal(methodName, new EasyMethodExecutor1<_Class, R, T1>(target, method, interface));
+    }
+
+    template<typename _Class, typename R, typename T1, typename T2>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2), const std::string& interface)
+    {
+        exportMethodInternal(methodName, new EasyMethodExecutor2<_Class, R, T1, T2>(target, method, interface));
+    }
+
+    template<typename _Class, typename R, typename T1, typename T2, typename T3>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1 arg1, T2 arg2, T3 arg), const std::string& interface)
+    {
+        exportMethodInternal(methodName, new EasyMethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
+    }
+
+    template<typename _Class>
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, 
+        void (_Class::*method)(Message method_call), 
+        const char *const * methodCallSignature, const char *const * methodReplySignature,
+        const std::string& interface)
+    {
+        exportMethodInternal(methodName, 
+            new FlexibleMethodExecutor<_Class>(target, method, interface, methodCallSignature, methodReplySignature));
+    }
+
+#ifdef DBUSTL_CXX0X
+    template<typename ... Args>
+    void DBusObject::emitSignal(const std::string& signalName, const Args&... args)
+    {
+        Message signal(createSignal(signalName));
+        processEmitSignalArgs(signal, args...);
+    }
+#endif
+
+#ifdef DBUSTL_CXX0X
+    template<typename T, typename ... Args>
+    void DBusObject::processEmitSignalArgs(Message& signal, const T& arg1, const Args&... args)
+    {
+        signal << arg1;
+        processEmitSignalArgs(signal, args...);
+    }
+#endif
+
+#ifdef DBUSTL_CXX0X
+    template<typename ... Args>
+    void DBusObject::processEmitSignalArgs(Message& signal, const Interface& intf, const Args&... args)
+    {
+        dbus_message_set_interface(signal.dbus(), intf.name().c_str());
+        processEmitSignalArgs(signal, args...);
+    }
+#endif
+    
+#ifdef DBUSTL_CXX0X
+    inline void DBusObject::processEmitSignalArgs(Message& signal)
+    {
+        emitSignal(signal);
+    }
+#endif
+
+#ifdef DBUSTL_CXX0X
+    template<typename... Args>
+    void DBusObject::exportSignal(const std::string& signalName, const std::string& interface)
+    {
+        exportSignal(signalName, SignatureBuilder<Args...>(), interface);
+    }
+#endif
+}
+
+#endif /* DBUSTL_DBUSOBJECT */

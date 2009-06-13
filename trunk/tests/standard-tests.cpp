@@ -776,7 +776,7 @@ int run_vt_tests()
         TRY {
             std::string message;
             pythonObjectProxy.call("SimpleHello", 
-              dbustl::ObjectProxy::Interface("com.example.SampleInterface"), "Hi", &message); 
+              dbustl::Interface("com.example.SampleInterface"), "Hi", &message); 
         }
         CATCH(const std::exception& e,
             std::cerr << e.what() << std::endl;
