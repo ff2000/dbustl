@@ -24,7 +24,7 @@
 #ifndef DBUSTL_SIGNATUREBUILDER
 #define DBUSTL_SIGNATUREBUILDER
 
-#include <dbustl-1/types/Tools>
+#include <dbustl-1/types/Serialization>
 
 namespace dbustl {
 

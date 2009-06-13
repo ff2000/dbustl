@@ -429,6 +429,42 @@ int run_vt_tests()
     }
 
     {
+        std::cout << ">unordered_set of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_set<std::string> in, out;
+            in.insert("String 1");
+            in.insert("String 2");
+            in.insert("String 3");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in.size() == out.size());            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
+        std::cout << ">unordered_multiset of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_multiset<std::string> in, out;
+            in.insert("String 1");
+            in.insert("String 1");
+            in.insert("String 2");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in.size() == out.size());            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
         std::cout << ">set collision " << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
@@ -503,6 +539,43 @@ int run_vt_tests()
     }
     
     {
+        std::cout << ">unordered_map of int->string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_map<int32_t, std::string> in, out;
+            in[0] = "EnTRY 0";
+            in[1] = "EnTRY 1";
+            in[2] = "EnTRY 2";
+            pythonObjectProxy.call("test_dict_of_integer_string", in, &out); 
+            assert(in.size() == out.size());            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
+        std::cout << ">unordered_multimap of int->string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::unordered_map<int32_t, std::string> in;
+            std::unordered_multimap<int32_t, std::string> out;
+            in[0] = "EnTRY 0";
+            in[1] = "EnTRY 1";
+            in[2] = "EnTRY 2";
+            pythonObjectProxy.call("test_dict_of_integer_string", in, &out); 
+            assert(out.size() == 3);            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+    
+    {
         std::cout << ">list of list of integers" << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
@@ -554,6 +627,41 @@ int run_vt_tests()
         )
     }
     
+    {
+        std::cout << ">Tuple with 6 parameters" << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::map<uint32_t, std::tuple<std::vector<std::string>, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t> > in, out;
+            std::get<0>(in[0]).push_back("String");
+            pythonObjectProxy.call("test_struct6", in, &out); 
+            assert(in == out);            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
+    {
+        std::cout << ">array of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::array<std::string, 3> in;
+            std::array<std::string, 2> out;
+            in[0]  = "String 1";
+            in[1]  = "String 2";
+            in[2]  = "String 3";
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in[0] == out[0] && in[1] == out[1]);
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+
     {
         std::cout << ">Struct with 1 parameter" << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
@@ -730,7 +838,6 @@ int run_vt_tests()
     return 0;
 }
 #endif /* DBUSTL_CXX0X */
-
 
 int main()
 {    

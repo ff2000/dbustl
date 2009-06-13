@@ -23,10 +23,14 @@
 
 // STL map & multimap support
 
-#ifndef DBUSTL_TYPES_MAP
-#define DBUSTL_TYPES_MAP
+#ifndef DBUSTL_TYPES_UNORDERED_MAP
+#define DBUSTL_TYPES_UNORDERED_MAP
 
-#include <map>
+#include <dbustl-1/Config> // For DBUSTL_CXX0X
+
+#ifdef DBUSTL_CXX0X
+
+#include <unordered_map>
 #include <dbustl-1/types/StdTools>
 
 namespace dbustl {
@@ -35,17 +39,19 @@ namespace types {
 /* map support */
 
 template<typename K, typename V, typename X, typename Y>
-struct Serializer<std::map<K, V, X, Y> > : public MapSerializer<std::map<K, V, X, Y> >{};
+struct Serializer<std::unordered_map<K, V, X, Y> > : public MapSerializer<std::unordered_map<K, V, X, Y> >{};
 
 template<typename K, typename V, typename X, typename Y>
-struct Deserializer<std::map<K, V, X, Y> > : public MapDeserializer<std::map<K, V, X, Y> > {};
+struct Deserializer<std::unordered_map<K, V, X, Y> > : public MapDeserializer<std::unordered_map<K, V, X, Y> > {};
     
 /* multimap support */
 
 template<typename K, typename V, typename X, typename Y>
-struct Deserializer<std::multimap<K, V, X, Y> > : public MultiMapDeserializer<std::multimap<K, V, X, Y> > {};
+struct Deserializer<std::unordered_multimap<K, V, X, Y> > : public MultiMapDeserializer<std::unordered_multimap<K, V, X, Y> > {};
 
 }
 }
 
-#endif /* DBUSTL_TYPES_MAP */
+#endif /* DBUSTL_CXX0X */
+
+#endif /* DBUSTL_TYPES_UNORDERED_MAP */

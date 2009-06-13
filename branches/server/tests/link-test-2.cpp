@@ -5,6 +5,10 @@
 #include <dbustl-1/types/vector>
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
+#include <dbustl-1/types/array>
+#include <dbustl-1/types/tuple>
+#include <dbustl-1/types/unordered_set>
+#include <dbustl-1/types/unordered_map>
 
 #include <cstdlib>
 
@@ -228,6 +232,37 @@ void testMessage2(dbustl::Message& m)
 		std::multimap<double, std::string> v;
 		m >> v;
 	}
+#ifdef DBUSTL_CXX0X
+	{
+		std::tuple<int, int> v;
+		m << v;
+		m >> v;
+	}
+	{
+		std::array<int, 5> v;
+		m << v;
+		m >> v;
+	}
+	{
+		std::unordered_set<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::unordered_multiset<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::unordered_map<double, std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::unordered_multimap<double, std::string> v;
+		m >> v;
+	}
+#endif
 	/* Now test standard containers with non standard comparison operations
 	 * and allocators - we test with map to also instantiate the Signature */
 	{
