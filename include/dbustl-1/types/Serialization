@@ -51,7 +51,7 @@ namespace types {
         static void calcValue(char *signature, int *idx);
     };
 
-    // This one is an easier to use version based on the SignatureImple
+    // This one is an easier to use version based on the SignatureImpl
     // Class hierarchy above
     template <typename T>
     const char * Signature()
