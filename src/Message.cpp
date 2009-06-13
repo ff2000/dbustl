@@ -106,6 +106,21 @@ std::string Message::interface() const
     return intf != NULL ? intf : "";
 }
 
+Message Message::createMethodReturn() const
+{
+    assert(_msg);
+    assert(dbus_message_get_type(_msg) == DBUS_MESSAGE_TYPE_METHOD_CALL);
+    return Message(dbus_message_new_method_return(_msg));
+}
+
+Message Message::createErrorReply(const std::string& name, const std::string& message) const
+{
+    const char *msg = message.empty() ? NULL: message.c_str();
+    assert(_msg);
+    assert(dbus_message_get_type(_msg) == DBUS_MESSAGE_TYPE_METHOD_CALL);
+    return Message(dbus_message_new_error(_msg, name.c_str(), msg));
+}
+
 bool Message::serializationInit()
 {
     if(!_msg) {

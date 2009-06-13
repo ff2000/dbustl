@@ -74,6 +74,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#743baaffc00e25ca2ef574b3ba02cad3">interface</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the message interface, as per the DBUS specification.  <a href="#743baaffc00e25ca2ef574b3ba02cad3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#6799174903d5e7c57101f12ac36a4842">createMethodReturn</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a new message of type DBUS_MESSAGE_TYPE_METHOD_RETURN, that is a reply to this message.  <a href="#6799174903d5e7c57101f12ac36a4842"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#826f964d9fe5f5dd892208e67b298f2e">createErrorReply</a> (const std::string &amp;name, const std::string &amp;message) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a new message of type DBUS_MESSAGE_TYPE_ERROR, that is a reply to this message.  <a href="#826f964d9fe5f5dd892208e67b298f2e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">DBusMessage *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#cb2e6658f4deccc94c71be4031bd5453">dbus</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#cb2e6658f4deccc94c71be4031bd5453"></a><br></td></tr>
@@ -378,6 +384,66 @@ Returns the message interface, as per the DBUS specification.
 
 </div>
 </div><p>
+<a class="anchor" name="6799174903d5e7c57101f12ac36a4842"></a><!-- doxytag: member="dbustl::Message::createMethodReturn" ref="6799174903d5e7c57101f12ac36a4842" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::Message::createMethodReturn           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns a new message of type DBUS_MESSAGE_TYPE_METHOD_RETURN, that is a reply to this message. 
+<p>
+The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the case, this is a programmatic error and behaviour is undefined. <dl class="return" compact><dt><b>Returns:</b></dt><dd>a reply to this message. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="826f964d9fe5f5dd892208e67b298f2e"></a><!-- doxytag: member="dbustl::Message::createErrorReply" ref="826f964d9fe5f5dd892208e67b298f2e" args="(const std::string &amp;name, const std::string &amp;message) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classdbustl_1_1Message.html">Message</a> dbustl::Message::createErrorReply           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>message</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns a new message of type DBUS_MESSAGE_TYPE_ERROR, that is a reply to this message. 
+<p>
+The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the case, this is a programmatic error and behaviour is undefined. <dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>The error name must be a valid error name according to the syntax given in the D-Bus specification. If you don't want to make up an error name just use DBUS_ERROR_FAILED. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>message</em>&nbsp;</td><td>can be empty string (but you should really use it anyway) </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>a reply to this message. </dd></dl>
+
+</div>
+</div><p>
 <a class="anchor" name="cb2e6658f4deccc94c71be4031bd5453"></a><!-- doxytag: member="dbustl::Message::dbus" ref="cb2e6658f4deccc94c71be4031bd5453" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -402,7 +468,7 @@ You should only use it if you <b>really</b> know what you are doing.
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>dbustl-1/Message<li>Message.cpp</ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>DBus Template Library 0.4.0 documentation, generated by &nbsp;
+<hr size="1"><address style="text-align: right;"><small>D-Bus Template Library 0.5.0 documentation, generated by &nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

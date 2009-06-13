@@ -6,7 +6,7 @@
  *
  *  This file is part of the DBus Template Library.
  *
- *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  The D-Bus Template Library is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 2.1 of the License, or
  *  (at your option) any later version.
@@ -155,6 +155,29 @@ namespace dbustl {
              */
             std::string interface() const;
             
+            /**
+             * Returns a new message of type DBUS_MESSAGE_TYPE_METHOD_RETURN, that is a reply
+             * to this message.
+             * 
+             * The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the case,
+             * this is a programmatic error and behaviour is undefined.
+             * @return a reply to this message.
+             */
+            Message createMethodReturn() const;
+
+            /**
+             * Returns a new message of type DBUS_MESSAGE_TYPE_ERROR, that is a reply
+             * to this message.
+             * 
+             * The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the case,
+             * this is a programmatic error and behaviour is undefined.
+             * @param name The error name must be a valid error name according to the syntax given 
+             * in the D-Bus specification. If you don't want to make up an error name just use DBUS_ERROR_FAILED.
+             * @param message can be empty string (but you should really use it anyway)
+             * @return a reply to this message.
+             */
+            Message createErrorReply(const std::string& name, const std::string& message) const;
+
             /**
              * The DBUS C api structure: don't use it!
              * 
