@@ -84,7 +84,7 @@
  * @section hello_world Hello world, revisited
  * 
  * I couldn't resist the temptation to introduce you with a so-called
- * 'Hello, World' dbus example.
+ * 'Hello, World' D-Bus example.
  * 
  * So let's try to compile the simplest.cpp program:
  * @include simplest.cpp
@@ -194,7 +194,7 @@
  *  <table>
  *  <tr>
  *     <th>Container</th>
- *     <th>Mapped dbus type</th>
+ *     <th>Mapped D-Bus type</th>
  *     <th>Can serialize ?</th>
  *     <th>Can deserialize ?</th>
  *  </tr>
@@ -206,6 +206,12 @@
  *  </tr>
  *  <tr>
  *     <td>std::list</td>
+ *     <td>ARRAY</td>
+ *     <td>yes</td>
+ *     <td>yes</td>
+ *  </tr>
+ *  <tr>
+ *     <td>std::deque</td>
  *     <td>ARRAY</td>
  *     <td>yes</td>
  *     <td>yes</td>
@@ -461,6 +467,7 @@
 #include <dbustl-1/types/Basic>
 #include <dbustl-1/types/vector>
 #include <dbustl-1/types/list>
+#include <dbustl-1/types/deque>
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
 #include <dbustl-1/types/Struct>
