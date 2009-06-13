@@ -14,12 +14,12 @@ nobase_include_HEADERS = \
     dbustl-1/types/Struct \
     dbustl-1/types/list \
     dbustl-1/types/vector \
+    dbustl-1/types/deque \
     dbustl-1/types/set \
     dbustl-1/types/map \
     dbustl-1/types/tuple \
     dbustl-1/types/unordered_set \
     dbustl-1/types/unordered_map \
-    dbustl-1/types/deque \
     dbustl-1/types/array
 
 if HAVE_GLIB
