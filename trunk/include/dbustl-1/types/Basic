@@ -131,6 +131,9 @@ template<>
 struct SignatureImpl<double> : public PrimitiveSignatureImpl<DBUS_TYPE_DOUBLE> {};
 	
 template<>
+struct SignatureImpl<long double> : public PrimitiveSignatureImpl<DBUS_TYPE_DOUBLE> {};
+	
+template<>
 struct SignatureImpl<const char *> : public PrimitiveSignatureImpl<DBUS_TYPE_STRING> {};
 	
 template<>
@@ -249,14 +252,19 @@ inline dbus_bool_t __deserializeBasic(DBusMessageIter* it, void* arg, int dbus_t
     return TRUE;
 }
 
-/* Default implementation */
+/* Default implementation for primitive types*/
 template<typename T>
-inline dbus_bool_t Serializer<T>::run(DBusMessageIter* it, const T& arg)
-{
-    return dbus_message_iter_append_basic(it, SignatureImpl<T>::constValue, &arg);
-}
+struct PrimitiveSerializer {
+    static inline dbus_bool_t run(DBusMessageIter* it, const T& arg)
+    {
+        return dbus_message_iter_append_basic(it, SignatureImpl<T>::constValue, &arg);
+    }
+};
 
 /* bool */
+template<>
+struct Serializer<bool> : public PrimitiveSerializer<bool> {};
+
 template<>
 struct Deserializer<bool> {
     static dbus_bool_t run(DBusMessageIter* it, bool* arg)
@@ -265,11 +273,18 @@ struct Deserializer<bool> {
     }
 };
 
-/* char - use default */
+/* char */
+template<>
+struct Serializer<char> : public PrimitiveSerializer<char> {};
 
-/* signed char - use default */
+/* signed char */
+template<>
+struct Serializer<signed char> : public PrimitiveSerializer<signed char> {};
 
 /* unsigned char */
+template<>
+struct Serializer<unsigned char> : public PrimitiveSerializer<unsigned char> {};
+
 template<>
 struct Deserializer<unsigned char> {
     static dbus_bool_t run(DBusMessageIter* it, unsigned char* arg)
@@ -284,6 +299,9 @@ struct Deserializer<unsigned char> {
 
 /* short */
 template<>
+struct Serializer<short> : public PrimitiveSerializer<short> {};
+
+template<>
 struct Deserializer<short> {
     static dbus_bool_t run(DBusMessageIter* it, short* arg)
     {
@@ -293,6 +311,9 @@ struct Deserializer<short> {
 
 /* unsigned short */
 template<>
+struct Serializer<unsigned short> : public PrimitiveSerializer<unsigned short> {};
+
+template<>
 struct Deserializer<unsigned short> {
     static dbus_bool_t run(DBusMessageIter* it, unsigned short* arg)
     {
@@ -301,7 +322,9 @@ struct Deserializer<unsigned short> {
 };
 
 /* int */
-//template dbus_bool_t Serializer<int>::run(DBusMessageIter* it, const int& arg);
+template<>
+struct Serializer<int> : public PrimitiveSerializer<int> {};
+
 template<>
 struct Deserializer<int> {
     static dbus_bool_t run(DBusMessageIter* it, int* arg)
@@ -312,6 +335,9 @@ struct Deserializer<int> {
 
 /* unsigned int */
 template<>
+struct Serializer<unsigned int> : public PrimitiveSerializer<unsigned int> {};
+
+template<>
 struct Deserializer<unsigned int> {
     static dbus_bool_t run(DBusMessageIter* it, unsigned int* arg)
     {
@@ -320,6 +346,9 @@ struct Deserializer<unsigned int> {
 };
 
 /* long */
+template<>
+struct Serializer<long> : public PrimitiveSerializer<long> {};
+
 template<>
 struct Deserializer<long> {
     static dbus_bool_t run(DBusMessageIter* it, long* arg)
@@ -330,6 +359,9 @@ struct Deserializer<long> {
 
 /* unsigned long */
 template<>
+struct Serializer<unsigned long> : public PrimitiveSerializer<unsigned long> {};
+
+template<>
 struct Deserializer<unsigned long> {
     static dbus_bool_t run(DBusMessageIter* it, unsigned long* arg)
     {
@@ -339,6 +371,9 @@ struct Deserializer<unsigned long> {
 
 /* long long */
 template<>
+struct Serializer<long long> : public PrimitiveSerializer<long long> {};
+
+template<>
 struct Deserializer<long long> {
     static dbus_bool_t run(DBusMessageIter* it, long long* arg)
     {
@@ -347,6 +382,9 @@ struct Deserializer<long long> {
 };
 
 /* unsigned long long */
+template<>
+struct Serializer<unsigned long long> : public PrimitiveSerializer<unsigned long long> {};
+
 template<>
 struct Deserializer<unsigned long long> {
     static dbus_bool_t run(DBusMessageIter* it, unsigned long long* arg)
@@ -378,6 +416,9 @@ struct Deserializer<float> {
 
 /* double */
 template<>
+struct Serializer<double> : public PrimitiveSerializer<double> {};
+
+template<>
 struct Deserializer<double> {
     static dbus_bool_t run(DBusMessageIter* it, double* arg)
     {
@@ -406,7 +447,10 @@ struct Deserializer<long double> {
     }
 };
 
-/* const char* - use default */
+/* const char* */
+template<>
+struct Serializer<const char*> : public PrimitiveSerializer<const char*> {};
+
 
 /* std::string */
 template<>
