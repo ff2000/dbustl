@@ -34,10 +34,25 @@
 namespace dbustl {
 namespace types {
 
-    // Generate a D-Bus signature for a given C++ type
-    template <typename T>
-    struct SignatureImpl;
+    // Each type to be supported by DBusTL serialization/deserialization 
+    // system is supposed to provide a partial or full specialization
+    // of the SignatureImpl, Serializer, and Seserializer classes
 
+    // SignatureImpl is in charge of generating a D-Bus signature for 
+    // a given C++ type
+    template <typename T>
+    struct SignatureImpl {
+        // Must equal to the size of the signature for T, without taking
+        // into account the NULL character
+        static const int size;
+        // Must write the value in the signature buffer, starting at idx
+        // offset. 
+        // Must also increment idx of the number of bytes written
+        static void calcValue(char *signature, int *idx);
+    };
+
+    // This one is an easier to use version based on the SignatureImple
+    // Class hierarchy above
     template <typename T>
     const char * Signature()
     {
@@ -48,22 +63,24 @@ namespace types {
     #endif
             SignatureImpl<T>::calcValue(signature, &idx);
             signature[idx] = 0;
+            return signature;
     #ifdef DBUSTL_NO_EXCEPTIONS
         }
         else {
-            signature = (char *)"";
+            return "";
         }
     #endif
-        return signature;
     }
         
     template<typename T>
     struct Serializer {
+        //Puts arg in it. If any error happens returns false.
         static dbus_bool_t run(DBusMessageIter* it, const T& arg);
     };
     
     template<typename T>
     struct Deserializer {
+        //Puts it in arg. If any error happens returns false.
         static dbus_bool_t run(DBusMessageIter* it, T* arg);
     };
 
