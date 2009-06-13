@@ -4,20 +4,20 @@
  *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
  *  
  *
- *  This file is part of the DBus Template Library.
+ *  This file is part of the D-Bus Template Library.
  *
- *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  The D-Bus Template Library is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 2.1 of the License, or
  *  (at your option) any later version.
  *
- *  DBus Template Library is distributed in the hope that it will be useful,
+ *  D-Bus Template Library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
- *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with D-Bus Template Library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -86,7 +86,7 @@ Message ObjectProxy::createMethodCall(const std::string& methodName)
         errorReset();
     }
     else {
-        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate DBUS message");
+        throw_or_set(DBUS_ERROR_NO_MEMORY, "Not enough memory to allocate D-Bus message");
     }
 
     return method_call;

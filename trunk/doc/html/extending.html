@@ -16,7 +16,7 @@
 </div>
 <div class="contents">
 <h1><a class="anchor" name="extending">Extending DBusTL to support custom data types </a></h1>DBusTL can be extended to support program-specific data types in two different way.<p>
-First way(and easy way) is by allowing user to map their own data structures into DBus structs.<p>
+First way(and easy way) is by allowing user to map their own data structures into D-Bus structs.<p>
 The second way(and more complex way) allows to map any user defined data type onto any D-Bus message. This is allows for complete customization, with no limitation.<h2><a class="anchor" name="custom_struct">
 Structs</a></h2>
 <h3><a class="anchor" name="cumstom_structs_theory">
@@ -87,7 +87,7 @@ The extension mechanism is similar to what is used natively by DBusTL to support
     <span class="keyword">struct </span>Deserializer {
         <span class="keyword">static</span> dbus_bool_t run(DBusMessageIter* it, T* arg);
     };
-</pre></div> In addition, if you intend to be able to put your type as the value of a DBus Dict, you will need to specialize this one: <div class="fragment"><pre class="fragment">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
+</pre></div> In addition, if you intend to be able to put your type as the value of a D-Bus Dict, you will need to specialize this one: <div class="fragment"><pre class="fragment">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;
     <span class="keyword">struct </span>Signature {
         <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span>* value();
     };

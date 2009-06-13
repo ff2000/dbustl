@@ -4,28 +4,28 @@
  *  Copyright (C) 2008, 2009  Fabien Chevalier <chefabien@gmail.com>
  *  
  *
- *  This file is part of the DBus Template Library.
+ *  This file is part of the D-Bus Template Library.
  *
- *  The DBus Template Library is free software: you can redistribute it and/or modify
+ *  The D-Bus Template Library is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as published by
  *  the Free Software Foundation, either version 2.1 of the License, or
  *  (at your option) any later version.
  *
- *  DBus Template Library is distributed in the hope that it will be useful,
+ *  D-Bus Template Library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
- *  along with DBus Template Library.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with D-Bus Template Library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
 /** 
  * @mainpage
  *
- * DBusTL is an easy do to use, extensible C++ wrapper for DBus that 
- * makes the use of DBus with plain C++ easy.<br></br>
+ * DBusTL is an easy do to use, extensible C++ wrapper for D-Bus that 
+ * makes the use of D-Bus with plain C++ easy.<br></br>
  * 
  * Though already quite usefull, DBusTL is still in its infancy, and
  * therefore interface might change at any time before 1.0 release.
@@ -52,7 +52,7 @@
  * 
  * To build DBusTL the following dependancies are requires:
  *   - gcc: >= 4.3
- *   - DBus development libraries (>= 1.2): older versions may work
+ *   - D-Bus development libraries (>= 1.2): older versions may work
  * but haven't been tested
  *   - glib: tested on 2.16, olders versions might work too
  *   - python-dbus: tested with 0.82.4
@@ -142,7 +142,7 @@
  * By now you may be wondering: how the hell does DBusTL make the difference
  * between input and output parameters ?
  * The answer is quite simple: input parameters start after the first one, which
- * is always the DBus method name, until a pointer is found. Attempts to mix
+ * is always the D-Bus method name, until a pointer is found. Attempts to mix
  * pointers with non pointers will result in failure at compile time.
  * This means all the method calls having a similar looks and feel:
  * @code 
@@ -158,8 +158,8 @@
  * @endcode
  * 
  * @subsection interface_choosing Choosing the right interface
- * The DBus specification allows to target messages calls to a specific object's interface. Specifying
- * the interface is optionnal from the DBus protocol perspective, so it is for DBusTL.
+ * The D-Bus specification allows to target messages calls to a specific object's interface. Specifying
+ * the interface is optionnal from the D-Bus protocol perspective, so it is for DBusTL.
  * 
  * Here is how we can do that with DBusTL:
  * @subsubsection interface_setinterface ServerProxy::setInterface() method.
@@ -186,7 +186,7 @@
  * onto the user of: this makes it easier for DBusTL to fit with existing
  * C++ toolkits that already have their own containers. This means
  * DBusTL does not define new objects for the ARRAY, STRUCT, DICT, 
- * and VARIANT DBus data types.
+ * and VARIANT D-Bus data types.
  * 
  * Currently DBusTL comes with builting support for the following 
  * STL containers.
@@ -343,21 +343,21 @@
 /** 
  * @page design Design paradigms
  * 
- * DBus is a great tool for next generation Linux desktops or mobile devices,
+ * D-Bus is a great tool for next generation Linux desktops or mobile devices,
  * where it provides a robust mechanism for decoupling of applicative services
  * (e.g. power management, networking, bluetooth, and so many other possible things) 
  * for the user of those services, such as configuration applets and other 
  * GUI oriented applications. 
  *
- * DBusTL grew from the frustration that there was no easy way to use DBus with C++, apart from
+ * DBusTL grew from the frustration that there was no easy way to use D-Bus with C++, apart from
  * what ships with the famous Qt toolkit. There were some attempts such as dbus-cpp or dbus-c++, 
  * dbusmm, or cbus, but none were "feeling right" to me. 
  * 
  * From my point of view the ideal toolkit has the following properties:
  *   - Be lightweight: don't pretend libdbus does not exist by creating one class per existing
- *     DBus concept, but just use libdbus' C functions when they can do the job.
+ *     D-Bus concept, but just use libdbus' C functions when they can do the job.
  *   - Even if the internals are coded in C, provide a high-level, C++-ish interface to the end user.
- *   - Don't provide new data types for DBus types mapping: the user probably already has his own data types (STL or others),
+ *   - Don't provide new data types for D-Bus types mapping: the user probably already has his own data types (STL or others),
  *     so just use them.
  *   - Provide integration with popular toolkits such as Glib, Qt
  *   - Use "modern" C++ techniques to make the user or developer's life easier when it makes sense.
@@ -380,7 +380,7 @@
  * different way.
  * 
  * First way(and easy way) is by allowing user to map
- * their own data structures into DBus structs.
+ * their own data structures into D-Bus structs.
  * 
  * The second way(and more complex way) allows to map any user defined
  * data type onto any D-Bus message. This is allows for complete customization,
@@ -440,7 +440,7 @@
         static dbus_bool_t run(DBusMessageIter* it, T* arg);
     };
  * @endcode
- * In addition, if you intend to be able to put your type as the value of a DBus Dict, 
+ * In addition, if you intend to be able to put your type as the value of a D-Bus Dict, 
  * you will need to specialize this one:
  * @code
     template <typename T>

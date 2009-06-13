@@ -70,10 +70,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the error object raise during serialization or deserialization for this message.  <a href="#29ef828567e2988ad388c4884feaa142"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#cbe945c144afee9b1a9c47c5a65f6db5">member</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the message member, as per the DBUS specification.  <a href="#cbe945c144afee9b1a9c47c5a65f6db5"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the message member, as per the D-Bus specification.  <a href="#cbe945c144afee9b1a9c47c5a65f6db5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#743baaffc00e25ca2ef574b3ba02cad3">interface</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the message interface, as per the DBUS specification.  <a href="#743baaffc00e25ca2ef574b3ba02cad3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the message interface, as per the D-Bus specification.  <a href="#743baaffc00e25ca2ef574b3ba02cad3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classdbustl_1_1Message.html">Message</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#6799174903d5e7c57101f12ac36a4842">createMethodReturn</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a new message of type DBUS_MESSAGE_TYPE_METHOD_RETURN, that is a reply to this message.  <a href="#6799174903d5e7c57101f12ac36a4842"></a><br></td></tr>
@@ -82,7 +82,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a new message of type DBUS_MESSAGE_TYPE_ERROR, that is a reply to this message.  <a href="#826f964d9fe5f5dd892208e67b298f2e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">DBusMessage *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdbustl_1_1Message.html#cb2e6658f4deccc94c71be4031bd5453">dbus</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The DBUS C api structure: don't use it!  <a href="#cb2e6658f4deccc94c71be4031bd5453"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The D-Bus C api structure: don't use it!  <a href="#cb2e6658f4deccc94c71be4031bd5453"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 <a class="el" href="classdbustl_1_1Message.html" title="Message is a lightweight wrapper class around D-Bus C API DBusMessage struct.">Message</a> is a lightweight wrapper class around D-Bus C API DBusMessage struct. 
@@ -94,7 +94,7 @@ This class provides the following benefits over its C counterpart:<ul>
 This class is implicitly shared, which means that if you make a copy of it, the new copy with share its internal data and state with the original.<p>
 Please note that as end user of D-Bus library, you are not supposed to instantiate objects from this class by yourself, but use instances that are built for your by DBusTL.<p>
 You will have to use this class for signals reception or asynchronous method calls reply. In all other cases everything should be handled behind the scene for you.<p>
-This class provides a <a class="el" href="classdbustl_1_1Message.html#cb2e6658f4deccc94c71be4031bd5453" title="The DBUS C api structure: don&#39;t use it!">dbus()</a> method that is public but that you are not supposed to use, unless you *really* know what you are doing. <hr><h2>Constructor &amp; Destructor Documentation</h2>
+This class provides a <a class="el" href="classdbustl_1_1Message.html#cb2e6658f4deccc94c71be4031bd5453" title="The D-Bus C api structure: don&#39;t use it!">dbus()</a> method that is public but that you are not supposed to use, unless you *really* know what you are doing. <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="63de0c801936cda3165c38dbfea83cf7"></a><!-- doxytag: member="dbustl::Message::Message" ref="63de0c801936cda3165c38dbfea83cf7" args="(DBusMessage *msg)" -->
 <div class="memitem">
 <div class="memproto">
@@ -358,7 +358,7 @@ If there no error happened, returns NULL.
 <div class="memdoc">
 
 <p>
-Returns the message member, as per the DBUS specification. 
+Returns the message member, as per the D-Bus specification. 
 <p>
 If the message is a signal, this equivalentto the signal name 
 </div>
@@ -379,7 +379,7 @@ If the message is a signal, this equivalentto the signal name
 <div class="memdoc">
 
 <p>
-Returns the message interface, as per the DBUS specification. 
+Returns the message interface, as per the D-Bus specification. 
 <p>
 
 </div>
@@ -460,7 +460,7 @@ The current message must be of type DBUS_MESSAGE_TYPE_METHOD_CALL. If not the ca
 <div class="memdoc">
 
 <p>
-The DBUS C api structure: don't use it! 
+The D-Bus C api structure: don't use it! 
 <p>
 You should only use it if you <b>really</b> know what you are doing. 
 </div>
