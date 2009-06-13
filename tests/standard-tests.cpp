@@ -393,6 +393,24 @@ int run_vt_tests()
     }
     
     {
+        std::cout << ">deque of string " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::deque<std::string> in, out;
+            in.push_back("String 1");
+            in.push_back("String 2");
+            in.push_back("String 3");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert(in == out);            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+    
+    {
         std::cout << ">set of string " << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {

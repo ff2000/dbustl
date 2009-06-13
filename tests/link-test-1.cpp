@@ -199,6 +199,11 @@ void testMessage1(dbustl::Message& m)
 		m << v;
 	}
 	{
+		std::deque<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
 		std::set<std::string> v;
 		m >> v;
 		m << v;

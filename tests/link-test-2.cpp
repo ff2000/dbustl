@@ -3,6 +3,7 @@
 #include <dbustl-1/types/Basic>
 #include <dbustl-1/types/list>
 #include <dbustl-1/types/vector>
+#include <dbustl-1/types/deque>
 #include <dbustl-1/types/set>
 #include <dbustl-1/types/map>
 #include <dbustl-1/types/array>
@@ -205,6 +206,11 @@ void testMessage2(dbustl::Message& m)
 	}
 	{
 		std::list<std::string> v;
+		m >> v;
+		m << v;
+	}
+	{
+		std::deque<std::string> v;
 		m >> v;
 		m << v;
 	}

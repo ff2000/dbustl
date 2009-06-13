@@ -21,11 +21,13 @@ DBusTL does its best not to enforce the used of any data type onto the user of: 
 Currently DBusTL comes with builting support for the following STL containers.<p>
 <table border="1" cellspacing="3" cellpadding="3">
 <tr>
-<th>Container </th><th>Mapped dbus type </th><th>Can serialize ? </th><th>Can deserialize ?  </th></tr>
+<th>Container </th><th>Mapped D-Bus type </th><th>Can serialize ? </th><th>Can deserialize ?  </th></tr>
 <tr>
 <td>std::vector </td><td>ARRAY </td><td>yes </td><td>yes  </td></tr>
 <tr>
 <td>std::list </td><td>ARRAY </td><td>yes </td><td>yes  </td></tr>
+<tr>
+<td>std::deque </td><td>ARRAY </td><td>yes </td><td>yes  </td></tr>
 <tr>
 <td>std::set </td><td>ARRAY </td><td>yes </td><td>yes  </td></tr>
 <tr>
