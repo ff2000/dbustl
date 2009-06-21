@@ -3,7 +3,7 @@ v0.5.0: Feature release
  * Renamed dbustl::ObjectProxy::Interface to dbustl::Interface
  * Added support for C++ deque type
  * Support for C++0x tuple, array, unordered_set, unordered_map,
-   unordered_multimap data type
+   unordered_multimap, shared_ptr data type
  * Reorganized serialization code
 
 v0.4.0: Cleanup release
