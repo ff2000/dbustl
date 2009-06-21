@@ -57,7 +57,7 @@ dbus_bool_t Serializer<std::shared_ptr<T> >::run(DBusMessageIter* it, const std:
 
 
 template <typename T>
-struct Deserializer<std::shared_ptr<T> > : public Deserializer<T>
+struct Deserializer<std::shared_ptr<T> >
 {
     static dbus_bool_t run(DBusMessageIter* it, std::shared_ptr<T>* arg);
 };
