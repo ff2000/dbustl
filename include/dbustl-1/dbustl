@@ -475,4 +475,5 @@
 #include <dbustl-1/types/stl/array>
 #include <dbustl-1/types/stl/unordered_set>
 #include <dbustl-1/types/stl/unordered_map>
+#include <dbustl-1/types/stl/shared_ptr>
 

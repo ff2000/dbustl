@@ -789,6 +789,55 @@ int run_vt_tests()
     }
 
     {
+        std::cout << ">shared_ptr " << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::shared_ptr<std::list<std::string> > in(new std::list<std::string>), out(new std::list<std::string>);
+            in->push_back("String 1");
+            in->push_back("String 2");
+            in->push_back("String 3");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+            assert((*in) == (*out));            
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+    
+    {
+        std::cout << ">shared_ptr (empty in input)" << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::shared_ptr<std::list<std::string> > in, out(new std::list<std::string>);
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+    
+    {
+        std::cout << ">shared_ptr (empty in output)" << std::endl;
+        dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
+        TRY {
+            pythonObjectProxy.setInterface("com.example.SampleInterface");
+            std::shared_ptr<std::list<std::string> > in(new std::list<std::string>), out;
+            in->push_back("String 1");
+            in->push_back("String 2");
+            in->push_back("String 3");
+            pythonObjectProxy.call("test_array_of_string", in, &out); 
+        }
+        CATCH(const std::exception& e,
+            std::cerr << e.what() << std::endl;
+            return 1;
+        )
+    }
+    
+    {
         std::cout << ">Interface modifier" << std::endl;
         dbustl::ObjectProxy pythonObjectProxy(session, "/PythonServerObject", "com.example.SampleService");
         TRY {
