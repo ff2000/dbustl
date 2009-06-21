@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef DBUSTL_TYPES_STDTOOLS
-#define DBUSTL_TYPES_STDTOOLS
+#ifndef DBUSTL_TYPES_TOOLS
+#define DBUSTL_TYPES_TOOLS
 
 #include <dbustl-1/types/Serialization>
 
@@ -242,4 +242,4 @@ dbus_bool_t MultiMapDeserializer<T>::run(DBusMessageIter* it, T* arg)
 }
 }
 
-#endif /* DBUSTL_TYPES_STDTOOLS */
+#endif /* DBUSTL_TYPES_TOOLS */

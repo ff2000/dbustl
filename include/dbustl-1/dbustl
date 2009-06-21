@@ -465,14 +465,14 @@
 #include <dbustl-1/ObjectProxy>
 #include <dbustl-1/DBusObject>
 #include <dbustl-1/types/Basic>
-#include <dbustl-1/types/vector>
-#include <dbustl-1/types/list>
-#include <dbustl-1/types/deque>
-#include <dbustl-1/types/set>
-#include <dbustl-1/types/map>
-#include <dbustl-1/types/Struct>
-#include <dbustl-1/types/tuple>
-#include <dbustl-1/types/array>
-#include <dbustl-1/types/unordered_set>
-#include <dbustl-1/types/unordered_map>
+#include <dbustl-1/types/stl/vector>
+#include <dbustl-1/types/stl/list>
+#include <dbustl-1/types/stl/deque>
+#include <dbustl-1/types/stl/set>
+#include <dbustl-1/types/stl/map>
+#include <dbustl-1/types/stl/Struct>
+#include <dbustl-1/types/stl/tuple>
+#include <dbustl-1/types/stl/array>
+#include <dbustl-1/types/stl/unordered_set>
+#include <dbustl-1/types/stl/unordered_map>
 
