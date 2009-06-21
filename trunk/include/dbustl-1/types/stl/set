@@ -27,7 +27,7 @@
 #define DBUSTL_TYPES_SET
 
 #include <set>
-#include <dbustl-1/types/StdTools>
+#include <dbustl-1/types/stl/Tools>
 
 namespace dbustl {
 namespace types {

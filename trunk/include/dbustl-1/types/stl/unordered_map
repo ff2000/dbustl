@@ -21,26 +21,37 @@
  *
  */
 
-// STL vector support
+// STL map & multimap support
 
-#ifndef DBUSTL_TYPES_VECTOR
-#define DBUSTL_TYPES_VECTOR
+#ifndef DBUSTL_TYPES_UNORDERED_MAP
+#define DBUSTL_TYPES_UNORDERED_MAP
 
-#include <vector>
-#include <dbustl-1/types/StdTools>
+#include <dbustl-1/Config> // For DBUSTL_CXX0X
+
+#ifdef DBUSTL_CXX0X
+
+#include <unordered_map>
+#include <dbustl-1/types/stl/Tools>
 
 namespace dbustl {
 namespace types {
 
-template <typename T, typename X>
-struct SignatureImpl<std::vector<T, X> > : public ArraySignatureImpl<T> {};
+/* map support */
 
-template <typename T, typename X>
-struct Serializer<std::vector<T, X> >: public ArraySerializer<std::vector<T, X> > {};
-template <typename T, typename X>
-struct Deserializer<std::vector<T, X> >: public ArrayDeserializer<std::vector<T, X> > {};
+template<typename K, typename V, typename X, typename Y>
+struct Serializer<std::unordered_map<K, V, X, Y> > : public MapSerializer<std::unordered_map<K, V, X, Y> >{};
+
+template<typename K, typename V, typename X, typename Y>
+struct Deserializer<std::unordered_map<K, V, X, Y> > : public MapDeserializer<std::unordered_map<K, V, X, Y> > {};
+    
+/* multimap support */
+
+template<typename K, typename V, typename X, typename Y>
+struct Deserializer<std::unordered_multimap<K, V, X, Y> > : public MultiMapDeserializer<std::unordered_multimap<K, V, X, Y> > {};
 
 }
 }
 
-#endif /* DBUSTL_TYPES_VECTOR */
+#endif /* DBUSTL_CXX0X */
+
+#endif /* DBUSTL_TYPES_UNORDERED_MAP */

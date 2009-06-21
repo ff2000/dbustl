@@ -21,31 +21,26 @@
  *
  */
 
-// STL map & multimap support
+// STL deque support
 
-#ifndef DBUSTL_TYPES_MAP
-#define DBUSTL_TYPES_MAP
+#ifndef DBUSTL_TYPES_DEQUE
+#define DBUSTL_TYPES_DEQUE
 
-#include <map>
-#include <dbustl-1/types/StdTools>
+#include <deque>
+#include <dbustl-1/types/stl/Tools>
 
 namespace dbustl {
 namespace types {
 
-/* map support */
+template <typename T, typename X>
+struct SignatureImpl<std::deque<T, X> > : public ArraySignatureImpl<T> {};
 
-template<typename K, typename V, typename X, typename Y>
-struct Serializer<std::map<K, V, X, Y> > : public MapSerializer<std::map<K, V, X, Y> >{};
-
-template<typename K, typename V, typename X, typename Y>
-struct Deserializer<std::map<K, V, X, Y> > : public MapDeserializer<std::map<K, V, X, Y> > {};
-    
-/* multimap support */
-
-template<typename K, typename V, typename X, typename Y>
-struct Deserializer<std::multimap<K, V, X, Y> > : public MultiMapDeserializer<std::multimap<K, V, X, Y> > {};
+template <typename T, typename X>
+struct Serializer<std::deque<T, X> >: public ArraySerializer<std::deque<T, X> > {};
+template <typename T, typename X>
+struct Deserializer<std::deque<T, X> >: public ArrayDeserializer<std::deque<T, X> > {};
 
 }
 }
 
-#endif /* DBUSTL_TYPES_MAP */
+#endif /* DBUSTL_TYPES_DEQUE */

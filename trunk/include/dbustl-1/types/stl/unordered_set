@@ -31,7 +31,7 @@
 #ifdef DBUSTL_CXX0X
 
 #include <unordered_set>
-#include <dbustl-1/types/StdTools>
+#include <dbustl-1/types/stl/Tools>
 
 namespace dbustl {
 namespace types {

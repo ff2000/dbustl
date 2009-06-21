@@ -21,26 +21,26 @@
  *
  */
 
-// STL deque support
+// STL vector support
 
-#ifndef DBUSTL_TYPES_DEQUE
-#define DBUSTL_TYPES_DEQUE
+#ifndef DBUSTL_TYPES_VECTOR
+#define DBUSTL_TYPES_VECTOR
 
-#include <deque>
-#include <dbustl-1/types/StdTools>
+#include <vector>
+#include <dbustl-1/types/stl/Tools>
 
 namespace dbustl {
 namespace types {
 
 template <typename T, typename X>
-struct SignatureImpl<std::deque<T, X> > : public ArraySignatureImpl<T> {};
+struct SignatureImpl<std::vector<T, X> > : public ArraySignatureImpl<T> {};
 
 template <typename T, typename X>
-struct Serializer<std::deque<T, X> >: public ArraySerializer<std::deque<T, X> > {};
+struct Serializer<std::vector<T, X> >: public ArraySerializer<std::vector<T, X> > {};
 template <typename T, typename X>
-struct Deserializer<std::deque<T, X> >: public ArrayDeserializer<std::deque<T, X> > {};
+struct Deserializer<std::vector<T, X> >: public ArrayDeserializer<std::vector<T, X> > {};
 
 }
 }
 
-#endif /* DBUSTL_TYPES_DEQUE */
+#endif /* DBUSTL_TYPES_VECTOR */
