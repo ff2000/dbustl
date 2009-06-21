@@ -309,7 +309,6 @@ namespace dbustl {
             MethodExecutorBase(const std::string& interface, 
                 const char* const * inSignature, const char* const * outSignature)
                  : _interface(interface), _inSignature(inSignature), _outSignature(outSignature) {};
-            virtual ~MethodExecutorBase() {};
             virtual void processCall(DBusObject *object, Message* method_call) = 0;
             const char* const * inSignatures() {return _inSignature; };
             const char* const * outSignatures() {return _outSignature; };
@@ -327,7 +326,6 @@ namespace dbustl {
                 const char* const * inSignature, const char* const * outSignature)
              : MethodExecutorBase(interface, inSignature, outSignature) {};
 
-            virtual ~EasyMethodExecutorBase() {};
         private:
             virtual void processCall(DBusObject *object, Message* method_call)
             {
