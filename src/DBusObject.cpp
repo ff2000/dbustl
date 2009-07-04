@@ -394,4 +394,15 @@ std::string DBusObject::convertSignature(const char *const *sig)
     return s;
 }
 
+void DBusObject::EasyMethodExecutorBase::processCall(DBusObject *object, Message* method_call)
+{
+    Message mreturn(method_call->createMethodReturn());
+    if(mreturn.dbus()) {
+        processCall(method_call, &mreturn);
+        if(!method_call->error()) {
+            object->sendReply(mreturn);
+        }
+    }
+}
+
 }

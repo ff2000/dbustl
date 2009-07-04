@@ -306,14 +306,16 @@ namespace dbustl {
         //This does not show up in doxygen
         class MethodExecutorBase {
         public:
-            MethodExecutorBase(const std::string& interface, 
+            MethodExecutorBase(void *target, const std::string& interface, 
                 const char* const * inSignature, const char* const * outSignature)
-                 : _interface(interface), _inSignature(inSignature), _outSignature(outSignature) {};
+                 : _target(target), _interface(interface), _inSignature(inSignature), _outSignature(outSignature) {};
             virtual void processCall(DBusObject *object, Message* method_call) = 0;
             const char* const * inSignatures() {return _inSignature; };
             const char* const * outSignatures() {return _outSignature; };
             const std::string& interface() const { return _interface; };
             void setInterface(const std::string& interface) { _interface = interface; };
+        protected:
+            void *_target;
         private:
             std::string _interface;
             const char* const *_inSignature;
@@ -322,21 +324,12 @@ namespace dbustl {
  
         class EasyMethodExecutorBase : public MethodExecutorBase {
         public:
-            EasyMethodExecutorBase(const std::string& interface, 
+            EasyMethodExecutorBase(void *target, const std::string& interface, 
                 const char* const * inSignature, const char* const * outSignature)
-             : MethodExecutorBase(interface, inSignature, outSignature) {};
+             : MethodExecutorBase(target, interface, inSignature, outSignature) {};
 
         private:
-            virtual void processCall(DBusObject *object, Message* method_call)
-            {
-                Message mreturn(method_call->createMethodReturn());
-                if(mreturn.dbus()) {
-                    processCall(method_call, &mreturn);
-                    if(!method_call->error()) {
-                        object->sendReply(mreturn);
-                    }
-                }
-            }
+            virtual void processCall(DBusObject *object, Message* method_call);
             virtual void processCall(Message* method_call, Message *method_return) = 0;
         };
 
@@ -367,16 +360,15 @@ namespace dbustl {
             typedef typename remove_const_ref<Result>::type _Result;
                 
             EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder(), SignatureBuilder<Result>()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<>(), SignatureBuilder<Result>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *method_reply)
             {
-                *method_reply << (_target->*_method)();
+                *method_reply << (static_cast<TargetClassType*>(_target)->*_method)();
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
             
@@ -386,16 +378,15 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (void);
                 
             EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder(), SignatureBuilder()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<>(), SignatureBuilder<>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message*, Message *)
             {
-                (_target->*_method)();
+                (static_cast<TargetClassType*>(_target)->*_method)();
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
             
@@ -407,8 +398,8 @@ namespace dbustl {
             typedef typename remove_const_ref<T1>::type _T1;
                 
             EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1>(), SignatureBuilder<_Result>()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<_T1>(), SignatureBuilder<_Result>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -416,10 +407,9 @@ namespace dbustl {
                 _T1 a1;
                 *method_call >> a1;
                 if(method_call->error()) return;
-                *method_reply << (_target->*_method)(a1);
+                *method_reply << (static_cast<TargetClassType*>(_target)->*_method)(a1);
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
             
@@ -430,8 +420,8 @@ namespace dbustl {
             typedef typename remove_const_ref<T1>::type _T1;
                 
             EasyMethodExecutor1(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1>(), SignatureBuilder()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<_T1>(), SignatureBuilder<>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -439,10 +429,9 @@ namespace dbustl {
                 _T1 a1;
                 *method_call >> a1;
                 if(method_call->error()) return;
-                (_target->*_method)(a1);
+                (static_cast<TargetClassType*>(_target)->*_method)(a1);
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
             
@@ -455,8 +444,8 @@ namespace dbustl {
             typedef typename remove_const_ref<T2>::type _T2;
                 
             EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2>(), SignatureBuilder<Result>()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<_T1, _T2>(), SignatureBuilder<Result>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -466,10 +455,9 @@ namespace dbustl {
                 *method_call >> a1;
                 *method_call >> a2;
                 if(method_call->error()) return;
-                *method_reply << (_target->*_method)(a1, a2);
+                *method_reply << (static_cast<TargetClassType*>(_target)->*_method)(a1, a2);
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
 
@@ -481,8 +469,8 @@ namespace dbustl {
             typedef typename remove_const_ref<T2>::type _T2;
                 
             EasyMethodExecutor2(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2>(), SignatureBuilder()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<_T1, _T2>(), SignatureBuilder<>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -492,10 +480,9 @@ namespace dbustl {
                 *method_call >> a1;
                 *method_call >> a2;
                 if(method_call->error()) return;
-                (_target->*_method)(a1, a2);
+                (static_cast<TargetClassType*>(_target)->*_method)(a1, a2);
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
 
@@ -509,8 +496,8 @@ namespace dbustl {
             typedef typename remove_const_ref<T3>::type _T3;
                 
             EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2, _T3>(), SignatureBuilder<Result>()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<_T1, _T2, _T3>(), SignatureBuilder<Result>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *method_reply)
@@ -522,10 +509,9 @@ namespace dbustl {
                 *method_call >> a2;
                 *method_call >> a3;
                 if(method_call->error()) return;
-                *method_reply << (_target->*_method)(a1, a2, a3);
+                *method_reply << (static_cast<TargetClassType*>(_target)->*_method)(a1, a2, a3);
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
 
@@ -538,8 +524,8 @@ namespace dbustl {
             typedef typename remove_const_ref<T3>::type _T3;
                 
             EasyMethodExecutor3(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(interface, SignatureBuilder<_T1, _T2, _T3>(), SignatureBuilder()),
-              _target(target), _method(method) {};
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<_T1, _T2, _T3>(), SignatureBuilder<>()),
+              _method(method) {};
                 
         private:
             virtual void processCall(Message* method_call, Message *)
@@ -551,10 +537,9 @@ namespace dbustl {
                 *method_call >> a2;
                 *method_call >> a3;
                 if(method_call->error()) return;
-                (_target->*_method)(a1, a2, a3);
+                (static_cast<TargetClassType*>(_target)->*_method)(a1, a2, a3);
             }
 
-            TargetClassType *_target;            
             MethodType _method;                
         };
 
@@ -565,16 +550,15 @@ namespace dbustl {
                 
             FlexibleMethodExecutor(TargetClassType *target, MethodType method, const std::string& interface,
                 const char *const * methodCallSignature, const char *const * methodReplySignature)
-             : MethodExecutorBase(interface, methodCallSignature, methodReplySignature),
-              _target(target), _method(method) {};
+             : MethodExecutorBase(target, interface, methodCallSignature, methodReplySignature),
+              _method(method) {};
 
         private:
             virtual void processCall(DBusObject *, Message* method_call)
             {
-                (_target->*_method)(*method_call);
+                (static_cast<TargetClassType*>(_target)->*_method)(*method_call);
             }
                 
-            TargetClassType *_target;            
             MethodType _method;
         };
         /** @endcond */
