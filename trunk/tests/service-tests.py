@@ -63,6 +63,10 @@ proxy.test_callvoid5(1, 1, 1, 1, 1)
 proxy.test_callvoid6(1, 1, 1, 1, 1, 1)
 proxy.test_callvoid7(1, 1, 1, 1, 1, 1, 1)
 proxy.test_callvoid8(1, 1, 1, 1, 1, 1, 1, 1)
+proxy.test_callvoid9(1, 1, 1, 1, 1, 1, 1, 1, 1)
+proxy.test_callvoid10(1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+proxy.test_callvoid11(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+proxy.test_callvoid12(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
                        
 assert proxy.test_call0() == 0
 assert proxy.test_call1(1) == 1
@@ -73,6 +77,10 @@ assert proxy.test_call5(1, 1, 1, 1, 1) == 5
 assert proxy.test_call6(1, 1, 1, 1, 1, 1) == 6
 assert proxy.test_call7(1, 1, 1, 1, 1, 1, 1) == 7
 assert proxy.test_call8(1, 1, 1, 1, 1, 1, 1, 1) == 8
+assert proxy.test_call9(1, 1, 1, 1, 1, 1, 1, 1, 1) == 9
+assert proxy.test_call10(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) == 10
+assert proxy.test_call11(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) == 11
+assert proxy.test_call12(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) == 12
 
 #We should complain if signature is invalid
 try:

@@ -223,7 +223,8 @@ namespace dbustl {
          * 
          * Identical to exportMethod() above, except this is for methods with 5 input parameters.
          */
-        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5>
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5), 
             const std::string& interface = "");
 
@@ -232,7 +233,8 @@ namespace dbustl {
          * 
          * Identical to exportMethod() above, except this is for methods with 6 input parameters.
          */
-        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6), 
             const std::string& interface = "");
 
@@ -241,7 +243,8 @@ namespace dbustl {
          * 
          * Identical to exportMethod() above, except this is for methods with 7 input parameters.
          */
-        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6, typename T7>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7),
             const std::string& interface = "");
 
@@ -250,8 +253,53 @@ namespace dbustl {
          * 
          * Identical to exportMethod() above, except this is for methods with 8 input parameters.
          */
-        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6, typename T7, typename T8>
         void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7, T8),
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 9 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 9 input parameters.
+         */
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6, typename T7, typename T8, 
+            typename T9>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7, T8, T9),
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 10 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 10 input parameters.
+         */
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6, typename T7, typename T8, 
+            typename T9, typename T10>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10),
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 11 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 11 input parameters.
+         */
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6, typename T7, typename T8, 
+            typename T9, typename T10, typename T11>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11),
+            const std::string& interface = "");
+
+        /**
+         * Exports a method of the target object on the bus: 12 input parameters 1 output parameter version.
+         * 
+         * Identical to exportMethod() above, except this is for methods with 12 input parameters.
+         */
+        template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, 
+            typename T5, typename T6, typename T7, typename T8, 
+            typename T9, typename T10, typename T11, typename T12>
+        void exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12),
             const std::string& interface = "");
 
         /**
@@ -509,6 +557,10 @@ namespace dbustl {
     DBUSOBJECT_EASY_METHOD_EXECUTOR(6)
     DBUSOBJECT_EASY_METHOD_EXECUTOR(7)
     DBUSOBJECT_EASY_METHOD_EXECUTOR(8)
+    DBUSOBJECT_EASY_METHOD_EXECUTOR(9)
+    DBUSOBJECT_EASY_METHOD_EXECUTOR(10)
+    DBUSOBJECT_EASY_METHOD_EXECUTOR(11)
+    DBUSOBJECT_EASY_METHOD_EXECUTOR(12)
 
         template<typename TargetClassType>
         class FlexibleMethodExecutor : public MethodExecutorBase {
@@ -617,6 +669,10 @@ namespace dbustl {
     DBUSOBJECT_DEFINE_EXPORTMETHOD(6);
     DBUSOBJECT_DEFINE_EXPORTMETHOD(7);
     DBUSOBJECT_DEFINE_EXPORTMETHOD(8);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(9);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(10);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(11);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(12);
 
     template<typename _Class>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, 
