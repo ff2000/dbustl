@@ -24,6 +24,7 @@
 #ifndef DBUSTL_SIGNATUREBUILDER
 #define DBUSTL_SIGNATUREBUILDER
 
+#include <dbustl-1/Iterators>
 #include <dbustl-1/types/Serialization>
 
 namespace dbustl {
@@ -62,133 +63,43 @@ namespace dbustl {
         
         __SignatureBuilderImpl<Args...>::compute(sig, i);
         return sig;
-    }    
-#else
+    }
+    
+#else /* DBUSTL_CXX0X */
+
     inline const char* const * SignatureBuilder()
     {
         static const char* sig[] = {0};
         return sig;
     }
 
-    template<typename T1>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            0
-            };
-        return sig;
+    #define SIGNATUREBUILDER_TYPENAME_TX(num) \
+        typename T##num
+        
+    #define SIGNATUREBUILDER_SIGNATURE(num) Signature<T##num>()
+
+    #define SIGNATUREBUILDER_DEFINE(num) \
+    template<DBUSTL_ITERATE_COMMA_##num(SIGNATUREBUILDER_TYPENAME_TX)> \
+    const char* const * SignatureBuilder() \
+    { \
+        using namespace types; \
+        static const char* sig[] = { \
+            DBUSTL_ITERATE_COMMA_##num(SIGNATUREBUILDER_SIGNATURE), \
+            0 \
+            }; \
+        return sig; \
     }
 
-    template<typename T1, typename T2>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            0
-            };
-        return sig;
-    }
+    SIGNATUREBUILDER_DEFINE(1);        
+    SIGNATUREBUILDER_DEFINE(2);
+    SIGNATUREBUILDER_DEFINE(3);
+    SIGNATUREBUILDER_DEFINE(4);
+    SIGNATUREBUILDER_DEFINE(5);
+    SIGNATUREBUILDER_DEFINE(6);
+    SIGNATUREBUILDER_DEFINE(7);
+    SIGNATUREBUILDER_DEFINE(8);
 
-    template<typename T1, typename T2, typename T3>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            Signature<T3>(),
-            0
-            };
-        return sig;
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            Signature<T3>(),
-            Signature<T4>(),
-            0
-            };
-        return sig;
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4, typename T5>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            Signature<T3>(),
-            Signature<T4>(),
-            Signature<T5>(),
-            0
-            };
-        return sig;
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4, typename T5,
-        typename T6>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            Signature<T3>(),
-            Signature<T4>(),
-            Signature<T5>(),
-            Signature<T6>(),
-            0
-            };
-        return sig;
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4, typename T5,
-    typename T6, typename T7>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            Signature<T3>(),
-            Signature<T4>(),
-            Signature<T5>(),
-            Signature<T6>(),
-            Signature<T7>(),
-            0
-            };
-        return sig;
-    }
-
-    template<typename T1, typename T2, typename T3, typename T4, typename T5,
-        typename T6, typename T7, typename T8>
-    const char* const * SignatureBuilder()
-    {
-        using namespace types;
-        static const char* sig[] = {
-            Signature<T1>(),
-            Signature<T2>(),
-            Signature<T3>(),
-            Signature<T4>(),
-            Signature<T5>(),
-            Signature<T6>(),
-            Signature<T7>(),
-            Signature<T8>(),
-            0
-            };
-        return sig;
-    }
-#endif
+#endif /* DBUSTL_CXX0X */
 
 }
 

@@ -35,6 +35,7 @@
 
 #include <dbustl-1/Message>
 #include <dbustl-1/Interface>
+#include <dbustl-1/Iterators>
 #include <dbustl-1/SignatureBuilder>
 
 namespace dbustl {
@@ -435,103 +436,6 @@ namespace dbustl {
             MethodType _method;                
         };
             
-
-    #define DBUSOBJECT_ITERATE_COMMA_1(fx) \
-        fx(1)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_1(fx) \
-        fx(1)
-
-    #define DBUSOBJECT_ITERATE_COMMA_2(fx) \
-        fx(1), \
-        fx(2)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_2(fx) \
-        fx(1); \
-        fx(2)
-
-    #define DBUSOBJECT_ITERATE_COMMA_3(fx) \
-        fx(1), \
-        fx(2), \
-        fx(3)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_3(fx) \
-        fx(1); \
-        fx(2); \
-        fx(3)
-
-    #define DBUSOBJECT_ITERATE_COMMA_4(fx) \
-        fx(1), \
-        fx(2), \
-        fx(3), \
-        fx(4)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_4(fx) \
-        fx(1); \
-        fx(2); \
-        fx(3); \
-        fx(4)
-
-    #define DBUSOBJECT_ITERATE_COMMA_5(fx) \
-        fx(1), \
-        fx(2), \
-        fx(3), \
-        fx(4), \
-        fx(5)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_5(fx) \
-        fx(1); \
-        fx(2); \
-        fx(3); \
-        fx(4); \
-        fx(5)
-
-    #define DBUSOBJECT_ITERATE_COMMA_6(fx) \
-        fx(1), \
-        fx(2), \
-        fx(3), \
-        fx(4), \
-        fx(5), \
-        fx(6)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_6(fx) \
-        fx(1); \
-        fx(2); \
-        fx(3); \
-        fx(4); \
-        fx(5); \
-        fx(6)
-
-    #define DBUSOBJECT_ITERATE_COMMA_7(fx) \
-        fx(1), \
-        fx(2), \
-        fx(3), \
-        fx(4), \
-        fx(5), \
-        fx(6), \
-        fx(7)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_7(fx) \
-        fx(1); \
-        fx(2); \
-        fx(3); \
-        fx(4); \
-        fx(5); \
-        fx(6); \
-        fx(7)
-
-    #define DBUSOBJECT_ITERATE_COMMA_8(fx) \
-        fx(1), \
-        fx(2), \
-        fx(3), \
-        fx(4), \
-        fx(5), \
-        fx(6), \
-        fx(7), \
-        fx(8)
-    #define DBUSOBJECT_ITERATE_SEMICOLON_8(fx) \
-        fx(1); \
-        fx(2); \
-        fx(3); \
-        fx(4); \
-        fx(5); \
-        fx(6); \
-        fx(7); \
-        fx(8)
-
     #define DBUSOBJECT_TYPENAME_TX(num) \
         typename T##num
         
@@ -552,46 +456,46 @@ namespace dbustl {
          *method_call >> a##num
                     
     #define DBUSOBJECT_EASY_METHOD_EXECUTOR(num) \
-        template<typename TargetClassType, typename Result, DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_TYPENAME_TX)> \
+        template<typename TargetClassType, typename Result, DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TYPENAME_TX)> \
         class EasyMethodExecutor##num : public EasyMethodExecutorBase { \
         public: \
-            typedef Result (TargetClassType::*MethodType) (DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_TX));\
+            typedef Result (TargetClassType::*MethodType) (DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TX));\
             typedef typename remove_const_ref<Result>::type _Result; \
-            DBUSOBJECT_ITERATE_SEMICOLON_##num(DBUSOBJECT_TYPEDEF_TX); \
+            DBUSTL_ITERATE_SEMICOLON_##num(DBUSOBJECT_TYPEDEF_TX); \
             \
             EasyMethodExecutor##num(TargetClassType *target, MethodType method, const std::string& interface) \
-             : EasyMethodExecutorBase(target, interface, SignatureBuilder<DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT__TX)>(), \
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT__TX)>(), \
              SignatureBuilder<_Result>()), \
               _method(method) {}; \
         \
         private: \
             virtual void processCall(Message* method_call, Message *method_reply) \
             { \
-                DBUSOBJECT_ITERATE_SEMICOLON_##num(DBUSOBJECT_DESERIALIZE); \
+                DBUSTL_ITERATE_SEMICOLON_##num(DBUSOBJECT_DESERIALIZE); \
                 if(method_call->error()) return; \
-                *method_reply << (static_cast<TargetClassType*>(_target)->*_method)(DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_aX)); \
+                *method_reply << (static_cast<TargetClassType*>(_target)->*_method)(DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_aX)); \
             } \
             \
             MethodType _method; \
         }; \
         \
-        template<typename TargetClassType, DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_TYPENAME_TX)> \
-        class EasyMethodExecutor##num<TargetClassType, void, DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_TX)> : public EasyMethodExecutorBase { \
+        template<typename TargetClassType, DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TYPENAME_TX)> \
+        class EasyMethodExecutor##num<TargetClassType, void, DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TX)> : public EasyMethodExecutorBase { \
         public:\
-            typedef void (TargetClassType::*MethodType) (DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_TX));\
-            DBUSOBJECT_ITERATE_SEMICOLON_##num(DBUSOBJECT_TYPEDEF_TX); \
+            typedef void (TargetClassType::*MethodType) (DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TX));\
+            DBUSTL_ITERATE_SEMICOLON_##num(DBUSOBJECT_TYPEDEF_TX); \
             \
             EasyMethodExecutor##num(TargetClassType *target, MethodType method, const std::string& interface) \
-             : EasyMethodExecutorBase(target, interface, SignatureBuilder<DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT__TX)>(), \
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder<DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT__TX)>(), \
              SignatureBuilder<>()), \
               _method(method) {}; \
         \
         private: \
             virtual void processCall(Message* method_call, Message *) \
             { \
-                DBUSOBJECT_ITERATE_SEMICOLON_##num(DBUSOBJECT_DESERIALIZE); \
+                DBUSTL_ITERATE_SEMICOLON_##num(DBUSOBJECT_DESERIALIZE); \
                 if(method_call->error()) return; \
-                (static_cast<TargetClassType*>(_target)->*_method)(DBUSOBJECT_ITERATE_COMMA_##num(DBUSOBJECT_aX)); \
+                (static_cast<TargetClassType*>(_target)->*_method)(DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_aX)); \
             } \
         \
             MethodType _method; \
@@ -698,53 +602,21 @@ namespace dbustl {
         exportMethodInternal(methodName, new EasyMethodExecutor0<_Class, R>(target, method, interface));
     }
 
-    template<typename _Class, typename R, typename T1>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor1<_Class, R, T1>(target, method, interface));
+#define DBUSOBJECT_DEFINE_EXPORTMETHOD(num) \
+    template<typename _Class, typename R, DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TYPENAME_TX)> \
+    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TX)), const std::string& interface) \
+    { \
+        exportMethodInternal(methodName, new EasyMethodExecutor##num<_Class, R, DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT_TX)>(target, method, interface)); \
     }
 
-    template<typename _Class, typename R, typename T1, typename T2>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor2<_Class, R, T1, T2>(target, method, interface));
-    }
-
-    template<typename _Class, typename R, typename T1, typename T2, typename T3>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor3<_Class, R, T1, T2, T3>(target, method, interface));
-    }
-
-    template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor4<_Class, R, T1, T2, T3, T4>(target, method, interface));
-    }
-
-    template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor5<_Class, R, T1, T2, T3, T4, T5>(target, method, interface));
-    }
-
-    template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor6<_Class, R, T1, T2, T3, T4, T5, T6>(target, method, interface));
-    }
-
-    template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor7<_Class, R, T1, T2, T3, T4, T5, T6, T7>(target, method, interface));
-    }
-
-    template<typename _Class, typename R, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
-    void DBusObject::exportMethod(const std::string& methodName, _Class *target, R (_Class::*method)(T1, T2, T3, T4, T5, T6, T7, T8), const std::string& interface)
-    {
-        exportMethodInternal(methodName, new EasyMethodExecutor8<_Class, R, T1, T2, T3, T4, T5, T6, T7, T8>(target, method, interface));
-    }
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(1);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(2);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(3);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(4);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(5);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(6);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(7);
+    DBUSOBJECT_DEFINE_EXPORTMETHOD(8);
 
     template<typename _Class>
     void DBusObject::exportMethod(const std::string& methodName, _Class *target, 
