@@ -406,7 +406,7 @@ namespace dbustl {
             typedef typename remove_const_ref<Result>::type _Result;
                 
             EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(target, interface, SignatureBuilder<>(), SignatureBuilder<Result>()),
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder(), SignatureBuilder<Result>()),
               _method(method) {};
                 
         private:
@@ -424,7 +424,7 @@ namespace dbustl {
             typedef void (TargetClassType::*MethodType) (void);
                 
             EasyMethodExecutor0(TargetClassType *target, MethodType method, const std::string& interface)
-             : EasyMethodExecutorBase(target, interface, SignatureBuilder<>(), SignatureBuilder<>()),
+             : EasyMethodExecutorBase(target, interface, SignatureBuilder(), SignatureBuilder()),
               _method(method) {};
                 
         private:
@@ -487,7 +487,7 @@ namespace dbustl {
             \
             EasyMethodExecutor##num(TargetClassType *target, MethodType method, const std::string& interface) \
              : EasyMethodExecutorBase(target, interface, SignatureBuilder<DBUSTL_ITERATE_COMMA_##num(DBUSOBJECT__TX)>(), \
-             SignatureBuilder<>()), \
+             SignatureBuilder()), \
               _method(method) {}; \
         \
         private: \
