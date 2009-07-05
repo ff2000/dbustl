@@ -50,6 +50,16 @@ public:
         exportMethod("test_call2", this, &TestServiceClass::test_call2);        
         exportMethod("test_callvoid3", this, &TestServiceClass::test_callvoid3);
         exportMethod("test_call3", this, &TestServiceClass::test_call3);        
+        exportMethod("test_callvoid4", this, &TestServiceClass::test_callvoid4);
+        exportMethod("test_call4", this, &TestServiceClass::test_call4);        
+        exportMethod("test_callvoid5", this, &TestServiceClass::test_callvoid5);
+        exportMethod("test_call5", this, &TestServiceClass::test_call5);        
+        exportMethod("test_callvoid6", this, &TestServiceClass::test_callvoid6);
+        exportMethod("test_call6", this, &TestServiceClass::test_call6);        
+        exportMethod("test_callvoid7", this, &TestServiceClass::test_callvoid7);
+        exportMethod("test_call7", this, &TestServiceClass::test_call7);        
+        exportMethod("test_callvoid8", this, &TestServiceClass::test_callvoid8);
+        exportMethod("test_call8", this, &TestServiceClass::test_call8);        
 
         exportMethod("test_flexible_executor", this, &TestServiceClass::test_flexible_executor, 
             dbustl::SignatureBuilder<double, double>(), dbustl::SignatureBuilder());        
@@ -141,6 +151,56 @@ private:
         return p1 + p2 + p3;
     }
 
+    void test_callvoid4(int p1, int p2, int p3, int p4)
+    {
+        std::cerr << __FUNCTION__<< ":" << p1 + p2 + p3 + p4 << std::endl;
+    };
+    int test_call4(int p1, int p2, int p3, int p4)
+    {
+        std::cerr << __FUNCTION__<< std::endl;
+        return p1 + p2 + p3 + p4;
+    }
+
+    void test_callvoid5(int p1, int p2, int p3, int p4, int p5)
+    {
+        std::cerr << __FUNCTION__<< ":" << p1 + p2 + p3 + p4 + p5 << std::endl;
+    };
+    int test_call5(int p1, int p2, int p3, int p4, int p5)
+    {
+        std::cerr << __FUNCTION__<< std::endl;
+        return p1 + p2 + p3 + p4 + p5;
+    }
+
+    void test_callvoid6(int p1, int p2, int p3, int p4, int p5, int p6)
+    {
+        std::cerr << __FUNCTION__<< ":" << p1 + p2 + p3 + p4 + p5 + p6 << std::endl;
+    };
+    int test_call6(int p1, int p2, int p3, int p4, int p5, int p6)
+    {
+        std::cerr << __FUNCTION__<< std::endl;
+        return p1 + p2 + p3 + p4 + p5 + p6;
+    }
+
+    void test_callvoid7(int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+    {
+        std::cerr << __FUNCTION__<< ":" << p1 + p2 + p3 + p4 + p5 + p6 + p7 << std::endl;
+    };
+    int test_call7(int p1, int p2, int p3, int p4, int p5, int p6, int p7)
+    {
+        std::cerr << __FUNCTION__<< std::endl;
+        return p1 + p2 + p3 + p4 + p5 + p6 + p7;
+    }
+
+    void test_callvoid8(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
+    {
+        std::cerr << __FUNCTION__<< ":" << p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 << std::endl;
+    };
+    int test_call8(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
+    {
+        std::cerr << __FUNCTION__<< std::endl;
+        return p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8;
+    }
+    
 #ifndef DBUSTL_NO_EXCEPTIONS
     void test_ex1()
     {
