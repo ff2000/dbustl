@@ -133,10 +133,10 @@ private:
     {
         std::cerr << __FUNCTION__ << ":" << p1 << std::endl;
     };
-    int test_call1(int p1)
+    bool test_call1(bool)
     {
         std::cerr << __FUNCTION__ << std::endl;
-        return p1;
+        return false;
     }
 
     void test_callvoid2(int p1, int p2)

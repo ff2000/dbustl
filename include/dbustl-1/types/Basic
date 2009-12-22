@@ -263,13 +263,26 @@ struct PrimitiveSerializer {
 
 /* bool */
 template<>
-struct Serializer<bool> : public PrimitiveSerializer<bool> {};
+struct Serializer<bool> {
+    static inline dbus_bool_t run(DBusMessageIter* it, const bool& arg)
+    {
+        //dbus_bool_t lies on 4 bytes, whereas bool can be less, so we have to reaffect it
+        dbus_bool_t b = arg;
+        return dbus_message_iter_append_basic(it, SignatureImpl<bool>::constValue, &b);
+    }
+};
 
 template<>
 struct Deserializer<bool> {
     static dbus_bool_t run(DBusMessageIter* it, bool* arg)
     {
-        return __deserializeBasic(it, arg, DBUS_TYPE_BOOLEAN);
+        //dbus_bool_t lies on 4 bytes, whereas bool can be less, so we have to reaffect it
+        dbus_bool_t tmp;
+        dbus_bool_t ret = __deserializeBasic(it, &tmp, DBUS_TYPE_BOOLEAN);
+        if(ret) {
+            *arg = tmp;
+        }
+        return ret;
     }
 };
 
