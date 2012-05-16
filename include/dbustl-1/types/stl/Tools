@@ -136,6 +136,20 @@ struct SignatureImpl<std::pair<const K, V> > {
 template<typename K, typename V> 
 const int SignatureImpl<std::pair<const K, V> >::size = 2 + SignatureImpl<K>::size + SignatureImpl<V>::size;
 
+template <typename T>
+struct MapSignatureImpl {
+    static const int size;
+    static inline void calcValue(char *signature, int *idx)
+    {
+    	signature[*idx] = DBUS_TYPE_ARRAY;
+    	++(*idx);
+    	SignatureImpl<typename T::value_type>::calcValue(signature, idx);
+    }    
+};
+
+template<typename T> 
+const int MapSignatureImpl<T>::size = 1 + SignatureImpl<std::pair<const typename T::key_type, typename T::value_type> >::size;
+
 template<typename T>
 struct MapSerializer {
     static dbus_bool_t run(DBusMessageIter* it, const T& arg);

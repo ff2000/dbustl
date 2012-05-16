@@ -39,6 +39,9 @@ namespace types {
 /* map support */
 
 template<typename K, typename V, typename X, typename Y>
+struct SignatureImpl<std::unordered_map<K, V, X, Y> > : public MapSignatureImpl<std::unordered_map<K, V, X, Y> > {};
+
+template<typename K, typename V, typename X, typename Y>
 struct Serializer<std::unordered_map<K, V, X, Y> > : public MapSerializer<std::unordered_map<K, V, X, Y> >{};
 
 template<typename K, typename V, typename X, typename Y>
