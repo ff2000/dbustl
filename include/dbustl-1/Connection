@@ -150,7 +150,7 @@ namespace dbustl {
             /**
              * Blocks until the outgoing message queue is empty.
              */
-            void flush();
+            void flush() const;
            
             /**
              * Asks the bus to assign the given name to this connection by invoking the RequestName method on the bus.
