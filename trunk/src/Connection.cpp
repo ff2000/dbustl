@@ -106,7 +106,7 @@ void Connection::construct(DBusBusType busType)
 #endif
 }
 
-void Connection::flush()
+void Connection::flush() const
 {
     if(_llconn) {
         dbus_connection_flush(_llconn);
